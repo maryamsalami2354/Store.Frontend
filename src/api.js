@@ -34,20 +34,21 @@ export function buildUrl(path) {
 }
 
 export async function apiFetch(path, options = {}) {
+  const { skipAuth, ...fetchOptions } = options;
   const token = getToken();
-  const headers = new Headers(options.headers || {});
+  const headers = new Headers(fetchOptions.headers || {});
 
-  if (token) headers.set("Authorization", `Bearer ${token}`);
-  if (options.body && !(options.body instanceof FormData)) {
+  if (token && !skipAuth) headers.set("Authorization", `Bearer ${token}`);
+  if (fetchOptions.body && !(fetchOptions.body instanceof FormData)) {
     headers.set("Content-Type", "application/json");
   }
 
   const response = await fetch(buildUrl(path), {
-    ...options,
+    ...fetchOptions,
     headers,
-    body: options.body && !(options.body instanceof FormData)
-      ? JSON.stringify(options.body)
-      : options.body
+    body: fetchOptions.body && !(fetchOptions.body instanceof FormData)
+      ? JSON.stringify(fetchOptions.body)
+      : fetchOptions.body
   });
 
   const contentType = response.headers.get("content-type") || "";
