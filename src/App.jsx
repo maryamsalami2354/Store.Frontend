@@ -41,7 +41,7 @@ import {
 
 const fallbackImage = "/uploads/products/ecf2dc0f-9fa8-47f2-b127-ed4fd2557e6c.jpg";
 
-const emptyLogin = { identifier: "", password: "" };
+const emptyLogin = { phoneNumber: "", password: "" };
 const emptyRegister = {
   username: "",
   name: "",
@@ -327,15 +327,14 @@ export default function App() {
 
   async function login(event) {
     event.preventDefault();
-    const identifier = loginForm.identifier.trim();
+    const phoneNumber = loginForm.phoneNumber.trim();
     const guestCart = cart?.items?.length ? cart : await getGuestCartSnapshot();
     const result = await run(
       () =>
         apiFetch("/Auth/Login", {
           method: "POST",
           body: {
-            username: identifier,
-            email: identifier.includes("@") ? identifier : null,
+            phoneNumber,
             password: loginForm.password
           }
         }),
@@ -357,7 +356,7 @@ export default function App() {
       "ثبت نام انجام شد. حالا می‌توانید وارد شوید."
     );
     if (!result) return;
-    setLoginForm({ identifier: registerForm.username || registerForm.email, password: registerForm.password });
+    setLoginForm({ phoneNumber: registerForm.phoneNumber, password: registerForm.password });
     setRegisterForm(emptyRegister);
   }
 
@@ -997,11 +996,19 @@ function AccountView({ user, loginForm, registerForm, setLoginForm, setRegisterF
           <>
             <div className="auth-copy">
               <h1>ورود یا ثبت‌نام در StoreKala</h1>
-              <p>لطفا نام کاربری یا ایمیل و رمز عبور خود را وارد کنید</p>
+              <p>لطفا شماره موبایل و رمز عبور خود را وارد کنید</p>
             </div>
             <label className="floating-field">
-              <span>نام کاربری یا ایمیل</span>
-              <input value={loginForm.identifier} onChange={saveField(setLoginForm, "identifier")} required autoFocus />
+              <span>شماره موبایل</span>
+              <input
+                type="tel"
+                inputMode="tel"
+                dir="ltr"
+                value={loginForm.phoneNumber}
+                onChange={saveField(setLoginForm, "phoneNumber")}
+                required
+                autoFocus
+              />
             </label>
             <label className="floating-field">
               <span>رمز عبور</span>
@@ -1012,7 +1019,7 @@ function AccountView({ user, loginForm, registerForm, setLoginForm, setRegisterF
           <>
             <div className="auth-copy">
               <h1>ساخت حساب کاربری</h1>
-              <p>برای ورود بعدی، نام کاربری یا ایمیل و رمز عبور را استفاده می‌کنید</p>
+              <p>برای ورود بعدی، شماره موبایل و رمز عبور را استفاده می‌کنید</p>
             </div>
             <div className="register-fields">
               <label className="floating-field">
@@ -1020,8 +1027,8 @@ function AccountView({ user, loginForm, registerForm, setLoginForm, setRegisterF
                 <input value={registerForm.username} onChange={saveField(setRegisterForm, "username")} required autoFocus />
               </label>
               <label className="floating-field">
-                <span>ایمیل</span>
-                <input type="email" value={registerForm.email} onChange={saveField(setRegisterForm, "email")} required />
+                <span>ایمیل اختیاری</span>
+                <input type="email" value={registerForm.email} onChange={saveField(setRegisterForm, "email")} />
               </label>
               <label className="floating-field">
                 <span>نام</span>
@@ -1033,7 +1040,14 @@ function AccountView({ user, loginForm, registerForm, setLoginForm, setRegisterF
               </label>
               <label className="floating-field">
                 <span>شماره موبایل</span>
-                <input value={registerForm.phoneNumber} onChange={saveField(setRegisterForm, "phoneNumber")} />
+                <input
+                  type="tel"
+                  inputMode="tel"
+                  dir="ltr"
+                  value={registerForm.phoneNumber}
+                  onChange={saveField(setRegisterForm, "phoneNumber")}
+                  required
+                />
               </label>
               <label className="floating-field">
                 <span>رمز عبور</span>
