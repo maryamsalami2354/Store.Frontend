@@ -128,6 +128,39 @@ function normalizeNumberText(value = "") {
     .replace(/[۰-۹٠-٩]/g, (digit) => digitMap[digit] || digit);
 }
 
+function toPersianDigits(value = "") {
+  const digitMap = {
+    "0": "۰",
+    "1": "۱",
+    "2": "۲",
+    "3": "۳",
+    "4": "۴",
+    "5": "۵",
+    "6": "۶",
+    "7": "۷",
+    "8": "۸",
+    "9": "۹",
+    "٠": "۰",
+    "١": "۱",
+    "٢": "۲",
+    "٣": "۳",
+    "٤": "۴",
+    "٥": "۵",
+    "٦": "۶",
+    "٧": "۷",
+    "٨": "۸",
+    "٩": "۹"
+  };
+
+  return String(value ?? "").replace(/[0-9٠-٩]/g, (digit) => digitMap[digit] || digit);
+}
+
+function normalizeTrackingCode(value = "") {
+  return String(value ?? "")
+    .trim()
+    .replace(/[۰-۹٠-٩]/g, (digit) => normalizeNumberText(digit));
+}
+
 function normalizeText(value = "") {
   return String(value).trim().replace(/\s+/g, " ");
 }
@@ -481,7 +514,7 @@ export default function App() {
           method: "POST",
           body: {
             recipientName: checkoutForm.recipientName,
-            recipientPhone: checkoutForm.recipientPhone,
+            recipientPhone: normalizeNumberText(checkoutForm.recipientPhone),
             shippingAddress: checkoutForm.shippingAddress,
             shippingMethodCode: checkoutForm.shippingMethodCode,
             deliveryDate: selectedSlot?.date,
@@ -638,7 +671,7 @@ export default function App() {
 
   async function trackOrder(event) {
     event.preventDefault();
-    const code = trackingCode.trim();
+    const code = normalizeTrackingCode(trackingCode);
     if (!code) return;
     const payload = await run(() => apiFetch(`/Order/track/${encodeURIComponent(code)}`));
     if (payload) setTrackingResult(payload);
@@ -659,7 +692,7 @@ export default function App() {
           method: "POST",
           body: {
             name: productForm.name,
-            price: Number(productForm.price),
+            price: Number(normalizeNumberText(productForm.price)),
             categoryId: Number(productForm.categoryId),
             brandId: productForm.brandId ? Number(productForm.brandId) : null
           }
@@ -722,8 +755,8 @@ export default function App() {
           body: {
             warehouseId: Number(stockForm.warehouseId),
             productId: Number(stockForm.productId),
-            quantity: Number(stockForm.quantity),
-            reorderLevel: Number(stockForm.reorderLevel || 0)
+            quantity: Number(normalizeNumberText(stockForm.quantity)),
+            reorderLevel: Number(normalizeNumberText(stockForm.reorderLevel || 0))
           }
         }),
       "موجودی ثبت شد."
@@ -758,7 +791,7 @@ export default function App() {
         apiStatus={apiStatus}
       />
 
-      {message && <div className="toast">{message}</div>}
+      {message && <div className="toast">{toPersianDigits(message)}</div>}
       {busy && <div className="loading-line" />}
 
       {view === "home" && (
@@ -886,7 +919,7 @@ function TopHeader({ user, view, setView, search, setSearch, cartCount, apiStatu
         <label className="global-search">
           <Search size={20} />
           <input
-            value={search}
+            value={toPersianDigits(search)}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="جستجو در محصولات"
           />
@@ -897,12 +930,12 @@ function TopHeader({ user, view, setView, search, setSearch, cartCount, apiStatu
           </button>
           <button className={`text-action login-entry ${view === "account" ? "active" : ""}`} onClick={() => setView("account")}>
             <LogIn size={20} />
-            <span>{user ? user.username || user.name : "ورود | ثبت‌نام"}</span>
+            <span>{user ? toPersianDigits(user.username || user.name) : "ورود | ثبت‌نام"}</span>
           </button>
           <span className="action-divider" />
           <button className={`cart-action ${view === "cart" ? "active" : ""}`} onClick={() => setView("cart")} title="سبد خرید">
             <ShoppingCart size={21} />
-            <span>{cartCount}</span>
+            <span>{toPersianDigits(cartCount)}</span>
           </button>
         </nav>
       </div>
@@ -947,7 +980,7 @@ function Storefront({
             className={String(selectedCategory) === String(category.id) ? "active" : ""}
             onClick={() => setSelectedCategory(category.id)}
           >
-            {category.title || category.name}
+            {toPersianDigits(category.title || category.name)}
           </button>
         ))}
       </aside>
@@ -974,13 +1007,13 @@ function Storefront({
           <h1>کالاهای فروشگاه</h1>
           <div className="filter-chip">
             <SlidersHorizontal size={17} />
-            <span>{products.length} کالا</span>
+            <span>{toPersianDigits(products.length)} کالا</span>
           </div>
         </div>
 
         <div className="brand-ribbon">
           {(brands.length ? brands : [{ id: "local", name: "StoreKala" }]).slice(0, 8).map((brand) => (
-            <span key={brand.id}>{brand.name || brand.title}</span>
+            <span key={brand.id}>{toPersianDigits(brand.name || brand.title)}</span>
           ))}
         </div>
 
@@ -1000,11 +1033,11 @@ function ProductCard({ product, addToCart }) {
       <button className="favorite" title="علاقه‌مندی">
         <Heart size={18} />
       </button>
-      <img src={product.imageUrl || buildUrl(fallbackImage)} alt={product.name} />
+      <img src={product.imageUrl || buildUrl(fallbackImage)} alt={toPersianDigits(product.name)} />
       <div className="product-info">
         <div className="rating"><Star size={15} /> ۴.۶</div>
-        <h2>{product.name}</h2>
-        <p>{product.categoryName}</p>
+        <h2>{toPersianDigits(product.name)}</h2>
+        <p>{toPersianDigits(product.categoryName)}</p>
         <div className="product-footer">
           <strong>{formatMoney(product.price)} <small>تومان</small></strong>
           <button onClick={() => addToCart(product.id)} title="افزودن به سبد">
@@ -1037,16 +1070,16 @@ function CartView({ cart, cartTotal, shippingCost, payableTotal, user, loadCart,
           <div className="cart-list">
             {cart.items.map((item) => (
               <div className="cart-item" key={item.id}>
-                <img src={buildUrl(fallbackImage)} alt={item.productName} />
+                <img src={buildUrl(fallbackImage)} alt={toPersianDigits(item.productName)} />
                 <div className="cart-title">
-                  <strong>{item.productName}</strong>
+                  <strong>{toPersianDigits(item.productName)}</strong>
                   <span>{formatMoney(item.unitPriceSnapshot)} تومان</span>
                 </div>
                 <div className="quantity-box">
                   <button onClick={() => updateCartItem(item.id, item.quantity + 1)} title="افزایش">
                     <Plus size={15} />
                   </button>
-                  <span>{item.quantity}</span>
+                  <span>{toPersianDigits(item.quantity)}</span>
                   <button onClick={() => updateCartItem(item.id, item.quantity - 1)} title="کاهش">
                     <Minus size={15} />
                   </button>
@@ -1106,15 +1139,15 @@ function CheckoutView({
         <div className="form-grid">
           <label>
             <span>نام گیرنده</span>
-            <input value={checkoutForm.recipientName} onChange={saveField(setCheckoutForm, "recipientName")} required />
+            <input value={toPersianDigits(checkoutForm.recipientName)} onChange={saveField(setCheckoutForm, "recipientName")} required />
           </label>
           <label>
             <span>شماره تماس</span>
-            <input value={checkoutForm.recipientPhone} onChange={saveField(setCheckoutForm, "recipientPhone")} required />
+            <input value={toPersianDigits(checkoutForm.recipientPhone)} onChange={saveField(setCheckoutForm, "recipientPhone")} required />
           </label>
           <label className="wide">
             <span>آدرس تحویل</span>
-            <textarea value={checkoutForm.shippingAddress} onChange={saveField(setCheckoutForm, "shippingAddress")} required />
+            <textarea value={toPersianDigits(checkoutForm.shippingAddress)} onChange={saveField(setCheckoutForm, "shippingAddress")} required />
           </label>
         </div>
 
@@ -1129,8 +1162,8 @@ function CheckoutView({
                 onChange={saveField(setCheckoutForm, "shippingMethodCode")}
               />
               <Truck size={20} />
-              <strong>{method.title}</strong>
-              <span>{method.description}</span>
+              <strong>{toPersianDigits(method.title)}</strong>
+              <span>{toPersianDigits(method.description)}</span>
               <em>{formatMoney(method.cost)} تومان</em>
             </label>
           ))}
@@ -1142,7 +1175,7 @@ function CheckoutView({
             <option value="">انتخاب بازه تحویل</option>
             {shipping.slots.map((slot) => (
               <option key={slotKey(slot)} value={slotKey(slot)}>
-                {slot.label || `${formatDate(slot.date)} - ${slot.timeSlot}`}
+                {toPersianDigits(slot.label || `${formatDate(slot.date)} - ${slot.timeSlot}`)}
               </option>
             ))}
           </select>
@@ -1191,7 +1224,7 @@ function OrdersView({ orders, trackingCode, setTrackingCode, trackingResult, tra
           </button>
         </div>
         <form className="tracking-form" onSubmit={trackOrder}>
-          <input value={trackingCode} onChange={(event) => setTrackingCode(event.target.value)} placeholder="کد رهگیری" />
+          <input value={toPersianDigits(trackingCode)} onChange={(event) => setTrackingCode(event.target.value)} placeholder="کد رهگیری" />
           <button className="primary-button" type="submit">
             <PackageCheck size={18} /> رهگیری
           </button>
@@ -1201,7 +1234,7 @@ function OrdersView({ orders, trackingCode, setTrackingCode, trackingResult, tra
             {trackingResult.steps?.map((step) => (
               <div className={`timeline-step ${step.done ? "done" : ""} ${step.current ? "current" : ""}`} key={step.code}>
                 <span />
-                <strong>{step.title}</strong>
+                <strong>{toPersianDigits(step.title)}</strong>
               </div>
             ))}
           </div>
@@ -1212,16 +1245,16 @@ function OrdersView({ orders, trackingCode, setTrackingCode, trackingResult, tra
         {orders.map((order) => (
           <article className="order-card" key={order.id}>
             <div>
-              <strong>سفارش #{order.id}</strong>
+              <strong>سفارش #{toPersianDigits(order.id)}</strong>
               <span>{formatDate(order.orderDate)} | {statusLabel(order.status)}</span>
             </div>
             <div>
-              <span>{order.trackingCode}</span>
+              <span>{toPersianDigits(order.trackingCode)}</span>
               <button onClick={() => setTrackingCode(order.trackingCode)}>کپی برای رهگیری</button>
             </div>
             <div>
               <Truck size={18} />
-              <span>{shippingLabel(order.shippingMethod)} - {formatDate(order.deliveryDate)} - {order.deliveryTimeSlot}</span>
+              <span>{toPersianDigits(`${shippingLabel(order.shippingMethod)} - ${formatDate(order.deliveryDate)} - ${order.deliveryTimeSlot}`)}</span>
             </div>
             <strong>{formatMoney(order.totalAmount)} تومان</strong>
           </article>
@@ -1239,7 +1272,7 @@ function OrdersView({ orders, trackingCode, setTrackingCode, trackingResult, tra
 
 function FieldError({ errors, name }) {
   if (!errors?.[name]) return null;
-  return <small className="field-error">{errors[name]}</small>;
+  return <small className="field-error">{toPersianDigits(errors[name])}</small>;
 }
 
 function AccountView({
@@ -1274,11 +1307,11 @@ function AccountView({
       <section className="account-page">
         <div className="profile-card">
           <UserRound size={38} />
-          <h1>{user.name} {user.lastName}</h1>
-          <p>{user.username}</p>
+          <h1>{toPersianDigits(`${user.name} ${user.lastName}`)}</h1>
+          <p>{toPersianDigits(user.username)}</p>
           <div className="profile-meta">
-            <span>{user.phoneNumber || "بدون شماره"}</span>
-            <span>{user.email || "بدون ایمیل"}</span>
+            <span>{toPersianDigits(user.phoneNumber || "بدون شماره")}</span>
+            <span>{toPersianDigits(user.email || "بدون ایمیل")}</span>
           </div>
           <div className="profile-actions">
             <button className="primary-button" type="button" onClick={() => setProfileEditing((current) => !current)}>
@@ -1295,18 +1328,18 @@ function AccountView({
               <UserRound size={34} />
               <div>
                 <h1>ویرایش پروفایل</h1>
-                <p>{user.phoneNumber}</p>
+                <p>{toPersianDigits(user.phoneNumber)}</p>
               </div>
             </div>
             <div className="register-fields">
               <label className={`floating-field ${formErrors.name ? "has-error" : ""}`}>
                 <span>نام</span>
-                <input value={profileForm.name} onChange={saveField(setProfileForm, "name")} required autoFocus />
+                <input value={toPersianDigits(profileForm.name)} onChange={saveField(setProfileForm, "name")} required autoFocus />
                 <FieldError errors={formErrors} name="name" />
               </label>
               <label className={`floating-field ${formErrors.lastName ? "has-error" : ""}`}>
                 <span>نام خانوادگی</span>
-                <input value={profileForm.lastName} onChange={saveField(setProfileForm, "lastName")} required />
+                <input value={toPersianDigits(profileForm.lastName)} onChange={saveField(setProfileForm, "lastName")} required />
                 <FieldError errors={formErrors} name="lastName" />
               </label>
               <label className={`floating-field ${formErrors.nationalCode ? "has-error" : ""}`}>
@@ -1314,7 +1347,7 @@ function AccountView({
                 <input
                   inputMode="numeric"
                   dir="ltr"
-                  value={profileForm.nationalCode}
+                  value={toPersianDigits(profileForm.nationalCode)}
                   onChange={saveField(setProfileForm, "nationalCode")}
                   required
                 />
@@ -1326,7 +1359,7 @@ function AccountView({
                   type="tel"
                   inputMode="tel"
                   dir="ltr"
-                  value={profileForm.phoneNumber}
+                  value={toPersianDigits(profileForm.phoneNumber)}
                   onChange={saveField(setProfileForm, "phoneNumber")}
                   required
                 />
@@ -1385,7 +1418,7 @@ function AccountView({
                 type="tel"
                 inputMode="tel"
                 dir="ltr"
-                value={loginForm.phoneNumber}
+                value={toPersianDigits(loginForm.phoneNumber)}
                 onChange={saveField(setLoginForm, "phoneNumber")}
                 required
                 autoFocus
@@ -1399,7 +1432,7 @@ function AccountView({
           <>
             <div className="auth-copy">
               <h1>کد تایید</h1>
-              <p>کد ارسال‌شده به شماره {loginForm.phoneNumber} را وارد کنید</p>
+              <p>کد ارسال‌شده به شماره {toPersianDigits(loginForm.phoneNumber)} را وارد کنید</p>
             </div>
             <label className={`floating-field ${formErrors.otpCode ? "has-error" : ""}`}>
               <span>کد تایید</span>
@@ -1407,7 +1440,7 @@ function AccountView({
                 type="text"
                 inputMode="numeric"
                 dir="ltr"
-                value={loginForm.otpCode}
+                value={toPersianDigits(loginForm.otpCode)}
                 onChange={saveField(setLoginForm, "otpCode")}
                 required
                 autoFocus
@@ -1426,18 +1459,18 @@ function AccountView({
             <div className="register-fields">
               <label className="floating-field">
                 <span>نام</span>
-                <input value={registerForm.name} onChange={saveField(setRegisterForm, "name")} required autoFocus />
+                <input value={toPersianDigits(registerForm.name)} onChange={saveField(setRegisterForm, "name")} required autoFocus />
               </label>
               <label className="floating-field">
                 <span>نام خانوادگی</span>
-                <input value={registerForm.lastName} onChange={saveField(setRegisterForm, "lastName")} required />
+                <input value={toPersianDigits(registerForm.lastName)} onChange={saveField(setRegisterForm, "lastName")} required />
               </label>
               <label className="floating-field">
                 <span>کد ملی</span>
                 <input
                   inputMode="numeric"
                   dir="ltr"
-                  value={registerForm.nationalCode}
+                  value={toPersianDigits(registerForm.nationalCode)}
                   onChange={saveField(setRegisterForm, "nationalCode")}
                   required
                 />
@@ -1448,7 +1481,7 @@ function AccountView({
                   type="tel"
                   inputMode="tel"
                   dir="ltr"
-                  value={registerForm.phoneNumber}
+                  value={toPersianDigits(registerForm.phoneNumber)}
                   onChange={saveField(setRegisterForm, "phoneNumber")}
                   required
                 />
@@ -1462,22 +1495,22 @@ function AccountView({
 
               <label className="floating-field">
                 <span>استان</span>
-                <input value={registerForm.address.provinceName} onChange={saveNestedField(setRegisterForm, "address", "provinceName")} required />
+                <input value={toPersianDigits(registerForm.address.provinceName)} onChange={saveNestedField(setRegisterForm, "address", "provinceName")} required />
               </label>
               <label className="floating-field">
                 <span>شهر</span>
-                <input value={registerForm.address.cityName} onChange={saveNestedField(setRegisterForm, "address", "cityName")} required />
+                <input value={toPersianDigits(registerForm.address.cityName)} onChange={saveNestedField(setRegisterForm, "address", "cityName")} required />
               </label>
               <label className="floating-field">
                 <span>محله</span>
-                <input value={registerForm.address.neighborhood} onChange={saveNestedField(setRegisterForm, "address", "neighborhood")} required />
+                <input value={toPersianDigits(registerForm.address.neighborhood)} onChange={saveNestedField(setRegisterForm, "address", "neighborhood")} required />
               </label>
               <label className="floating-field">
                 <span>پلاک</span>
                 <input
                   inputMode="numeric"
                   dir="ltr"
-                  value={registerForm.address.plateNumber}
+                  value={toPersianDigits(registerForm.address.plateNumber)}
                   onChange={saveNestedField(setRegisterForm, "address", "plateNumber")}
                   required
                 />
@@ -1487,7 +1520,7 @@ function AccountView({
                 <input
                   inputMode="numeric"
                   dir="ltr"
-                  value={registerForm.address.unitNumber}
+                  value={toPersianDigits(registerForm.address.unitNumber)}
                   onChange={saveNestedField(setRegisterForm, "address", "unitNumber")}
                   required
                 />
@@ -1497,7 +1530,7 @@ function AccountView({
                 <input
                   inputMode="numeric"
                   dir="ltr"
-                  value={registerForm.address.postalCode}
+                  value={toPersianDigits(registerForm.address.postalCode)}
                   onChange={saveNestedField(setRegisterForm, "address", "postalCode")}
                   required
                 />
@@ -1505,7 +1538,7 @@ function AccountView({
               <label className="floating-field wide-field">
                 <span>توضیحات</span>
                 <textarea
-                  value={registerForm.address.description}
+                  value={toPersianDigits(registerForm.address.description)}
                   onChange={saveNestedField(setRegisterForm, "address", "description")}
                 />
               </label>
@@ -1516,7 +1549,7 @@ function AccountView({
         {hasValidationErrors(formErrors) && (
           <div className="form-error-list">
             {Object.values(formErrors).map((error) => (
-              <span key={error}>{error}</span>
+              <span key={error}>{toPersianDigits(error)}</span>
             ))}
           </div>
         )}
@@ -1573,18 +1606,18 @@ function AdminView(props) {
           <h2>محصول</h2>
           <PackagePlus size={18} />
         </div>
-        <input placeholder="نام" value={productForm.name} onChange={saveField(setProductForm, "name")} required />
-        <input placeholder="قیمت" type="number" value={productForm.price} onChange={saveField(setProductForm, "price")} required />
+        <input placeholder="نام" value={toPersianDigits(productForm.name)} onChange={saveField(setProductForm, "name")} required />
+        <input placeholder="قیمت" type="text" inputMode="numeric" value={toPersianDigits(productForm.price)} onChange={saveField(setProductForm, "price")} required />
         <select value={productForm.categoryId} onChange={saveField(setProductForm, "categoryId")} required>
           <option value="">دسته بندی</option>
           {categories.map((category) => (
-            <option key={category.id} value={category.id}>{category.title}</option>
+            <option key={category.id} value={category.id}>{toPersianDigits(category.title)}</option>
           ))}
         </select>
         <select value={productForm.brandId} onChange={saveField(setProductForm, "brandId")}>
           <option value="">برند</option>
           {brands.map((brand) => (
-            <option key={brand.id} value={brand.id}>{brand.name}</option>
+            <option key={brand.id} value={brand.id}>{toPersianDigits(brand.name)}</option>
           ))}
         </select>
         <button className="primary-button" type="submit"><Plus size={17} /> ثبت محصول</button>
@@ -1595,7 +1628,7 @@ function AdminView(props) {
           <h2>دسته بندی</h2>
           <LayoutGrid size={18} />
         </div>
-        <input placeholder="عنوان" value={categoryForm.title} onChange={saveField(setCategoryForm, "title")} required />
+        <input placeholder="عنوان" value={toPersianDigits(categoryForm.title)} onChange={saveField(setCategoryForm, "title")} required />
         <button className="primary-button" type="submit"><Plus size={17} /> ثبت دسته</button>
       </form>
 
@@ -1604,8 +1637,8 @@ function AdminView(props) {
           <h2>برند</h2>
           <BadgeCheck size={18} />
         </div>
-        <input placeholder="نام برند" value={brandForm.name} onChange={saveField(setBrandForm, "name")} required />
-        <input placeholder="توضیحات" value={brandForm.description} onChange={saveField(setBrandForm, "description")} />
+        <input placeholder="نام برند" value={toPersianDigits(brandForm.name)} onChange={saveField(setBrandForm, "name")} required />
+        <input placeholder="توضیحات" value={toPersianDigits(brandForm.description)} onChange={saveField(setBrandForm, "description")} />
         <input placeholder="آدرس لوگو" value={brandForm.logoUrl} onChange={saveField(setBrandForm, "logoUrl")} />
         <button className="primary-button" type="submit"><Plus size={17} /> ثبت برند</button>
       </form>
@@ -1618,12 +1651,12 @@ function AdminView(props) {
         <select value={attributeForm.productId} onChange={saveField(setAttributeForm, "productId")} required>
           <option value="">محصول</option>
           {products.map((product) => (
-            <option key={product.id} value={product.id}>{product.name}</option>
+            <option key={product.id} value={product.id}>{toPersianDigits(product.name)}</option>
           ))}
         </select>
-        <input placeholder="عنوان ویژگی مثل رم" value={attributeForm.key} onChange={saveField(setAttributeForm, "key")} required />
-        <input placeholder="مقدار مثل ۸ گیگابایت" value={attributeForm.value} onChange={saveField(setAttributeForm, "value")} required />
-        <input placeholder="توضیحات" value={attributeForm.description} onChange={saveField(setAttributeForm, "description")} />
+        <input placeholder="عنوان ویژگی مثل رم" value={toPersianDigits(attributeForm.key)} onChange={saveField(setAttributeForm, "key")} required />
+        <input placeholder="مقدار مثل ۸ گیگابایت" value={toPersianDigits(attributeForm.value)} onChange={saveField(setAttributeForm, "value")} required />
+        <input placeholder="توضیحات" value={toPersianDigits(attributeForm.description)} onChange={saveField(setAttributeForm, "description")} />
         <button className="primary-button" type="submit"><Plus size={17} /> ثبت ویژگی</button>
       </form>
 
@@ -1632,9 +1665,9 @@ function AdminView(props) {
           <h2>انبار</h2>
           <Boxes size={18} />
         </div>
-        <input placeholder="نام" value={warehouseForm.name} onChange={saveField(setWarehouseForm, "name")} required />
-        <input placeholder="کد" value={warehouseForm.code} onChange={saveField(setWarehouseForm, "code")} required />
-        <input placeholder="آدرس" value={warehouseForm.address} onChange={saveField(setWarehouseForm, "address")} />
+        <input placeholder="نام" value={toPersianDigits(warehouseForm.name)} onChange={saveField(setWarehouseForm, "name")} required />
+        <input placeholder="کد" value={toPersianDigits(warehouseForm.code)} onChange={saveField(setWarehouseForm, "code")} required />
+        <input placeholder="آدرس" value={toPersianDigits(warehouseForm.address)} onChange={saveField(setWarehouseForm, "address")} />
         <button className="primary-button" type="submit"><Plus size={17} /> ثبت انبار</button>
       </form>
 
@@ -1648,17 +1681,17 @@ function AdminView(props) {
         <select value={stockForm.warehouseId} onChange={saveField(setStockForm, "warehouseId")} required>
           <option value="">انبار</option>
           {warehouses.map((warehouse) => (
-            <option key={warehouse.id} value={warehouse.id}>{warehouse.name}</option>
+            <option key={warehouse.id} value={warehouse.id}>{toPersianDigits(warehouse.name)}</option>
           ))}
         </select>
         <select value={stockForm.productId} onChange={saveField(setStockForm, "productId")} required>
           <option value="">محصول</option>
           {products.map((product) => (
-            <option key={product.id} value={product.id}>{product.name}</option>
+            <option key={product.id} value={product.id}>{toPersianDigits(product.name)}</option>
           ))}
         </select>
-        <input placeholder="موجودی" type="number" value={stockForm.quantity} onChange={saveField(setStockForm, "quantity")} required />
-        <input placeholder="حد سفارش مجدد" type="number" value={stockForm.reorderLevel} onChange={saveField(setStockForm, "reorderLevel")} />
+        <input placeholder="موجودی" type="text" inputMode="numeric" value={toPersianDigits(stockForm.quantity)} onChange={saveField(setStockForm, "quantity")} required />
+        <input placeholder="حد سفارش مجدد" type="text" inputMode="numeric" value={toPersianDigits(stockForm.reorderLevel)} onChange={saveField(setStockForm, "reorderLevel")} />
         <button className="primary-button" type="submit"><Plus size={17} /> ثبت موجودی</button>
       </form>
     </section>
