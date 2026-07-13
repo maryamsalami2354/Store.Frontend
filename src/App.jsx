@@ -41,15 +41,22 @@ import {
 
 const fallbackImage = "/uploads/products/ecf2dc0f-9fa8-47f2-b127-ed4fd2557e6c.jpg";
 
-const emptyLogin = { phoneNumber: "", password: "" };
+const emptyLogin = { phoneNumber: "", otpCode: "" };
 const emptyRegister = {
-  username: "",
   name: "",
   lastName: "",
   nationalCode: "",
   phoneNumber: "",
   email: "",
-  password: ""
+  address: {
+    provinceName: "",
+    cityName: "",
+    neighborhood: "",
+    plateNumber: "",
+    unitNumber: "",
+    postalCode: "",
+    description: ""
+  }
 };
 const emptyProduct = { name: "", price: "", categoryId: "", brandId: "" };
 const emptyCategory = { title: "" };
@@ -88,6 +95,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [loginForm, setLoginForm] = useState(emptyLogin);
   const [registerForm, setRegisterForm] = useState(emptyRegister);
+  const [authStep, setAuthStep] = useState("phone");
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -325,7 +333,41 @@ export default function App() {
     setView("orders");
   }
 
-  async function login(event) {
+  async function requestOtp(event) {
+    event.preventDefault();
+    const phoneNumber = loginForm.phoneNumber.trim();
+    const result = await run(
+      () =>
+        apiFetch("/Auth/RequestOtp", {
+          method: "POST",
+          body: {
+            phoneNumber
+          }
+        }),
+      "",
+      { keepMessage: true }
+    );
+
+    if (!result) return;
+
+    const normalizedPhone = result.phoneNumber || phoneNumber;
+    setLoginForm({ phoneNumber: normalizedPhone, otpCode: "" });
+
+    if (result.userExists) {
+      setAuthStep("otp");
+      setMessage(result.message || "کد تایید ارسال شد.");
+      return;
+    }
+
+    setRegisterForm((current) => ({
+      ...current,
+      phoneNumber: normalizedPhone
+    }));
+    setAuthStep("register");
+    setMessage(result.message || "برای ادامه ثبت نام کنید.");
+  }
+
+  async function verifyOtp(event) {
     event.preventDefault();
     const phoneNumber = loginForm.phoneNumber.trim();
     const guestCart = cart?.items?.length ? cart : await getGuestCartSnapshot();
@@ -335,7 +377,7 @@ export default function App() {
           method: "POST",
           body: {
             phoneNumber,
-            password: loginForm.password
+            otpCode: loginForm.otpCode
           }
         }),
       "ورود انجام شد."
@@ -345,6 +387,7 @@ export default function App() {
     setUser(result.user);
     await mergeGuestCartToUser(result.user, guestCart);
     setLoginForm(emptyLogin);
+    setAuthStep("phone");
     await Promise.all([loadCart({ silent: true, user: result.user }), loadOrders()]);
     setView("home");
   }
@@ -356,8 +399,9 @@ export default function App() {
       "ثبت نام انجام شد. حالا می‌توانید وارد شوید."
     );
     if (!result) return;
-    setLoginForm({ phoneNumber: registerForm.phoneNumber, password: registerForm.password });
+    setLoginForm({ phoneNumber: result.phoneNumber || registerForm.phoneNumber, otpCode: "" });
     setRegisterForm(emptyRegister);
+    setAuthStep("phone");
   }
 
   function logout() {
@@ -468,6 +512,17 @@ export default function App() {
     return (event) => setter((current) => ({ ...current, [key]: event.target.value }));
   }
 
+  function saveNestedField(setter, parentKey, key) {
+    return (event) =>
+      setter((current) => ({
+        ...current,
+        [parentKey]: {
+          ...current[parentKey],
+          [key]: event.target.value
+        }
+      }));
+  }
+
   return (
     <main className="market">
       <TopHeader
@@ -544,7 +599,11 @@ export default function App() {
           setLoginForm={setLoginForm}
           setRegisterForm={setRegisterForm}
           saveField={saveField}
-          login={login}
+          saveNestedField={saveNestedField}
+          authStep={authStep}
+          setAuthStep={setAuthStep}
+          requestOtp={requestOtp}
+          verifyOtp={verifyOtp}
           register={register}
           logout={logout}
           setView={setView}
@@ -949,9 +1008,22 @@ function OrdersView({ orders, trackingCode, setTrackingCode, trackingResult, tra
   );
 }
 
-function AccountView({ user, loginForm, registerForm, setLoginForm, setRegisterForm, saveField, login, register, logout, setView }) {
-  const [authMode, setAuthMode] = useState("login");
-
+function AccountView({
+  user,
+  loginForm,
+  registerForm,
+  setLoginForm,
+  setRegisterForm,
+  saveField,
+  saveNestedField,
+  authStep,
+  setAuthStep,
+  requestOtp,
+  verifyOtp,
+  register,
+  logout,
+  setView
+}) {
   if (user) {
     return (
       <section className="account-page">
@@ -971,10 +1043,19 @@ function AccountView({ user, loginForm, registerForm, setLoginForm, setRegisterF
     );
   }
 
+  const isRegister = authStep === "register";
+  const isOtp = authStep === "otp";
+  const submitHandler = isRegister ? register : isOtp ? verifyOtp : requestOtp;
+  const submitText = isRegister ? "ثبت‌نام و بازگشت به ورود" : isOtp ? "تایید و ورود" : "ادامه";
+  const goBack = () => {
+    if (authStep === "phone") setView("home");
+    else setAuthStep("phone");
+  };
+
   return (
     <section className="auth-page">
-      <form className={`auth-card auth-entry-card ${authMode === "register" ? "register-mode" : ""}`} onSubmit={authMode === "login" ? login : register}>
-        <button className="auth-back" type="button" onClick={() => setView("home")} title="بازگشت">
+      <form className={`auth-card auth-entry-card ${isRegister ? "register-mode" : ""}`} onSubmit={submitHandler}>
+        <button className="auth-back" type="button" onClick={goBack} title="بازگشت">
           <ChevronLeft size={24} />
         </button>
 
@@ -983,20 +1064,11 @@ function AccountView({ user, loginForm, registerForm, setLoginForm, setRegisterF
           <strong>StoreKala</strong>
         </div>
 
-        <div className="auth-tabs">
-          <button type="button" className={authMode === "login" ? "active" : ""} onClick={() => setAuthMode("login")}>
-            ورود
-          </button>
-          <button type="button" className={authMode === "register" ? "active" : ""} onClick={() => setAuthMode("register")}>
-            ثبت‌نام
-          </button>
-        </div>
-
-        {authMode === "login" ? (
+        {authStep === "phone" && (
           <>
             <div className="auth-copy">
               <h1>ورود یا ثبت‌نام در StoreKala</h1>
-              <p>لطفا شماره موبایل و رمز عبور خود را وارد کنید</p>
+              <p>لطفا شماره موبایل خود را وارد کنید</p>
             </div>
             <label className="floating-field">
               <span>شماره موبایل</span>
@@ -1010,33 +1082,54 @@ function AccountView({ user, loginForm, registerForm, setLoginForm, setRegisterF
                 autoFocus
               />
             </label>
-            <label className="floating-field">
-              <span>رمز عبور</span>
-              <input type="password" value={loginForm.password} onChange={saveField(setLoginForm, "password")} required />
-            </label>
           </>
-        ) : (
+        )}
+
+        {authStep === "otp" && (
           <>
             <div className="auth-copy">
-              <h1>ساخت حساب کاربری</h1>
-              <p>برای ورود بعدی، شماره موبایل و رمز عبور را استفاده می‌کنید</p>
+              <h1>کد تایید</h1>
+              <p>کد ارسال‌شده به شماره {loginForm.phoneNumber} را وارد کنید</p>
+            </div>
+            <label className="floating-field">
+              <span>کد تایید</span>
+              <input
+                type="text"
+                inputMode="numeric"
+                dir="ltr"
+                value={loginForm.otpCode}
+                onChange={saveField(setLoginForm, "otpCode")}
+                required
+                autoFocus
+              />
+            </label>
+          </>
+        )}
+
+        {authStep === "register" && (
+          <>
+            <div className="auth-copy">
+              <h1>تکمیل ثبت‌نام</h1>
+              <p>اطلاعات حساب و آدرس را وارد کنید</p>
             </div>
             <div className="register-fields">
               <label className="floating-field">
-                <span>نام کاربری</span>
-                <input value={registerForm.username} onChange={saveField(setRegisterForm, "username")} required autoFocus />
-              </label>
-              <label className="floating-field">
-                <span>ایمیل اختیاری</span>
-                <input type="email" value={registerForm.email} onChange={saveField(setRegisterForm, "email")} />
-              </label>
-              <label className="floating-field">
                 <span>نام</span>
-                <input value={registerForm.name} onChange={saveField(setRegisterForm, "name")} required />
+                <input value={registerForm.name} onChange={saveField(setRegisterForm, "name")} required autoFocus />
               </label>
               <label className="floating-field">
                 <span>نام خانوادگی</span>
                 <input value={registerForm.lastName} onChange={saveField(setRegisterForm, "lastName")} required />
+              </label>
+              <label className="floating-field">
+                <span>کد ملی</span>
+                <input
+                  inputMode="numeric"
+                  dir="ltr"
+                  value={registerForm.nationalCode}
+                  onChange={saveField(setRegisterForm, "nationalCode")}
+                  required
+                />
               </label>
               <label className="floating-field">
                 <span>شماره موبایل</span>
@@ -1050,15 +1143,67 @@ function AccountView({ user, loginForm, registerForm, setLoginForm, setRegisterF
                 />
               </label>
               <label className="floating-field">
-                <span>رمز عبور</span>
-                <input type="password" value={registerForm.password} onChange={saveField(setRegisterForm, "password")} required />
+                <span>ایمیل اختیاری</span>
+                <input type="email" value={registerForm.email} onChange={saveField(setRegisterForm, "email")} />
+              </label>
+
+              <div className="register-section-title">آدرس</div>
+
+              <label className="floating-field">
+                <span>استان</span>
+                <input value={registerForm.address.provinceName} onChange={saveNestedField(setRegisterForm, "address", "provinceName")} required />
+              </label>
+              <label className="floating-field">
+                <span>شهر</span>
+                <input value={registerForm.address.cityName} onChange={saveNestedField(setRegisterForm, "address", "cityName")} required />
+              </label>
+              <label className="floating-field">
+                <span>محله</span>
+                <input value={registerForm.address.neighborhood} onChange={saveNestedField(setRegisterForm, "address", "neighborhood")} required />
+              </label>
+              <label className="floating-field">
+                <span>پلاک</span>
+                <input
+                  inputMode="numeric"
+                  dir="ltr"
+                  value={registerForm.address.plateNumber}
+                  onChange={saveNestedField(setRegisterForm, "address", "plateNumber")}
+                  required
+                />
+              </label>
+              <label className="floating-field">
+                <span>واحد</span>
+                <input
+                  inputMode="numeric"
+                  dir="ltr"
+                  value={registerForm.address.unitNumber}
+                  onChange={saveNestedField(setRegisterForm, "address", "unitNumber")}
+                  required
+                />
+              </label>
+              <label className="floating-field">
+                <span>کد پستی</span>
+                <input
+                  inputMode="numeric"
+                  dir="ltr"
+                  value={registerForm.address.postalCode}
+                  onChange={saveNestedField(setRegisterForm, "address", "postalCode")}
+                  required
+                />
+              </label>
+              <label className="floating-field wide-field">
+                <span>توضیحات</span>
+                <textarea
+                  value={registerForm.address.description}
+                  onChange={saveNestedField(setRegisterForm, "address", "description")}
+                />
               </label>
             </div>
           </>
         )}
 
         <button className="primary-button" type="submit">
-          <LogIn size={18} /> {authMode === "login" ? "ورود به StoreKala" : "ثبت‌نام در StoreKala"}
+          <LogIn size={18} /> {submitText}
         </button>
         <p className="auth-terms">
           ورود شما به معنای پذیرش <span>شرایط StoreKala</span> و <span>قوانین حریم خصوصی</span> است.
