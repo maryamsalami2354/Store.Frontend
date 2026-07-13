@@ -945,6 +945,31 @@ textarea:focus {
   font-size: 16px;
 }
 
+.floating-field.has-error input,
+.floating-field.has-error textarea {
+  border-color: var(--danger);
+  background: #fff7f8;
+}
+
+.field-error {
+  margin-top: 6px;
+  color: var(--danger);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.form-error-list {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid #f3b4bd;
+  border-radius: 8px;
+  background: #fff7f8;
+  color: var(--danger);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
 .floating-field textarea {
   min-height: 96px;
   padding-top: 20px;
@@ -997,6 +1022,28 @@ textarea:focus {
   display: grid;
   justify-items: start;
   gap: 10px;
+}
+
+.profile-edit-card {
+  width: min(760px, 100%);
+  margin-top: 14px;
+}
+
+.profile-edit-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-edit-head h1 {
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .profile-meta {

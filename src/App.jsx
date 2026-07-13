@@ -18,6 +18,7 @@ import {
   PackagePlus,
   Plus,
   RefreshCw,
+  Save,
   Search,
   Settings,
   ShoppingCart,
@@ -26,7 +27,8 @@ import {
   Store,
   Trash2,
   Truck,
-  UserRound
+  UserRound,
+  X
 } from "lucide-react";
 import {
   apiFetch,
@@ -57,6 +59,13 @@ const emptyRegister = {
     postalCode: "",
     description: ""
   }
+};
+const emptyProfile = {
+  name: "",
+  lastName: "",
+  nationalCode: "",
+  phoneNumber: "",
+  email: ""
 };
 const emptyProduct = { name: "", price: "", categoryId: "", brandId: "" };
 const emptyCategory = { title: "" };
@@ -89,12 +98,167 @@ const fallbackShipping = {
   })
 };
 
+function normalizeNumberText(value = "") {
+  const digitMap = {
+    "۰": "0",
+    "۱": "1",
+    "۲": "2",
+    "۳": "3",
+    "۴": "4",
+    "۵": "5",
+    "۶": "6",
+    "۷": "7",
+    "۸": "8",
+    "۹": "9",
+    "٠": "0",
+    "١": "1",
+    "٢": "2",
+    "٣": "3",
+    "٤": "4",
+    "٥": "5",
+    "٦": "6",
+    "٧": "7",
+    "٨": "8",
+    "٩": "9"
+  };
+
+  return String(value)
+    .trim()
+    .replace(/[ \-()]/g, "")
+    .replace(/[۰-۹٠-٩]/g, (digit) => digitMap[digit] || digit);
+}
+
+function normalizeText(value = "") {
+  return String(value).trim().replace(/\s+/g, " ");
+}
+
+function isValidName(value) {
+  return /^[\p{L}\s\u200c-]+$/u.test(value);
+}
+
+function isValidNationalCode(value) {
+  if (!/^\d{10}$/.test(value)) return false;
+  if (/^(\d)\1{9}$/.test(value)) return false;
+
+  const sum = value
+    .slice(0, 9)
+    .split("")
+    .reduce((total, digit, index) => total + Number(digit) * (10 - index), 0);
+  const remainder = sum % 11;
+  const checkDigit = Number(value[9]);
+  return remainder < 2 ? checkDigit === remainder : checkDigit === 11 - remainder;
+}
+
+function validateNameField(value, label) {
+  const normalized = normalizeText(value);
+  if (!normalized) return { value: normalized, error: `${label} اجباری است.` };
+  if (normalized.length < 2) return { value: normalized, error: `${label} باید حداقل 2 حرف باشد.` };
+  if (normalized.length > 80) return { value: normalized, error: `${label} نباید بیشتر از 80 حرف باشد.` };
+  if (!isValidName(normalized)) return { value: normalized, error: `${label} فقط می‌تواند شامل حروف و فاصله باشد.` };
+  return { value: normalized };
+}
+
+function validatePhoneField(value) {
+  const normalized = normalizeNumberText(value);
+  if (!normalized) return { value: normalized, error: "شماره موبایل اجباری است." };
+  if (!/^09\d{9}$/.test(normalized)) {
+    return { value: normalized, error: "شماره موبایل باید 11 رقم و با 09 شروع شود." };
+  }
+  return { value: normalized };
+}
+
+function validateNationalCodeField(value) {
+  const normalized = normalizeNumberText(value);
+  if (!normalized) return { value: normalized, error: "کد ملی اجباری است." };
+  if (!/^\d{10}$/.test(normalized)) return { value: normalized, error: "کد ملی باید 10 رقم باشد." };
+  if (!isValidNationalCode(normalized)) return { value: normalized, error: "کد ملی معتبر نیست." };
+  return { value: normalized };
+}
+
+function validateOptionalEmailField(value) {
+  const normalized = normalizeText(value);
+  if (!normalized) return { value: "" };
+  if (normalized.length > 120) return { value: normalized, error: "ایمیل نباید بیشتر از 120 کاراکتر باشد." };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) return { value: normalized, error: "ایمیل معتبر نیست." };
+  return { value: normalized };
+}
+
+function validateRequiredTextField(value, label, minLength = 2, maxLength = 100) {
+  const normalized = normalizeText(value);
+  if (!normalized) return { value: normalized, error: `${label} اجباری است.` };
+  if (normalized.length < minLength) return { value: normalized, error: `${label} باید حداقل ${minLength} کاراکتر باشد.` };
+  if (normalized.length > maxLength) return { value: normalized, error: `${label} نباید بیشتر از ${maxLength} کاراکتر باشد.` };
+  return { value: normalized };
+}
+
+function validateRequiredNumberField(value, label, exactLength = null, maxLength = 20) {
+  const normalized = normalizeNumberText(value);
+  if (!normalized) return { value: normalized, error: `${label} اجباری است.` };
+  if (!/^\d+$/.test(normalized)) return { value: normalized, error: `${label} فقط باید شامل عدد باشد.` };
+  if (exactLength && normalized.length !== exactLength) return { value: normalized, error: `${label} باید ${exactLength} رقم باشد.` };
+  if (!exactLength && normalized.length > maxLength) return { value: normalized, error: `${label} نباید بیشتر از ${maxLength} رقم باشد.` };
+  return { value: normalized };
+}
+
+function collectValidation(result, errors, key) {
+  if (result.error) errors[key] = result.error;
+  return result.value;
+}
+
+function buildProfilePayload(form) {
+  const errors = {};
+  const payload = {
+    name: collectValidation(validateNameField(form.name, "نام"), errors, "name"),
+    lastName: collectValidation(validateNameField(form.lastName, "نام خانوادگی"), errors, "lastName"),
+    nationalCode: collectValidation(validateNationalCodeField(form.nationalCode), errors, "nationalCode"),
+    phoneNumber: collectValidation(validatePhoneField(form.phoneNumber), errors, "phoneNumber"),
+    email: collectValidation(validateOptionalEmailField(form.email), errors, "email")
+  };
+
+  return { payload, errors };
+}
+
+function buildRegisterPayload(form) {
+  const { payload, errors } = buildProfilePayload(form);
+  payload.address = {
+    provinceName: collectValidation(validateRequiredTextField(form.address.provinceName, "نام استان"), errors, "address.provinceName"),
+    cityName: collectValidation(validateRequiredTextField(form.address.cityName, "نام شهر"), errors, "address.cityName"),
+    neighborhood: collectValidation(validateRequiredTextField(form.address.neighborhood, "محله"), errors, "address.neighborhood"),
+    plateNumber: collectValidation(validateRequiredNumberField(form.address.plateNumber, "شماره پلاک", null, 10), errors, "address.plateNumber"),
+    unitNumber: collectValidation(validateRequiredNumberField(form.address.unitNumber, "شماره واحد", null, 10), errors, "address.unitNumber"),
+    postalCode: collectValidation(validateRequiredNumberField(form.address.postalCode, "کد پستی", 10), errors, "address.postalCode"),
+    description: normalizeText(form.address.description)
+  };
+
+  return { payload, errors };
+}
+
+function firstValidationError(errors) {
+  return Object.values(errors)[0] || "";
+}
+
+function hasValidationErrors(errors) {
+  return Object.keys(errors).length > 0;
+}
+
+function userToProfileForm(user) {
+  return {
+    name: user?.name || "",
+    lastName: user?.lastName || "",
+    nationalCode: user?.nationalCode || "",
+    phoneNumber: user?.phoneNumber || "",
+    email: user?.email || ""
+  };
+}
+
 export default function App() {
   const [view, setView] = useState("home");
   const [apiStatus, setApiStatus] = useState("checking");
   const [user, setUser] = useState(null);
   const [loginForm, setLoginForm] = useState(emptyLogin);
   const [registerForm, setRegisterForm] = useState(emptyRegister);
+  const [profileForm, setProfileForm] = useState(emptyProfile);
+  const [profileEditing, setProfileEditing] = useState(false);
   const [authStep, setAuthStep] = useState("phone");
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -116,6 +280,7 @@ export default function App() {
   const [attributeForm, setAttributeForm] = useState(emptyAttribute);
   const [warehouseForm, setWarehouseForm] = useState(emptyWarehouse);
   const [stockForm, setStockForm] = useState(emptyStock);
+  const [formErrors, setFormErrors] = useState({});
 
   const cartCount = useMemo(() => cart?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0, [cart]);
   const cartTotal = useMemo(
@@ -153,6 +318,7 @@ export default function App() {
       recipientName: current.recipientName || `${user.name || ""} ${user.lastName || ""}`.trim(),
       recipientPhone: current.recipientPhone || user.phoneNumber || ""
     }));
+    setProfileForm(userToProfileForm(user));
   }, [user]);
 
   async function boot() {
@@ -335,7 +501,16 @@ export default function App() {
 
   async function requestOtp(event) {
     event.preventDefault();
-    const phoneNumber = loginForm.phoneNumber.trim();
+    const phone = validatePhoneField(loginForm.phoneNumber);
+    if (phone.error) {
+      setFormErrors({ loginPhone: phone.error });
+      setMessage(phone.error);
+      return;
+    }
+
+    setFormErrors({});
+    const phoneNumber = phone.value;
+    setLoginForm((current) => ({ ...current, phoneNumber }));
     const result = await run(
       () =>
         apiFetch("/Auth/RequestOtp", {
@@ -369,7 +544,23 @@ export default function App() {
 
   async function verifyOtp(event) {
     event.preventDefault();
-    const phoneNumber = loginForm.phoneNumber.trim();
+    const phone = validatePhoneField(loginForm.phoneNumber);
+    const otpCode = normalizeNumberText(loginForm.otpCode);
+    const errors = {};
+
+    if (phone.error) errors.loginPhone = phone.error;
+    if (!otpCode) errors.otpCode = "کد تایید اجباری است.";
+    else if (!/^\d{5}$/.test(otpCode)) errors.otpCode = "کد تایید باید 5 رقم باشد.";
+
+    if (hasValidationErrors(errors)) {
+      setFormErrors(errors);
+      setMessage(firstValidationError(errors));
+      return;
+    }
+
+    setFormErrors({});
+    const phoneNumber = phone.value;
+    setLoginForm({ phoneNumber, otpCode });
     const guestCart = cart?.items?.length ? cart : await getGuestCartSnapshot();
     const result = await run(
       () =>
@@ -377,7 +568,7 @@ export default function App() {
           method: "POST",
           body: {
             phoneNumber,
-            otpCode: loginForm.otpCode
+            otpCode
           }
         }),
       "ورود انجام شد."
@@ -394,19 +585,51 @@ export default function App() {
 
   async function register(event) {
     event.preventDefault();
+    const { payload, errors } = buildRegisterPayload(registerForm);
+    if (hasValidationErrors(errors)) {
+      setFormErrors(errors);
+      setMessage(firstValidationError(errors));
+      return;
+    }
+
+    setFormErrors({});
     const result = await run(
-      () => apiFetch("/Auth/Register", { method: "POST", body: registerForm }),
+      () => apiFetch("/Auth/Register", { method: "POST", body: payload }),
       "ثبت نام انجام شد. حالا می‌توانید وارد شوید."
     );
     if (!result) return;
-    setLoginForm({ phoneNumber: result.phoneNumber || registerForm.phoneNumber, otpCode: "" });
+    setLoginForm({ phoneNumber: result.phoneNumber || payload.phoneNumber, otpCode: "" });
     setRegisterForm(emptyRegister);
     setAuthStep("phone");
+  }
+
+  async function updateProfile(event) {
+    event.preventDefault();
+    const { payload, errors } = buildProfilePayload(profileForm);
+    if (hasValidationErrors(errors)) {
+      setFormErrors(errors);
+      setMessage(firstValidationError(errors));
+      return;
+    }
+
+    setFormErrors({});
+    const updated = await run(
+      () => apiFetch("/Auth/Me", { method: "PUT", body: payload }),
+      "پروفایل به‌روزرسانی شد."
+    );
+
+    if (!updated) return;
+    setUser(updated);
+    setProfileForm(userToProfileForm(updated));
+    setProfileEditing(false);
   }
 
   function logout() {
     setToken(null);
     setUser(null);
+    setProfileForm(emptyProfile);
+    setProfileEditing(false);
+    setFormErrors({});
     setCart(null);
     setOrders([]);
     setMessage("خروج انجام شد.");
@@ -596,6 +819,11 @@ export default function App() {
           user={user}
           loginForm={loginForm}
           registerForm={registerForm}
+          profileForm={profileForm}
+          setProfileForm={setProfileForm}
+          profileEditing={profileEditing}
+          setProfileEditing={setProfileEditing}
+          formErrors={formErrors}
           setLoginForm={setLoginForm}
           setRegisterForm={setRegisterForm}
           saveField={saveField}
@@ -605,6 +833,7 @@ export default function App() {
           requestOtp={requestOtp}
           verifyOtp={verifyOtp}
           register={register}
+          updateProfile={updateProfile}
           logout={logout}
           setView={setView}
         />
@@ -731,8 +960,8 @@ function Storefront({
           </div>
           <button onClick={() => setView("cart")}>
             مشاهده سبد <ChevronLeft size={17} />
-          </button>
-        </div>
+            </button>
+          </div>
 
         <div className="quick-row">
           <div><Truck size={20} /> ارسال سریع</div>
@@ -1008,10 +1237,20 @@ function OrdersView({ orders, trackingCode, setTrackingCode, trackingResult, tra
   );
 }
 
+function FieldError({ errors, name }) {
+  if (!errors?.[name]) return null;
+  return <small className="field-error">{errors[name]}</small>;
+}
+
 function AccountView({
   user,
   loginForm,
   registerForm,
+  profileForm,
+  setProfileForm,
+  profileEditing,
+  setProfileEditing,
+  formErrors,
   setLoginForm,
   setRegisterForm,
   saveField,
@@ -1021,10 +1260,16 @@ function AccountView({
   requestOtp,
   verifyOtp,
   register,
+  updateProfile,
   logout,
   setView
 }) {
   if (user) {
+    const cancelEdit = () => {
+      setProfileForm(userToProfileForm(user));
+      setProfileEditing(false);
+    };
+
     return (
       <section className="account-page">
         <div className="profile-card">
@@ -1035,10 +1280,74 @@ function AccountView({
             <span>{user.phoneNumber || "بدون شماره"}</span>
             <span>{user.email || "بدون ایمیل"}</span>
           </div>
-          <button className="danger-button" onClick={logout}>
+          <div className="profile-actions">
+            <button className="primary-button" type="button" onClick={() => setProfileEditing((current) => !current)}>
+              <Settings size={18} /> {profileEditing ? "بستن ویرایش" : "ویرایش پروفایل"}
+            </button>
+            <button className="danger-button" type="button" onClick={logout}>
             <LogOut size={18} /> خروج
-          </button>
+            </button>
+          </div>
         </div>
+        {profileEditing && (
+          <form className="profile-card profile-edit-card" onSubmit={updateProfile}>
+            <div className="profile-edit-head">
+              <UserRound size={34} />
+              <div>
+                <h1>ویرایش پروفایل</h1>
+                <p>{user.phoneNumber}</p>
+              </div>
+            </div>
+            <div className="register-fields">
+              <label className={`floating-field ${formErrors.name ? "has-error" : ""}`}>
+                <span>نام</span>
+                <input value={profileForm.name} onChange={saveField(setProfileForm, "name")} required autoFocus />
+                <FieldError errors={formErrors} name="name" />
+              </label>
+              <label className={`floating-field ${formErrors.lastName ? "has-error" : ""}`}>
+                <span>نام خانوادگی</span>
+                <input value={profileForm.lastName} onChange={saveField(setProfileForm, "lastName")} required />
+                <FieldError errors={formErrors} name="lastName" />
+              </label>
+              <label className={`floating-field ${formErrors.nationalCode ? "has-error" : ""}`}>
+                <span>کد ملی</span>
+                <input
+                  inputMode="numeric"
+                  dir="ltr"
+                  value={profileForm.nationalCode}
+                  onChange={saveField(setProfileForm, "nationalCode")}
+                  required
+                />
+                <FieldError errors={formErrors} name="nationalCode" />
+              </label>
+              <label className={`floating-field ${formErrors.phoneNumber ? "has-error" : ""}`}>
+                <span>شماره موبایل</span>
+                <input
+                  type="tel"
+                  inputMode="tel"
+                  dir="ltr"
+                  value={profileForm.phoneNumber}
+                  onChange={saveField(setProfileForm, "phoneNumber")}
+                  required
+                />
+                <FieldError errors={formErrors} name="phoneNumber" />
+              </label>
+              <label className={`floating-field wide-field ${formErrors.email ? "has-error" : ""}`}>
+                <span>ایمیل اختیاری</span>
+                <input type="email" value={profileForm.email} onChange={saveField(setProfileForm, "email")} />
+                <FieldError errors={formErrors} name="email" />
+              </label>
+            </div>
+            <div className="profile-actions">
+              <button className="primary-button" type="submit">
+                <Save size={18} /> ذخیره تغییرات
+              </button>
+              <button className="secondary-button" type="button" onClick={cancelEdit}>
+                <X size={18} /> انصراف
+              </button>
+            </div>
+          </form>
+        )}
       </section>
     );
   }
@@ -1070,7 +1379,7 @@ function AccountView({
               <h1>ورود یا ثبت‌نام در StoreKala</h1>
               <p>لطفا شماره موبایل خود را وارد کنید</p>
             </div>
-            <label className="floating-field">
+            <label className={`floating-field ${formErrors.loginPhone ? "has-error" : ""}`}>
               <span>شماره موبایل</span>
               <input
                 type="tel"
@@ -1081,6 +1390,7 @@ function AccountView({
                 required
                 autoFocus
               />
+              <FieldError errors={formErrors} name="loginPhone" />
             </label>
           </>
         )}
@@ -1091,7 +1401,7 @@ function AccountView({
               <h1>کد تایید</h1>
               <p>کد ارسال‌شده به شماره {loginForm.phoneNumber} را وارد کنید</p>
             </div>
-            <label className="floating-field">
+            <label className={`floating-field ${formErrors.otpCode ? "has-error" : ""}`}>
               <span>کد تایید</span>
               <input
                 type="text"
@@ -1102,6 +1412,7 @@ function AccountView({
                 required
                 autoFocus
               />
+              <FieldError errors={formErrors} name="otpCode" />
             </label>
           </>
         )}
@@ -1200,6 +1511,14 @@ function AccountView({
               </label>
             </div>
           </>
+        )}
+
+        {hasValidationErrors(formErrors) && (
+          <div className="form-error-list">
+            {Object.values(formErrors).map((error) => (
+              <span key={error}>{error}</span>
+            ))}
+          </div>
         )}
 
         <button className="primary-button" type="submit">
