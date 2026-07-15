@@ -1,0 +1,181 @@
+{
+  "reviewsData": [
+    {
+      "id": 1,
+      "productId": 1,
+      "productName": "گوشی آیفون ۱۵ پرو مکس",
+      "productImage": "/images/products/1.jpg",
+      "customer": {
+        "name": "علی محمدی",
+        "avatar": "/images/users/avatar-1.svg",
+        "isVerifiedBuyer": true
+      },
+      "rating": 4.5,
+      "title": "عالی و باکیفیت",
+      "text": "محصول خیلی خوبی بود. ارسال به موقع انجام شد و بسته‌بندی عالی بود. حتماً دوباره خرید می‌کنم. پیشنهاد می‌کنم اگر شک دارید، نترسید و خرید کنید.",
+      "positivePoints": [
+        "ارسال سریع",
+        "بسته‌بندی عالی",
+        "کیفیت ساخت بالا"
+      ],
+      "negativePoints": [
+        "قیمت کمی بالاست"
+      ],
+      "images": [
+        "/images/products/1.jpg",
+        "/images/products/1.jpg"
+      ],
+      "date": "۱۴۰۲/۱۲/۲۰",
+      "status": "approved",
+      "isEdited": false,
+      "helpfulCount": 12,
+      "notHelpfulCount": 2,
+      "reply": {
+        "text": "سلام علی آقا، ممنون از نظر دقیق و کاملتون. خوشحالیم که از خریدتون راضی بودید. در مورد قیمت هم باید بگم که با توجه به امکانات و کیفیت، قیمت منصفانه‌ای داره. منتظر خریدهای بعدیتون هستیم 🌹",
+        "date": "۱۴۰۲/۱۲/۲۱",
+        "author": "فروشنده"
+      }
+    },
+    {
+      "id": 2,
+      "productId": 17,
+      "productName": "ساعت هوشمند سامسونگ Watch 6",
+      "productImage": "/images/products/17.jpg",
+      "customer": {
+        "name": "سارا احمدی",
+        "avatar": "/images/users/avatar-1.svg",
+        "isVerifiedBuyer": true
+      },
+      "rating": 3,
+      "title": "متوسط، انتظار بیشتری داشتم",
+      "text": "ساعت خوبه ولی شارژش یک روز بیشتر دوام نمیاره. صفحه نمایش خوبه ولی سنسورهاش یکم کند عمل میکنن.",
+      "positivePoints": [
+        "صفحه نمایش خوب",
+        "طراحی شیک"
+      ],
+      "negativePoints": [
+        "عمر باتری کم",
+        "عملکرد سنسورها"
+      ],
+      "images": [],
+      "date": "۱۴۰۲/۱۲/۱۸",
+      "status": "pending",
+      "isEdited": false,
+      "helpfulCount": 3,
+      "notHelpfulCount": 1,
+      "reply": null
+    },
+    {
+      "id": 3,
+      "productId": 45,
+      "productName": "ساعت هوشمند گارمین Fenix 7X",
+      "productImage": "/images/products/45.jpg",
+      "customer": {
+        "name": "رضا کریمی",
+        "avatar": "/images/users/avatar-1.svg",
+        "isVerifiedBuyer": false
+      },
+      "rating": 1.5,
+      "title": "اصلاً راضی نیستم",
+      "text": "محصول خراب بود. مرجوع کردم.",
+      "positivePoints": [],
+      "negativePoints": [
+        "محصول خراب",
+        "بسته‌بندی نامناسب"
+      ],
+      "images": [
+        "/images/products/3.jpg"
+      ],
+      "date": "۱۴۰۲/۱۲/۱۵",
+      "status": "rejected",
+      "isEdited": false,
+      "helpfulCount": 0,
+      "notHelpfulCount": 8,
+      "reply": {
+        "text": "سلام آقای کریمی، ضمن عذرخواهی بابت این مشکل، همکاران ما در بخش پشتیبانی با شما تماس خواهند گرفت. می‌تونید از طریق تیکت هم پیگیری کنید.",
+        "date": "۱۴۰۲/۱۲/۱۶",
+        "author": "فروشنده"
+      }
+    },
+    {
+      "id": 4,
+      "productId": 8,
+      "productName": "کنسول بازی PS5",
+      "productImage": "/images/products/8.jpg",
+      "customer": {
+        "name": "حسین عباسی",
+        "avatar": "/images/users/avatar-1.svg",
+        "isVerifiedBuyer": true
+      },
+      "rating": 5,
+      "title": "فوق‌العاده و بی‌نظیر",
+      "text": "بهترین خرید عمرم بود. بسته کاملاً سالم و با گارانتی معتبر رسید. یک ماهه دارم بازی میکنم و هیچ مشکلی نداشته.",
+      "positivePoints": [
+        "کیفیت عالی",
+        "گارانتی معتبر",
+        "ارسال فوری"
+      ],
+      "negativePoints": [],
+      "images": [
+        "/images/products/4.jpg",
+        "/images/products/4.jpg",
+        "/images/products/4.jpg"
+      ],
+      "date": "۱۴۰۲/۱۲/۱۰",
+      "status": "approved",
+      "isEdited": true,
+      "helpfulCount": 45,
+      "notHelpfulCount": 0,
+      "reply": {
+        "text": "دمتون گرم ❤️ خوشحالیم که راضی هستید. امیدواریم همیشه همراه ما باشید.",
+        "date": "۱۴۰۲/۱۲/۱۱",
+        "author": "فروشنده"
+      }
+    },
+    {
+      "id": 5,
+      "productId": 41,
+      "productName": "لپ‌تاپ مک‌بوک پرو ۱۶ اینچ M3",
+      "productImage": "/images/products/41.jpg",
+      "customer": {
+        "name": "مریم رضایی",
+        "avatar": "/images/users/avatar-1.svg",
+        "isVerifiedBuyer": true
+      },
+      "rating": 4,
+      "title": "خوب ولی گرون",
+      "text": "لپ‌تاپ خیلی خوبیه و برای کارای گرافیکی و تدوین عالیه. فقط قیمتش نسبت به نمونه‌های مشابه بالاتره.",
+      "positivePoints": [
+        "عملکرد سریع",
+        "صفحه نمایش بی‌نظیر",
+        "باتری خوب"
+      ],
+      "negativePoints": [
+        "قیمت بالا"
+      ],
+      "images": [],
+      "date": "۱۴۰۲/۱۱/۲۸",
+      "status": "approved",
+      "isEdited": false,
+      "helpfulCount": 18,
+      "notHelpfulCount": 3,
+      "reply": null
+    }
+  ],
+  "summary": {
+    "total": 48,
+    "averageRating": 4.2,
+    "ratingDistribution": {
+      "5": 25,
+      "4": 12,
+      "3": 6,
+      "2": 3,
+      "1": 2
+    },
+    "pending": 8,
+    "approved": 36,
+    "rejected": 4,
+    "withImages": 15,
+    "withReply": 28
+  }
+}

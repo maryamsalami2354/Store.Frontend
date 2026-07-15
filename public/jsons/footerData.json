@@ -1,0 +1,48 @@
+{
+    "menus": [
+        {
+            "id": 1,
+            "titleBold": "راهنمای",
+            "titleRest": "خرید",
+            "items": [
+                { "name": "راهنمای ثبت نام", "link": "/" },
+                { "name": "نحوه خرید", "link": "/" },
+                { "name": "رویه ارسال سفارش", "link": "/" },
+                { "name": "شیوه پرداخت", "link": "/" }
+            ]
+        },
+        {
+            "id": 2,
+            "titleBold": "خدمات",
+            "titleRest": "مشتریان",
+            "items": [
+                { "name": "پیگیری سفارش", "link": "user/orders" },
+                { "name": "شرایط بازگشت کالا", "link": "/return-policy" },
+                { "name": "پاسخ به سوالات متداول", "link": "/faq" },
+                { "name": "تماس با پشتیبانی", "link": "/user/tickets" }
+            ]
+        },
+        {
+            "id": 3,
+            "titleBold": "فروشگاه",
+            "titleRest": "ما",
+            "items": [
+                { "name": "درباره ما", "link": "/about" },
+                { "name": "تماس با ما", "link": "/contact" },
+                { "name": "فرصت‌های شغلی", "link": "/seller-register" },
+                { "name": "وبلاگ", "link": "/blogs", "badge": "جدید" }
+            ]
+        },
+        {
+            "id": 4,
+            "titleBold": "خدمات",
+            "titleRest": "ویژه",
+            "items": [
+                { "name": "کارت هدیه", "link": "/user/gift-cards" },
+                { "name": "گارانتی محصولات", "link": "/guarantee" },
+                { "name": "سازمانی", "link": "/" },
+                { "name": "باشگاه مشتریان", "link": "/club", "badge": "جدید" }
+            ]
+        }
+    ]
+}

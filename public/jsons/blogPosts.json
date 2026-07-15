@@ -1,0 +1,169 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "راهنمای کامل خرید کنسول بازی در سال ۲۰۲۴",
+      "slug": "complete-guide-buying-game-console-2024",
+      "excerpt": "در این مقاله به بررسی کامل کنسول‌های بازی موجود در بازار می‌پردازیم و به شما کمک می‌کنیم بهترین انتخاب را داشته باشید.",
+      "category": "راهنمای خرید",
+      "categorySlug": "buying-guide",
+      "videoUrl": "/images/stories/video/1.mp4",
+      "author": {
+        "name": "علی محمدی",
+        "avatar": "/images/users/avatar-1.svg"
+      },
+      "coverImage": "/images/blogs/blog-1.jpg",
+      "publishedAt": "2024-04-15T10:30:00",
+      "readTime": 8,
+      "views": 2540,
+      "likes": 187,
+      "comments": 24,
+      "isFeatured": true,
+      "tags": ["کنسول بازی", "PS5", "Xbox", "راهنمای خرید"]
+    },
+    {
+      "id": 2,
+      "title": "۱۰ ترفند کاربردی در ویندوز ۱۱ که هر کاربری باید بداند",
+      "slug": "10-useful-windows-11-tips",
+      "excerpt": "با این ترفندهای ساده اما کاربردی، تجربه کار با ویندوز ۱۱ را برای خود لذت‌بخش‌تر کنید و بهره‌وری خود را افزایش دهید.",
+      "category": "ترفند و آموزش",
+      "categorySlug": "tutorials",
+      "videoUrl": "/images/stories/video/1.mp4",
+      "author": {
+        "name": "سارا رضایی",
+        "avatar": "/images/users/avatar-1.svg"
+      },
+      "coverImage": "/images/blogs/blog-2.jpg",
+      "publishedAt": "2024-04-12T14:20:00",
+      "readTime": 6,
+      "views": 1890,
+      "likes": 145,
+      "comments": 18,
+      "isFeatured": true,
+      "tags": ["ویندوز ۱۱", "ترفند", "آموزش"]
+    },
+    {
+      "id": 3,
+      "title": "مقایسه آیفون ۱۵ پرو مکس با سامسونگ S24 اولترا",
+      "slug": "iphone-15-pro-max-vs-samsung-s24-ultra",
+      "excerpt": "نبرد غول‌های دنیای موبایل! مقایسه کامل و تخصصی دو پرچمدار اپل و سامسونگ از نظر دوربین، عملکرد و باتری.",
+      "category": "مقایسه",
+      "categorySlug": "comparison",
+      "videoUrl": "/images/stories/video/1.mp4",
+      "author": {
+        "name": "محمد کریمی",
+        "avatar": "/images/users/avatar-1.svg"
+      },
+      "coverImage": "/images/blogs/blog-3.jpg",
+      "publishedAt": "2024-04-10T09:15:00",
+      "readTime": 12,
+      "views": 4120,
+      "likes": 312,
+      "comments": 47,
+      "isFeatured": true,
+      "tags": ["آیفون", "سامسونگ", "مقایسه", "موبایل"]
+    },
+    {
+      "id": 4,
+      "title": "چگونه یک سیستم گیمینگ حرفه‌ای با بودجه متوسط بسازیم؟",
+      "slug": "build-gaming-pc-medium-budget",
+      "excerpt": "راهنمای گام به گام انتخاب قطعات و مونتاژ یک کامپیوتر گیمینگ قدرتمند با بودجه‌ای معقول و مناسب.",
+      "category": "سخت‌افزار",
+      "categorySlug": "hardware",
+      "videoUrl": "/images/stories/video/1.mp4",
+      "author": {
+        "name": "رضا احمدی",
+        "avatar": "/images/users/avatar-1.svg"
+      },
+      "coverImage": "/images/blogs/blog-4.jpg",
+      "publishedAt": "2024-04-08T16:45:00",
+      "readTime": 10,
+      "views": 3210,
+      "likes": 276,
+      "comments": 35,
+      "isFeatured": true,
+      "tags": ["گیمینگ", "سخت‌افزار", "اسمبل", "کامپیوتر"]
+    },
+    {
+      "id": 5,
+      "title": "هوش مصنوعی در عکاسی: انقلاب یا تهدید؟",
+      "slug": "ai-in-photography-revolution-or-threat",
+      "excerpt": "بررسی تأثیر هوش مصنوعی بر دنیای عکاسی؛ از ادیت خودکار تصاویر تا ساخت تصاویر کاملاً مصنوعی.",
+      "category": "تکنولوژی",
+      "categorySlug": "technology",
+      "videoUrl": "/images/stories/video/1.mp4",
+      "author": {
+        "name": "نرگس جعفری",
+        "avatar": "/images/users/avatar-1.svg"
+      },
+      "coverImage": "/images/blogs/blog-1.jpg",
+      "publishedAt": "2024-04-05T11:30:00",
+      "readTime": 7,
+      "views": 1670,
+      "likes": 98,
+      "comments": 12,
+      "isFeatured": false,
+      "tags": ["هوش مصنوعی", "عکاسی", "تکنولوژی"]
+    },
+    {
+      "id": 6,
+      "title": "معرفی بهترین هدفون‌های بی‌سیم زیر ۳ میلیون تومان",
+      "slug": "best-wireless-headphones-under-3-million",
+      "excerpt": "لیست کامل و بررسی تخصصی بهترین هدفون‌ها و هندزفری‌های بی‌سیم اقتصادی با کیفیت صدای عالی.",
+      "category": "معرفی محصول",
+      "categorySlug": "product-review",
+      "videoUrl": "/images/stories/video/1.mp4",
+      "author": {
+        "name": "علی محمدی",
+        "avatar": "/images/users/avatar-1.svg"
+      },
+      "coverImage": "/images/blogs/blog-4.jpg",
+      "publishedAt": "2024-04-01T13:00:00",
+      "readTime": 9,
+      "views": 2980,
+      "likes": 203,
+      "comments": 29,
+      "isFeatured": true,
+      "tags": ["هدفون", "هندزفری", "بی‌سیم", "اقتصادی"]
+    }
+  ],
+  "total": 6,
+  "categories": [
+    {
+      "id": 1,
+      "name": "راهنمای خرید",
+      "slug": "buying-guide",
+      "count": 12
+    },
+    {
+      "id": 2,
+      "name": "ترفند و آموزش",
+      "slug": "tutorials",
+      "count": 18
+    },
+    {
+      "id": 3,
+      "name": "مقایسه",
+      "slug": "comparison",
+      "count": 8
+    },
+    {
+      "id": 4,
+      "name": "سخت‌افزار",
+      "slug": "hardware",
+      "count": 15
+    },
+    {
+      "id": 5,
+      "name": "تکنولوژی",
+      "slug": "technology",
+      "count": 22
+    },
+    {
+      "id": 6,
+      "name": "معرفی محصول",
+      "slug": "product-review",
+      "count": 14
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "balance": 2500000,
+  "transactions": [
+    {
+      "id": 1,
+      "type": "deposit",
+      "amount": 500000,
+      "date": "۱۴۰۴/۰۱/۲۶",
+      "time": "۱۴:۳۰",
+      "status": "successful",
+      "trackingCode": "TRX-4521",
+      "description": "شارژ کیف پول"
+    },
+    {
+      "id": 2,
+      "type": "refund",
+      "amount": 320000,
+      "date": "۱۴۰۴/۰۱/۲۴",
+      "time": "۱۰:۱۵",
+      "status": "successful",
+      "trackingCode": "TRX-4520",
+      "description": "استرداد سفارش #ORD-1236"
+    },
+    {
+      "id": 3,
+      "type": "withdrawal",
+      "amount": 200000,
+      "date": "۱۴۰۴/۰۱/۲۰",
+      "time": "۰۹:۴۵",
+      "status": "successful",
+      "trackingCode": "WTH-1234",
+      "description": "برداشت از کیف پول"
+    },
+    {
+      "id": 4,
+      "type": "deposit",
+      "amount": 1000000,
+      "date": "۱۴۰۴/۰۱/۱۵",
+      "time": "۱۶:۲۰",
+      "status": "successful",
+      "trackingCode": "TRX-4519",
+      "description": "شارژ کیف پول"
+    },
+    {
+      "id": 5,
+      "type": "withdrawal",
+      "amount": 500000,
+      "date": "۱۴۰۴/۰۱/۱۰",
+      "time": "۱۱:۰۰",
+      "status": "pending",
+      "trackingCode": "WTH-1235",
+      "description": "درخواست برداشت"
+    }
+  ]
+}

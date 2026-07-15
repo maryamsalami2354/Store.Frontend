@@ -1,0 +1,38 @@
+{
+    "navItems": [
+      {
+        "id": "products",
+        "name": "لیست کالا ها",
+        "icon": "Grid",
+        "href": "/search"
+      },
+      {
+        "id": "faq",
+        "name": "سوالی دارید",
+        "icon": "HelpCircle",
+        "href": "/faq"
+      },
+      {
+        "id": "about",
+        "name": "درباره ما ",
+        "icon": "AlertCircle",
+        "href": "/about"
+      },
+      {
+        "id": "contact",
+        "name": "تماس با ما",
+        "icon": "Phone",
+        "href": "/contact"
+      },
+      {
+        "id": "seller-register",
+        "name": "در شاپ مارکت بفروش",
+        "icon": "Tag",
+        "href": "/seller-register"
+      }
+    ],
+    "hotline": {
+      "number": "091212345678",
+      "label": "تماس تلفنی"
+    }
+  }

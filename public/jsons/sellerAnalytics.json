@@ -1,0 +1,79 @@
+{
+  "summary": {
+    "totalSales": 890000000,
+    "totalOrders": 1245,
+    "totalViews": 45890,
+    "conversionRate": 2.7,
+    "averageOrderValue": 714859,
+    "totalCustomers": 876,
+    "newCustomersThisMonth": 124
+  },
+  "salesData": {
+    "daily": [
+      { "date": "۰۱/۰۱", "sales": 12500000, "orders": 48, "views": 1890 },
+      { "date": "۰۱/۰۲", "sales": 9800000, "orders": 35, "views": 1520 },
+      { "date": "۰۱/۰۳", "sales": 15600000, "orders": 62, "views": 2340 },
+      { "date": "۰۱/۰۴", "sales": 18900000, "orders": 71, "views": 2890 },
+      { "date": "۰۱/۰۵", "sales": 14500000, "orders": 55, "views": 2100 },
+      { "date": "۰۱/۰۶", "sales": 21000000, "orders": 82, "views": 3200 },
+      { "date": "۰۱/۰۷", "sales": 17800000, "orders": 65, "views": 2650 }
+    ],
+    "weekly": [
+      { "date": "هفته اول", "sales": 98000000, "orders": 380, "views": 14500 },
+      { "date": "هفته دوم", "sales": 112000000, "orders": 420, "views": 16800 },
+      { "date": "هفته سوم", "sales": 135000000, "orders": 510, "views": 19500 },
+      { "date": "هفته چهارم", "sales": 148000000, "orders": 560, "views": 22000 }
+    ],
+    "monthly": [
+      { "date": "مهر", "sales": 345000000, "orders": 980, "views": 42000 },
+      { "date": "آبان", "sales": 412000000, "orders": 1150, "views": 48000 },
+      { "date": "آذر", "sales": 380000000, "orders": 1020, "views": 45000 },
+      { "date": "دی", "sales": 520000000, "orders": 1450, "views": 52000 },
+      { "date": "بهمن", "sales": 480000000, "orders": 1350, "views": 49000 },
+      { "date": "اسفند", "sales": 890000000, "orders": 1245, "views": 45890 }
+    ],
+    "yearly": [
+      { "date": "۱۴۰۰", "sales": 3200000000, "orders": 8900, "views": 320000 },
+      { "date": "۱۴۰۱", "sales": 4500000000, "orders": 12000, "views": 410000 },
+      { "date": "۱۴۰۲", "sales": 5800000000, "orders": 15500, "views": 520000 },
+      { "date": "۱۴۰۳", "sales": 7200000000, "orders": 18500, "views": 610000 },
+      { "date": "۱۴۰۴", "sales": 890000000, "orders": 1245, "views": 45890 }
+    ]
+  },
+  "topProducts": [
+    { "id": 1, "name": "گوشی آیفون ۱۵ پرو مکس", "image": "/images/products/1.jpg", "sales": 124, "revenue": 4340000000, "percentage": 18, "trend": "up" },
+    { "id": 8, "name": "کنسول PS5", "image": "/images/products/8.jpg", "sales": 89, "revenue": 1958000000, "percentage": 14, "trend": "down" },
+    { "id": 45, "name": "ساعت گارمین Fenix 7X", "image": "/images/products/45.jpg", "sales": 76, "revenue": 2128000000, "percentage": 12, "trend": "up" },
+    { "id": 17, "name": "ساعت سامسونگ Watch 6", "image": "/images/products/17.jpg", "sales": 65, "revenue": 273000000, "percentage": 10, "trend": "up" },
+    { "id": 41, "name": "مک‌بوک پرو ۱۶ M3", "image": "/images/products/41.jpg", "sales": 52, "revenue": 4940000000, "percentage": 9, "trend": "down" },
+    { "id": 9, "name": "گوشی سامسونگ S24 Ultra", "image": "/images/products/9.jpg", "sales": 48, "revenue": 2016000000, "percentage": 8, "trend": "up" },
+    { "id": 12, "name": "کیبورد لاجیتک G Pro", "image": "/images/products/12.jpg", "sales": 42, "revenue": 117600000, "percentage": 7, "trend": "stable" },
+    { "id": 38, "name": "کنسول Xbox Series X", "image": "/images/products/38.jpg", "sales": 38, "revenue": 798000000, "percentage": 6, "trend": "up" },
+    { "id": 44, "name": "دوربین سونی A7 IV", "image": "/images/products/44.jpg", "sales": 32, "revenue": 2304000000, "percentage": 5, "trend": "down" },
+    { "id": 36, "name": "هدفون بوز QuietComfort Ultra", "image": "/images/products/36.jpg", "sales": 28, "revenue": 602000000, "percentage": 4, "trend": "stable" }
+  ],
+  "ordersByStatus": [
+    { "status": "completed", "label": "تکمیل شده", "count": 980, "color": "#22c55e", "percentage": 78.7 },
+    { "status": "processing", "label": "در حال پردازش", "count": 145, "color": "#3b82f6", "percentage": 11.6 },
+    { "status": "pending", "label": "در انتظار", "count": 78, "color": "#f59e0b", "percentage": 6.3 },
+    { "status": "cancelled", "label": "لغو شده", "count": 42, "color": "#ef4444", "percentage": 3.4 }
+  ],
+  "incomeExpense": [
+    { "month": "مهر", "income": 345, "expense": 98, "profit": 247 },
+    { "month": "آبان", "income": 412, "expense": 115, "profit": 297 },
+    { "month": "آذر", "income": 380, "expense": 105, "profit": 275 },
+    { "month": "دی", "income": 520, "expense": 142, "profit": 378 },
+    { "month": "بهمن", "income": 480, "expense": 135, "profit": 345 },
+    { "month": "اسفند", "income": 890, "expense": 210, "profit": 680 }
+  ],
+  "hourlyTraffic": [
+    { "hour": "۰۸", "visits": 145 },
+    { "hour": "۱۰", "visits": 320 },
+    { "hour": "۱۲", "visits": 480 },
+    { "hour": "۱۴", "visits": 390 },
+    { "hour": "۱۶", "visits": 520 },
+    { "hour": "۱۸", "visits": 610 },
+    { "hour": "۲۰", "visits": 480 },
+    { "hour": "۲۲", "visits": 280 }
+  ]
+}

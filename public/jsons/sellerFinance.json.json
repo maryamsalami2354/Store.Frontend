@@ -1,0 +1,89 @@
+{
+  "wallet": {
+    "balance": 45000000,
+    "cardNumber": "6037-****-****-1234",
+    "shaba": "IR123456789012345678901234"
+  },
+  "transactions": [
+    {
+      "id": 1,
+      "type": "purchase",
+      "amount": 28500000,
+      "date": "۱۴۰۲/۱۲/۲۰",
+      "status": "successful",
+      "trackingCode": "TRX-1234"
+    },
+    {
+      "id": 2,
+      "type": "deposit",
+      "amount": 50000000,
+      "date": "۱۴۰۲/۱۲/۱۸",
+      "status": "successful",
+      "trackingCode": "TRX-1235"
+    },
+    {
+      "id": 3,
+      "type": "withdrawal",
+      "amount": 15000000,
+      "date": "۱۴۰۲/۱۲/۱۵",
+      "status": "pending",
+      "trackingCode": "TRX-1236"
+    },
+    {
+      "id": 4,
+      "type": "purchase",
+      "amount": 4200000,
+      "date": "۱۴۰۲/۱۲/۱۰",
+      "status": "successful",
+      "trackingCode": "TRX-1237"
+    },
+    {
+      "id": 5,
+      "type": "deposit",
+      "amount": 20000000,
+      "date": "۱۴۰۲/۱۱/۲۵",
+      "status": "successful",
+      "trackingCode": "TRX-1238"
+    },
+    {
+      "id": 6,
+      "type": "withdrawal",
+      "amount": 8000000,
+      "date": "۱۴۰۲/۱۱/۲۰",
+      "status": "failed",
+      "trackingCode": "TRX-1239"
+    }
+  ],
+  "withdrawals": [
+    {
+      "id": 1,
+      "amount": 15000000,
+      "requestDate": "۱۴۰۲/۱۲/۱۵",
+      "status": "pending",
+      "paidDate": null,
+      "account": "IR123456789012345678901234"
+    },
+    {
+      "id": 2,
+      "amount": 8000000,
+      "requestDate": "۱۴۰۲/۱۱/۲۰",
+      "status": "paid",
+      "paidDate": "۱۴۰۲/۱۱/۲۲",
+      "account": "6037-****-****-1234"
+    },
+    {
+      "id": 3,
+      "amount": 12000000,
+      "requestDate": "۱۴۰۲/۱۰/۰۵",
+      "status": "rejected",
+      "paidDate": null,
+      "account": "IR123456789012345678901234"
+    }
+  ],
+  "summary": {
+    "balance": 45000000,
+    "monthlySales": 124500000,
+    "totalRevenue": 890000000,
+    "pendingWithdrawals": 15000000
+  }
+}

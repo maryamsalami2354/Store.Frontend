@@ -1,0 +1,34 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+.theme-color{
+    background: #002874;
+}
+.theme-color-text{
+    color: #002874;
+}
+.theme-color-in-dark{
+    background: #4C6FB6;
+}
+.theme-color-text-in-dark{
+    color: #4C6FB6;
+}
+/**=====================
+    Fonts css start
+==========================**/
+@font-face {
+    font-family: 'IRANSansX';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../public/fonts/eot/IRANSansX-Regular.otf');
+    src:
+    url('../public/fonts/woff2/IRANSansXNoEn-Regular.woff2') format('woff2'),  /* FF39+,Chrome36+, Opera24+*/
+    url('../public/fonts/woff/IRANSansXNoEn-Regular.woff') format('woff'),  /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+    url('../public/fonts/ttf/IRANSansX-Regular.ttf') format('truetype');
+}
+.dark {
+    color-scheme: dark;
+}
+  
+*{
+    font-family: 'IRANSansX', sans-serif;
+}

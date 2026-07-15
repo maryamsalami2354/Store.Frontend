@@ -1,0 +1,19 @@
+{
+  "sellers": [
+    { "id": 1, "name": "دیجی گجت", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 2, "name": "فروشگاه مد و پوشاک سارا", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 3, "name": "تکنوکالا", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 4, "name": "عطر و ادکلن مریم", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 5, "name": "لوازم خانگی مدرن", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 6, "name": "کتابسرای تهران", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 7, "name": "ورزشی‌ها", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 8, "name": "اسباب‌بازی شادی", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 9, "name": "صنایع دستی هنر", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 10, "name": "گیاهان آپارتمانی سبز", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 11, "name": "قهوه و دمنوش", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 12, "name": "پت شاپ حیوانات", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 13, "name": "ابزارآلات صنعتی", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 14, "name": "موسیقی و آلات", "avatar": "/images/users/avatar-1.svg" },
+    { "id": 15, "name": "فرش و گلیم", "avatar": "/images/users/avatar-1.svg" }
+  ]
+}

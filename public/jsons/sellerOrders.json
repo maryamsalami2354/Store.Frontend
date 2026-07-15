@@ -1,0 +1,305 @@
+{
+  "orders": [
+    {
+      "id": "#ORD-1234",
+      "customer": {
+        "name": "علی محمدی",
+        "email": "ali.mohammadi@example.com",
+        "phone": "09123456789"
+      },
+      "address": {
+        "province": "تهران",
+        "city": "تهران",
+        "full": "تهران، خیابان ولیعصر، بالاتر از میدان ونک، کوچه شهید احمدی، پلاک ۱۲، واحد ۵",
+        "postalCode": "1968612345"
+      },
+      "items": [
+        {
+          "productId": 45,
+          "name": "ساعت هوشمند گارمین Fenix 7X",
+          "price": "28,000,000",
+          "quantity": 1,
+          "discount": 12
+        },
+        {
+          "productId": 12,
+          "name": "کیبورد مکانیکال لاجیتک G Pro",
+          "price": "2,800,000",
+          "quantity": 1,
+          "discount": 0
+        }
+      ],
+      "amount": "۲,۵۰۰,۰۰۰",
+      "shippingCost": 0,
+      "discountTotal": 3360000,
+      "paymentMethod": "درگاه بانکی ملت",
+      "paymentStatus": "paid",
+      "status": "completed",
+      "trackingCode": "TRK-9876-5432",
+      "notes": [
+        {
+          "author": "فروشنده",
+          "text": "لطفاً قبل از ارسال، با مشتری هماهنگ شود.",
+          "date": "۱۴۰۲/۱۲/۱۹"
+        },
+        {
+          "author": "فروشنده",
+          "text": "سفارش ارسال شد. کد رهگیری به مشتری پیامک شد.",
+          "date": "۱۴۰۲/۱۲/۲۰"
+        }
+      ],
+      "history": [
+        {
+          "status": "pending",
+          "date": "۱۴۰۲/۱۲/۱۸",
+          "time": "۱۰:۲۰"
+        },
+        {
+          "status": "processing",
+          "date": "۱۴۰۲/۱۲/۱۹",
+          "time": "۰۹:۱۵"
+        },
+        {
+          "status": "shipped",
+          "date": "۱۴۰۲/۱۲/۲۰",
+          "time": "۱۱:۰۰"
+        },
+        {
+          "status": "completed",
+          "date": "۱۴۰۲/۱۲/۲۰",
+          "time": "۱۶:۳۰"
+        }
+      ],
+      "date": "۱۴۰۲/۱۲/۲۰",
+      "isNew": true
+    },
+    {
+      "id": "#ORD-1235",
+      "customer": {
+        "name": "سارا احمدی",
+        "email": "sara.ahmadi@example.com",
+        "phone": "09361234567"
+      },
+      "address": {
+        "province": "اصفهان",
+        "city": "اصفهان",
+        "full": "اصفهان، خیابان چهارباغ عباسی، کوچه شهید رجایی، پلاک ۴۵",
+        "postalCode": "8134678901"
+      },
+      "items": [
+        {
+          "productId": 17,
+          "name": "ساعت هوشمند سامسونگ Watch 6",
+          "price": "4,200,000",
+          "quantity": 1,
+          "discount": 12
+        }
+      ],
+      "amount": "۱,۸۰۰,۰۰۰",
+      "shippingCost": 35000,
+      "discountTotal": 504000,
+      "paymentMethod": "پرداخت در محل",
+      "paymentStatus": "pending",
+      "status": "processing",
+      "trackingCode": null,
+      "notes": [
+        {
+          "author": "فروشنده",
+          "text": "موجودی محصول بررسی شد. آماده ارسال است.",
+          "date": "۱۴۰۲/۱۲/۲۰"
+        }
+      ],
+      "history": [
+        {
+          "status": "pending",
+          "date": "۱۴۰۲/۱۲/۱۹",
+          "time": "۱۴:۴۵"
+        },
+        {
+          "status": "processing",
+          "date": "۱۴۰۲/۱۲/۲۰",
+          "time": "۰۸:۳۰"
+        }
+      ],
+      "date": "۱۴۰۲/۱۲/۲۰",
+      "isNew": true
+    },
+    {
+      "id": "#ORD-1236",
+      "customer": {
+        "name": "رضا کریمی",
+        "email": "reza.karimi@example.com",
+        "phone": "09187654321"
+      },
+      "address": {
+        "province": "خراسان رضوی",
+        "city": "مشهد",
+        "full": "مشهد، بلوار وکیل‌آباد، وکیل‌آباد ۱۲، پلاک ۸۹",
+        "postalCode": "9187654321"
+      },
+      "items": [
+        {
+          "productId": 9,
+          "name": "گوشی سامسونگ Galaxy S24 Ultra",
+          "price": "42,000,000",
+          "quantity": 1,
+          "discount": 7
+        }
+      ],
+      "amount": "۳,۲۰۰,۰۰۰",
+      "shippingCost": 0,
+      "discountTotal": 2940000,
+      "paymentMethod": "درگاه بانکی سامان",
+      "paymentStatus": "refunded",
+      "status": "cancelled",
+      "trackingCode": null,
+      "notes": [
+        {
+          "author": "مشتری",
+          "text": "لطفاً سفارش را لغو کنید.",
+          "date": "۱۴۰۲/۱۲/۱۸"
+        },
+        {
+          "author": "فروشنده",
+          "text": "سفارش بنا به درخواست مشتری لغو شد. وجه پرداختی عودت داده شد.",
+          "date": "۱۴۰۲/۱۲/۱۹"
+        }
+      ],
+      "history": [
+        {
+          "status": "pending",
+          "date": "۱۴۰۲/۱۲/۱۷",
+          "time": "۱۶:۲۰"
+        },
+        {
+          "status": "processing",
+          "date": "۱۴۰۲/۱۲/۱۸",
+          "time": "۰۹:۱۰"
+        },
+        {
+          "status": "cancelled",
+          "date": "۱۴۰۲/۱۲/۱۹",
+          "time": "۱۱:۳۰"
+        }
+      ],
+      "date": "۱۴۰۲/۱۲/۱۹",
+      "isNew": false
+    },
+    {
+      "id": "#ORD-1237",
+      "customer": {
+        "name": "مریم رضایی",
+        "email": "maryam.rezaei@example.com",
+        "phone": "09011239876"
+      },
+      "address": {
+        "province": "فارس",
+        "city": "شیراز",
+        "full": "شیراز، معالی‌آباد، خیابان بهار، کوچه ۵، پلاک ۲۳",
+        "postalCode": "7189654321"
+      },
+      "items": [
+        {
+          "productId": 22,
+          "name": "پاوربانک انکر ۲۰۰۰۰",
+          "price": "850,000",
+          "quantity": 2,
+          "discount": 23
+        }
+      ],
+      "amount": "۹۵۰,۰۰۰",
+      "shippingCost": 40000,
+      "discountTotal": 391000,
+      "paymentMethod": "درگاه بانکی پارسیان",
+      "paymentStatus": "paid",
+      "status": "pending",
+      "trackingCode": null,
+      "notes": [],
+      "history": [
+        {
+          "status": "pending",
+          "date": "۱۴۰۲/۱۲/۱۹",
+          "time": "۱۳:۱۵"
+        }
+      ],
+      "date": "۱۴۰۲/۱۲/۱۹",
+      "isNew": true
+    },
+    {
+      "id": "#ORD-1238",
+      "customer": {
+        "name": "حسین عباسی",
+        "email": "hossein.abbasi@example.com",
+        "phone": "09125554433"
+      },
+      "address": {
+        "province": "آذربایجان شرقی",
+        "city": "تبریز",
+        "full": "تبریز، ولیعصر، فلکه بزرگ، مجتمع تجاری اطلس، طبقه ۳، واحد ۱۲",
+        "postalCode": "5167891234"
+      },
+      "items": [
+        {
+          "productId": 8,
+          "name": "کنسول بازی PS5",
+          "price": "22,000,000",
+          "quantity": 1,
+          "discount": 10
+        },
+        {
+          "productId": 43,
+          "name": "هدفون گیمینگ ریزر BlackShark V2",
+          "price": "3,200,000",
+          "quantity": 1,
+          "discount": 18
+        }
+      ],
+      "amount": "۴,۱۰۰,۰۰۰",
+      "shippingCost": 0,
+      "discountTotal": 2776000,
+      "paymentMethod": "درگاه بانکی ملت",
+      "paymentStatus": "paid",
+      "status": "completed",
+      "trackingCode": "TRK-2345-6789",
+      "notes": [
+        {
+          "author": "فروشنده",
+          "text": "سفارش تحویل پست شد.",
+          "date": "۱۴۰۲/۱۲/۱۷"
+        }
+      ],
+      "history": [
+        {
+          "status": "pending",
+          "date": "۱۴۰۲/۱۲/۱۵",
+          "time": "۱۱:۳۰"
+        },
+        {
+          "status": "processing",
+          "date": "۱۴۰۲/۱۲/۱۶",
+          "time": "۰۹:۴۵"
+        },
+        {
+          "status": "shipped",
+          "date": "۱۴۰۲/۱۲/۱۷",
+          "time": "۱۴:۲۰"
+        },
+        {
+          "status": "completed",
+          "date": "۱۴۰۲/۱۲/۱۸",
+          "time": "۱۰:۰۰"
+        }
+      ],
+      "date": "۱۴۰۲/۱۲/۱۸",
+      "isNew": true
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "pending": 1,
+    "processing": 1,
+    "completed": 2,
+    "cancelled": 1,
+    "revenue": 6600000
+  }
+}

@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "type": "image",
+    "user": "استوری ۱",
+    "avatar": "/images/stories/1.jpg",
+    "url": "/images/stories/1.jpg",
+    "duration": 5000,
+    "link": "/category/1",
+    "viewed": false
+  },
+  {
+    "id": 2,
+    "type": "image",
+    "user": "استوری ۲",
+    "avatar": "/images/stories/2.jpg",
+    "url": "/images/stories/2.jpg",
+    "duration": 5000,
+    "link": "/category/2",
+    "viewed": false
+  },
+  {
+    "id": 3,
+    "type": "image",
+    "user": "استوری ۳",
+    "avatar": "/images/stories/3.jpg",
+    "url": "/images/stories/3.jpg",
+    "duration": 5000,
+    "link": "/category/3",
+    "viewed": false
+  },
+  {
+    "id": 4,
+    "type": "image",
+    "user": "استوری ۴",
+    "avatar": "/images/stories/5.jpg",
+    "url": "/images/stories/5.jpg",
+    "duration": 5000,
+    "link": "/category/4",
+    "viewed": false
+  },
+  {
+    "id": 5,
+    "type": "image",
+    "user": "استوری ۵",
+    "avatar": "/images/stories/6.jpg",
+    "url": "/images/stories/6.jpg",
+    "duration": 5000,
+    "link": "/category/5",
+    "viewed": false
+  },
+  {
+    "id": 6,
+    "type": "image",
+    "user": "استوری ۶",
+    "avatar": "/images/stories/7.jpg",
+    "url": "/images/stories/7.jpg",
+    "duration": 5000,
+    "link": "/category/6",
+    "viewed": false
+  },
+  {
+    "id": 7,
+    "type": "video",
+    "user": "استوری ۸",
+    "avatar": "/images/stories/4.jpg",
+    "url": "/images/stories/video/1.mp4",
+    "duration": null,
+    "link": "/category/8",
+    "viewed": false
+  },
+  {
+    "id": 8,
+    "type": "image",
+    "user": "استوری ۹",
+    "avatar": "/images/stories/1.jpg",
+    "url": "/images/stories/1.jpg",
+    "duration": 5000,
+    "link": "/category/9",
+    "viewed": false
+  },
+  {
+    "id": 9,
+    "type": "image",
+    "user": "استوری ۱۰",
+    "avatar": "/images/stories/2.jpg",
+    "url": "/images/stories/2.jpg",
+    "duration": 5000,
+    "link": "/category/10",
+    "viewed": false
+  },
+  {
+    "id": 10,
+    "type": "image",
+    "user": "استوری ۱",
+    "avatar": "/images/stories/1.jpg",
+    "url": "/images/stories/1.jpg",
+    "duration": 5000,
+    "link": "/category/1",
+    "viewed": false
+  },
+  {
+    "id":11,
+    "type": "image",
+    "user": "استوری ۲",
+    "avatar": "/images/stories/2.jpg",
+    "url": "/images/stories/2.jpg",
+    "duration": 5000,
+    "link": "/category/2",
+    "viewed": false
+  },
+  {
+    "id": 12,
+    "type": "image",
+    "user": "استوری ۳",
+    "avatar": "/images/stories/3.jpg",
+    "url": "/images/stories/3.jpg",
+    "duration": 5000,
+    "link": "/category/3",
+    "viewed": false
+  },
+  {
+    "id": 13,
+    "type": "image",
+    "user": "استوری ۴",
+    "avatar": "/images/stories/5.jpg",
+    "url": "/images/stories/5.jpg",
+    "duration": 5000,
+    "link": "/category/4",
+    "viewed": false
+  },
+  {
+    "id": 14,
+    "type": "image",
+    "user": "استوری ۵",
+    "avatar": "/images/stories/6.jpg",
+    "url": "/images/stories/6.jpg",
+    "duration": 5000,
+    "link": "/category/5",
+    "viewed": false
+  },
+  {
+    "id": 15,
+    "type": "image",
+    "user": "استوری ۶",
+    "avatar": "/images/stories/7.jpg",
+    "url": "/images/stories/7.jpg",
+    "duration": 5000,
+    "link": "/category/6",
+    "viewed": false
+  },
+  {
+    "id": 16,
+    "type": "video",
+    "user": "استوری ۸",
+    "avatar": "/images/stories/4.jpg",
+    "url": "/images/stories/video/1.mp4",
+    "duration": null,
+    "link": "/category/8",
+    "viewed": false
+  },
+  {
+    "id": 17,
+    "type": "image",
+    "user": "استوری ۹",
+    "avatar": "/images/stories/1.jpg",
+    "url": "/images/stories/1.jpg",
+    "duration": 5000,
+    "link": "/category/9",
+    "viewed": false
+  },
+  {
+    "id": 18,
+    "type": "image",
+    "user": "استوری ۱۰",
+    "avatar": "/images/stories/2.jpg",
+    "url": "/images/stories/2.jpg",
+    "duration": 5000,
+    "link": "/category/10",
+    "viewed": false
+  }
+]

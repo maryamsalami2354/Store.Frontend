@@ -1,0 +1,1 @@
+export {default} from "./middleBanners.jsx"
