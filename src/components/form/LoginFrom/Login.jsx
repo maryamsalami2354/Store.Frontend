@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence } from "framer-motion";
@@ -177,7 +177,7 @@ const LoginPage = () => {
             <div className="w-full max-w-md">
                 <div className="flex justify-center mb-8">
                     <Link to="/">
-                        <img src="/images/logos/with-border.svg" alt="Shop Market" className="h-16 w-auto dark:brightness-90" />
+                        <img src="/images/logos/with-border.svg" alt="Kian Shop" className="h-16 w-auto dark:brightness-90" />
                     </Link>
                 </div>
 

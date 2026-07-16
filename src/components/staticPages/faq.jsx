@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
     ChevronDown, ChevronLeft, Home, Search, HelpCircle,
@@ -42,7 +42,7 @@ const faqData = [
         id: 4,
         category: 'payment',
         question: 'روش‌های پرداخت کدامند؟',
-        answer: 'شما می‌توانید از طریق کارت‌های بانکی عضو شتاب، کیف پول شاپ مارکت و یا پرداخت در محل (برای تهران) هزینه سفارش را پرداخت کنید.'
+        answer: 'شما می‌توانید از طریق کارت‌های بانکی عضو شتاب، کیف پول کیان شاپ و یا پرداخت در محل (برای تهران) هزینه سفارش را پرداخت کنید.'
     },
     {
         id: 5,

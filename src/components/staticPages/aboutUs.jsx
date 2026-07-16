@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import {
@@ -197,11 +197,11 @@ const AboutUsComponents = () => {
                     </div>
                     <div className="relative z-10">
                         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white mb-4">
-                            داستان <span className="text-amber-400">شاپ مارکت</span>
+                            داستان <span className="text-amber-400">کیان شاپ</span>
                         </h1>
                         <p className="text-sm sm:text-base lg:text-lg text-white/80 max-w-2xl leading-relaxed">
                             ما از سال ۱۳۹۶ با هدف ایجاد تجربه‌ای متفاوت در خرید آنلاین شروع به کار کردیم.
-                            شاپ مارکت امروز با بیش از ۵۰۰ برند معتبر و ۱۰,۰۰۰ مشتری راضی، به یکی از معتبرترین
+                            کیان شاپ امروز با بیش از ۵۰۰ برند معتبر و ۱۰,۰۰۰ مشتری راضی، به یکی از معتبرترین
                             فروشگاه‌های اینترنتی تبدیل شده است.
                         </p>
                     </div>
@@ -328,9 +328,9 @@ const AboutUsComponents = () => {
 
                 {/* CTA */}
                 <div className="bg-gradient-to-r from-[#002874] to-[#003399] dark:from-[#002874] dark:to-[#003399] rounded-2xl p-6 sm:p-8 text-center text-white">
-                    <h2 className="text-xl sm:text-2xl font-extrabold mb-2">همین حالا به خانواده شاپ مارکت بپیوندید</h2>
+                    <h2 className="text-xl sm:text-2xl font-extrabold mb-2">همین حالا به خانواده کیان شاپ بپیوندید</h2>
                     <p className="text-sm text-white/70 mb-4 max-w-lg mx-auto">
-                        با ثبت‌نام در شاپ مارکت از تخفیف‌های ویژه و جدیدترین محصولات باخبر شوید
+                        با ثبت‌نام در کیان شاپ از تخفیف‌های ویژه و جدیدترین محصولات باخبر شوید
                     </p>
                     <Link
                         to="/login"

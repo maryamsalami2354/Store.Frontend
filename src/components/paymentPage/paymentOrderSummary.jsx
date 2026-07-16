@@ -3,12 +3,6 @@ import { MapPin, Clock, Shield, ArrowLeft, Truck } from 'react-feather';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { toAssetUrl } from '../../services/authApi.js';
 
-const timeLabels = {
-    morning: 'صبح (۹ تا ۱۲)',
-    afternoon: 'عصر (۱۵ تا ۱۸)',
-    evening: 'غروب (۱۸ تا ۲۱)',
-};
-
 const PaymentOrderSummary = ({
     items = [],
     subtotal,
@@ -16,6 +10,7 @@ const PaymentOrderSummary = ({
     total,
     selectedAddress,
     deliveryTime,
+    deliveryTimeLabel,
     shippingMethodTitle,
     onPay,
     paymentMethod,
@@ -76,7 +71,7 @@ const PaymentOrderSummary = ({
         {deliveryTime && (
             <div className="flex items-center gap-2 text-xs text-gray-500">
                 <Clock size={14} className="text-[#002874] dark:text-[#4C6FB6]" />
-                <span>{timeLabels[deliveryTime]}</span>
+                <span>{deliveryTimeLabel || deliveryTime}</span>
             </div>
         )}
 
@@ -85,7 +80,7 @@ const PaymentOrderSummary = ({
             disabled={isPaying}
             className="w-full py-3 bg-[#002874] text-white rounded-xl font-medium text-sm hover:bg-[#001d5a] disabled:opacity-60 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
-            {isPaying ? 'در حال ثبت سفارش...' : paymentMethod === 'Wallet' ? 'پرداخت از کیف پول' : 'پرداخت و ثبت سفارش'}
+            {isPaying ? 'در حال ثبت سفارش...' : paymentMethod === 'wallet' ? 'پرداخت از کیف پول' : 'پرداخت تستی زرین‌پال'}
             <ArrowLeft size={16} />
         </button>
 

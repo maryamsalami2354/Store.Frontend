@@ -1,4 +1,4 @@
-{
+﻿{
     "navItems": [
       {
         "id": "products",
@@ -26,7 +26,7 @@
       },
       {
         "id": "seller-register",
-        "name": "در شاپ مارکت بفروش",
+        "name": "در کیان شاپ بفروش",
         "icon": "Tag",
         "href": "/seller-register"
       }

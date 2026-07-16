@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // FILE: sellerLandingHero.jsx
 // =============================================================================
 import React from 'react';
@@ -17,11 +17,11 @@ const SellerLandingHero = ({ onStart }) => (
                 {/* Badge */}
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur rounded-full text-white text-sm mb-6">
                     <Star size={16} className="text-amber-400 fill-amber-400" />
-                    به خانواده بزرگ شاپ مارکت بپیوندید
+                    به خانواده بزرگ کیان شاپ بپیوندید
                 </div>
 
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4 leading-tight">
-                    فروشنده <span className="text-amber-400">شاپ مارکت</span> شوید
+                    فروشنده <span className="text-amber-400">کیان شاپ</span> شوید
                 </h1>
                 <p className="text-base sm:text-lg text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed">
                     فروشگاه خود را در بزرگترین پلتفرم فروش آنلاین ایران راه‌اندازی کنید و محصولاتتان را به میلیون‌ها مشتری عرضه کنید.

@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // FILE: sellerLandingBenefits.jsx
 // =============================================================================
 import React from 'react';
@@ -47,7 +47,7 @@ const SellerLandingBenefits = () => (
     <div className="mb-8">
         <div className="text-center mb-6">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
-                چرا شاپ مارکت؟
+                چرا کیان شاپ؟
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
                 همه چیز برای موفقیت شما فراهم است

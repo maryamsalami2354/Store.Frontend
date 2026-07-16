@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // FILE: ContactUsComponents.jsx (اصلاح‌شده - CustomSelect + toast ساده)
 // =============================================================================
 import React, { useState, useEffect } from 'react';
@@ -15,7 +15,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 const contactInfoData = [
     { id: 1, icon: Phone, title: 'تلفن تماس', value: '۰۲۱-۱۲۳۴۵۶۷۸', subValue: '۰۲۱-۸۷۶۵۴۳۲۱', color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600 dark:text-blue-400' },
-    { id: 2, icon: Mail, title: 'ایمیل', value: 'info@shopmarket.ir', subValue: 'support@shopmarket.ir', color: 'from-green-500 to-green-600', bgColor: 'bg-green-100 dark:bg-green-900/30', iconColor: 'text-green-600 dark:text-green-400' },
+    { id: 2, icon: Mail, title: 'ایمیل', value: 'info@kianshop.ir', subValue: 'support@kianshop.ir', color: 'from-green-500 to-green-600', bgColor: 'bg-green-100 dark:bg-green-900/30', iconColor: 'text-green-600 dark:text-green-400' },
     { id: 3, icon: MapPin, title: 'آدرس', value: 'تهران، خیابان ولیعصر، کوچه باغ', subValue: 'پلاک ۱۲۳، طبقه ۴', color: 'from-orange-500 to-orange-600', bgColor: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600 dark:text-orange-400' },
     { id: 4, icon: Clock, title: 'ساعات کاری', value: 'شنبه تا پنجشنبه', subValue: '۹ صبح تا ۹ شب', color: 'from-purple-500 to-purple-600', bgColor: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600 dark:text-purple-400' },
 ];

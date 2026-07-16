@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // FILE: bestSellersHero.jsx
 // =============================================================================
 import React from 'react';
@@ -15,7 +15,7 @@ const BestSellersHero = ({ total = 0 }) => (
                 <Award size={32} className="text-white" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2">بهترین فروشندگان</h1>
-            <p className="text-sm text-white/70 max-w-xl mx-auto">{total.toLocaleString('fa-IR')} فروشنده برتر شاپ مارکت</p>
+            <p className="text-sm text-white/70 max-w-xl mx-auto">{total.toLocaleString('fa-IR')} فروشنده برتر کیان شاپ</p>
             <div className="flex items-center justify-center gap-6 mt-6 text-white/80 text-sm">
                 <span className="flex items-center gap-1.5"><TrendingUp size={16} className="text-amber-400" />بیشترین فروش</span>
                 <span className="flex items-center gap-1.5"><Users size={16} className="text-amber-400" />رضایت مشتری</span>

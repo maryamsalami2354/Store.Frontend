@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // FILE: sellerLandingStats.jsx
 // =============================================================================
 import React from 'react';
@@ -15,7 +15,7 @@ const SellerLandingStats = () => (
     <div className="mb-8">
         <div className="text-center mb-6">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
-                شاپ مارکت در یک نگاه
+                کیان شاپ در یک نگاه
             </h2>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

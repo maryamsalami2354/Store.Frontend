@@ -15,6 +15,8 @@ const PaymentResultPage = () => {
     // فقط ?status=ok یا ?status=nok
     const status = searchParams.get('status'); // "ok" | "nok"
     const isSuccess = status === 'ok';
+    const refId = searchParams.get('refId');
+    const message = searchParams.get('message');
 
     useEffect(() => {
         if (!status || (status !== 'ok' && status !== 'nok')) {
@@ -64,6 +66,13 @@ const PaymentResultPage = () => {
                                 : 'متأسفانه مشکلی در پرداخت پیش آمده. لطفاً دوباره تلاش کنید.'
                             }
                         </p>
+
+                        {(refId || message) && (
+                            <div className="mb-6 rounded-xl bg-gray-50 dark:bg-gray-900 p-3 text-xs text-gray-600 dark:text-gray-300 space-y-1">
+                                {refId && <p>کد پیگیری زرین‌پال: {Number(refId).toLocaleString('fa-IR')}</p>}
+                                {message && <p>{message}</p>}
+                            </div>
+                        )}
 
                         {/* Actions */}
                         <div className="flex flex-col sm:flex-row gap-3">

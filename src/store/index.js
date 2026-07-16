@@ -4,7 +4,7 @@ import { removeCookie } from "../utils/helpers/cookie";
 const getStoredToken = () => {
     if (typeof window === "undefined") return null;
 
-    return localStorage.getItem("authToken");
+    return localStorage.getItem("authToken") || localStorage.getItem("token");
 };
 
 const useStore = create((set) => ({
@@ -12,11 +12,19 @@ const useStore = create((set) => ({
     user: null,
     cart: null,
 
-    setState: (data) =>
+    setState: (data) => {
+        const accessToken = data?.accessToken || data?.token || getStoredToken();
+
+        if (accessToken) {
+            localStorage.setItem("authToken", accessToken);
+            localStorage.setItem("token", accessToken);
+        }
+
         set({
-            accessToken: data?.accessToken || data?.token || getStoredToken(),
+            accessToken,
             user: data?.user || null,
-        }),
+        });
+    },
 
     setCart: (cart) => set({ cart }),
     clearCartState: () => set({ cart: null }),

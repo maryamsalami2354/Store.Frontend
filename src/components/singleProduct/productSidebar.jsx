@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // FILE: productSidebar.jsx (اصلاح‌شده - حالت ناموجود)
 // =============================================================================
 import React, {useState} from 'react';
@@ -134,7 +134,7 @@ const ProductSidebar = ({product, onAddToCart}) => {
                                     <div className="p-1 rounded-lg bg-green-100 dark:bg-green-900/30"><Truck size={12}
                                                                                                              className="text-green-600"/>
                                     </div>
-                                    ارسال شاپ مارکت (۱-۲ روز کاری)
+                                    ارسال کیان شاپ (۱-۲ روز کاری)
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div className="p-1 rounded-lg bg-blue-100 dark:bg-blue-900/30"><Shield size={12}

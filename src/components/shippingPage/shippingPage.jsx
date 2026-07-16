@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin } from 'react-feather';
-import addressesData from '../../../public/jsons/addresses.json';
 import { Breadcrumb } from '../../utils/helpers/breadcrumb';
 import { toast } from 'react-toastify';
 import ShippingPageSkeleton from '../skeleton/ShippingPageSkeleton/ShippingPageSkeleton.jsx';
@@ -13,15 +12,10 @@ import ShippingStickyFooter from './shippingStickyFooter';
 import CartShipping from '../cartPage/cartShipping';
 import { getCart } from '../../services/cartApi.js';
 import { getShippingOptions } from '../../services/shippingApi.js';
+import { getMyAddresses } from '../../services/addressApi.js';
 import useStore from '../../store/index.js';
 
 const CHECKOUT_STORAGE_KEY = 'checkoutInfo';
-
-const deliverySlots = {
-    morning: '09:00-12:00',
-    afternoon: '15:00-18:00',
-    evening: '18:00-21:00',
-};
 
 const getDeliveryDate = () => {
     const date = new Date();
@@ -29,42 +23,99 @@ const getDeliveryDate = () => {
     return date.toISOString();
 };
 
+const persianDateFormatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+    month: 'long',
+    day: 'numeric',
+});
+
+const toPersianDigits = (value) => String(value).replace(/\d/g, (digit) => '۰۱۲۳۴۵۶۷۸۹'[digit]);
+
+const getDeliverySlotKey = (slot) => `${slot.date}|${slot.code}`;
+
+const parseSlotDate = (value) => {
+    const [year, month, day] = String(value || '').slice(0, 10).split('-').map(Number);
+
+    if (!year || !month || !day) return new Date(value);
+
+    return new Date(year, month - 1, day, 12);
+};
+
+const formatTimeSlot = (timeSlot) => {
+    const [start, end] = String(timeSlot || '').split('-');
+    const startHour = Number(start?.split(':')[0]);
+    const endHour = Number(end?.split(':')[0]);
+
+    if (Number.isFinite(startHour) && Number.isFinite(endHour)) {
+        return `ساعت ${toPersianDigits(startHour)} تا ${toPersianDigits(endHour)}`;
+    }
+
+    return timeSlot || '';
+};
+
+const formatDeliverySlotLabel = (slot) => {
+    if (!slot) return '';
+
+    return `${persianDateFormatter.format(parseSlotDate(slot.date))}، ${formatTimeSlot(slot.timeSlot)}`;
+};
+
+const buildShippingAddress = (address) => {
+    const parts = [
+        address.province,
+        address.city,
+        address.address,
+        address.plateNumber ? `پلاک ${address.plateNumber}` : '',
+        address.unitNumber ? `واحد ${address.unitNumber}` : '',
+    ];
+
+    return parts.filter(Boolean).join('، ');
+};
+
 const ShippingPage = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [deliveryTime, setDeliveryTime] = useState('');
+    const [deliveryTimes, setDeliveryTimes] = useState([]);
     const [shippingMethods, setShippingMethods] = useState([]);
     const [shippingMethodCode, setShippingMethodCode] = useState('');
-    const [addresses] = useState(addressesData.addresses || []);
+    const [addresses, setAddresses] = useState([]);
+    const accessToken = useStore((state) => state.accessToken);
     const cart = useStore((state) => state.cart);
     const setCart = useStore((state) => state.setCart);
     const cartItems = cart?.items || [];
 
     useEffect(() => {
-        if (addresses.length && !selectedAddress) {
-            setSelectedAddress(addresses.find(a => a.isDefault) || addresses[0]);
-        }
-    }, [addresses, selectedAddress]);
-
-    useEffect(() => {
         let isMounted = true;
 
         const load = async () => {
+            if (!accessToken) {
+                toast.error('برای انتخاب آدرس ابتدا وارد حساب کاربری شوید');
+                navigate('/login?redirect=/shipping', { replace: true });
+                return;
+            }
+
             setIsLoading(true);
             try {
-                const [cartData, shippingData] = await Promise.all([
+                const [cartData, shippingData, addressData] = await Promise.all([
                     getCart(),
                     getShippingOptions(),
+                    getMyAddresses(),
                 ]);
 
                 if (!isMounted) return;
 
                 setCart(cartData);
+                setAddresses(addressData);
+                setSelectedAddress(addressData.find((address) => address.isDefault) || addressData[0] || null);
                 setShippingMethods(shippingData.methods);
+                setDeliveryTimes(shippingData.slots);
                 setShippingMethodCode((current) => {
                     if (current && shippingData.methods.some((method) => method.code === current)) return current;
                     return shippingData.methods.find((method) => method.code === 'standard')?.code || shippingData.methods[0]?.code || '';
+                });
+                setDeliveryTime((current) => {
+                    if (current && shippingData.slots.some((slot) => getDeliverySlotKey(slot) === current)) return current;
+                    return shippingData.slots[0] ? getDeliverySlotKey(shippingData.slots[0]) : '';
                 });
 
                 if (!cartData.items?.length) {
@@ -85,7 +136,7 @@ const ShippingPage = () => {
         return () => {
             isMounted = false;
         };
-    }, [navigate, setCart]);
+    }, [accessToken, navigate, setCart]);
 
     const subtotal = useMemo(() => {
         return Number(cart?.subtotal ?? cart?.grandTotal ?? cartItems.reduce((sum, item) => sum + Number(item.priceValue || 0) * item.quantity, 0));
@@ -94,6 +145,10 @@ const ShippingPage = () => {
     const selectedShippingMethod = useMemo(() => {
         return shippingMethods.find((method) => method.code === shippingMethodCode) || null;
     }, [shippingMethods, shippingMethodCode]);
+
+    const selectedDeliveryTime = useMemo(() => {
+        return deliveryTimes.find((slot) => getDeliverySlotKey(slot) === deliveryTime) || null;
+    }, [deliveryTimes, deliveryTime]);
 
     const shippingCost = Number(selectedShippingMethod?.cost || 0);
     const total = subtotal + shippingCost;
@@ -112,7 +167,7 @@ const ShippingPage = () => {
             toast.error('لطفا روش ارسال را انتخاب کنید');
             return;
         }
-        if (!deliveryTime) {
+        if (!selectedDeliveryTime) {
             toast.error('لطفا زمان ارسال را انتخاب کنید');
             return;
         }
@@ -121,10 +176,11 @@ const ShippingPage = () => {
             shippingMethodCode: selectedShippingMethod.code,
             shippingMethodTitle: selectedShippingMethod.title,
             shippingMethodCost: selectedShippingMethod.cost,
-            deliveryDate: getDeliveryDate(),
-            deliveryTimeSlot: deliverySlots[deliveryTime] || deliveryTime,
-            deliveryTime,
-            shippingAddress: `${selectedAddress.province || ''}، ${selectedAddress.city || ''}، ${selectedAddress.address || ''}`,
+            deliveryDate: selectedDeliveryTime.date || getDeliveryDate(),
+            deliveryTimeSlot: selectedDeliveryTime.timeSlot,
+            deliveryTime: getDeliverySlotKey(selectedDeliveryTime),
+            deliveryTimeTitle: formatDeliverySlotLabel(selectedDeliveryTime),
+            shippingAddress: buildShippingAddress(selectedAddress),
             recipientName: selectedAddress.receiverName || selectedAddress.title || 'مشتری',
             recipientPhone: selectedAddress.phone || '',
             selectedAddress,
@@ -165,7 +221,12 @@ const ShippingPage = () => {
                             options={shippingMethods}
                         />
 
-                        <ShippingDeliveryTime value={deliveryTime} onChange={setDeliveryTime} />
+                        <ShippingDeliveryTime
+                            value={deliveryTime}
+                            onChange={setDeliveryTime}
+                            options={deliveryTimes}
+                            shippingCost={shippingCost}
+                        />
                     </div>
 
                     <div className="hidden lg:block w-80 xl:w-96 flex-shrink-0">
@@ -177,6 +238,7 @@ const ShippingPage = () => {
                                 total={total}
                                 selectedAddress={selectedAddress}
                                 deliveryTime={deliveryTime}
+                                deliveryTimeLabel={formatDeliverySlotLabel(selectedDeliveryTime)}
                                 shippingMethod={selectedShippingMethod}
                                 onContinue={handleContinue}
                             />
@@ -187,7 +249,6 @@ const ShippingPage = () => {
                 <ShippingStickyFooter
                     total={total}
                     selectedAddress={selectedAddress}
-                    deliveryTime={deliveryTime}
                     onContinue={handleContinue}
                 />
             </div>

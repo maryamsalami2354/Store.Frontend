@@ -1,4 +1,3 @@
-// src/components/seller/sellerOrders/ordersSummaryCards.jsx
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -7,9 +6,9 @@ import { ShoppingBag, Clock, Package, CheckCircle, XCircle, DollarSign } from 'r
 const OrdersSummaryCards = ({ summary, isLoading }) => {
     const cards = [
         { title: 'کل سفارشات', value: summary?.total || 0, icon: ShoppingBag, color: 'blue' },
-        { title: 'در انتظار', value: summary?.pending || 0, icon: Clock, color: 'yellow' },
-        { title: 'در حال پردازش', value: summary?.processing || 0, icon: Package, color: 'purple' },
-        { title: 'تکمیل شده', value: summary?.completed || 0, icon: CheckCircle, color: 'green' },
+        { title: 'در انتظار پرداخت', value: summary?.pending || 0, icon: Clock, color: 'yellow' },
+        { title: 'در انتظار ارسال', value: summary?.processing || 0, icon: Package, color: 'purple' },
+        { title: 'تحویل داده شد', value: summary?.completed || 0, icon: CheckCircle, color: 'green' },
         { title: 'لغو شده', value: summary?.cancelled || 0, icon: XCircle, color: 'red' },
         { title: 'مجموع فروش', value: summary?.revenue?.toLocaleString('fa-IR') || '۰', icon: DollarSign, color: 'orange', isCurrency: true },
     ];

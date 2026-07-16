@@ -1,30 +1,55 @@
-// src/components/user/userAddresses/userAddresses.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AddressCard from './addressCard';
 import AddressFormModal from './addressFormModal';
 import AddressDeleteModal from './addressDeleteModal';
-import addressesData from '../../../../public/jsons/addresses.json';
+import {
+    createAddress,
+    deleteAddress,
+    getMyAddresses,
+    setDefaultAddress,
+    updateAddress,
+} from '../../../services/addressApi.js';
+import useStore from '../../../store/index.js';
 
 const UserAddresses = () => {
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const accessToken = useStore((state) => state.accessToken);
     const [addresses, setAddresses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
     const [formModal, setFormModal] = useState({ isOpen: false, address: null });
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, address: null });
     const [maxLimit] = useState(5);
 
-    useEffect(() => {
-        const loadData = async () => {
-            await new Promise(resolve => setTimeout(resolve, 800));
-            setAddresses(addressesData.addresses || []);
+    const redirectTarget = searchParams.get('redirect');
+
+    const loadAddresses = async () => {
+        if (!accessToken) {
+            navigate('/login?redirect=/user/addresses', { replace: true });
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const data = await getMyAddresses();
+            setAddresses(data);
+        } catch (error) {
+            toast.error(error.message || 'خطا در دریافت آدرس‌ها');
+        } finally {
             setIsLoading(false);
-        };
-        loadData();
-    }, []);
+        }
+    };
+
+    useEffect(() => {
+        loadAddresses();
+    }, [accessToken]);
 
     const handleAdd = () => {
         if (addresses.length >= maxLimit) {
-            toast.error(`حداکثر ${maxLimit} آدرس می‌توانید ثبت کنید`);
+            toast.error(`حداکثر ${maxLimit.toLocaleString('fa-IR')} آدرس می‌توانید ثبت کنید`);
             return;
         }
         setFormModal({ isOpen: true, address: null });
@@ -38,33 +63,54 @@ const UserAddresses = () => {
         setDeleteModal({ isOpen: true, address });
     };
 
-    const handleSave = (formData) => {
-        if (formData.isDefault) {
-            setAddresses(prev => prev.map(a => ({ ...a, isDefault: false })));
-        }
+    const handleSave = async (formData) => {
+        setIsSaving(true);
+        try {
+            if (formData.id) {
+                const saved = await updateAddress(formData.id, formData);
+                setAddresses((prev) => prev.map((address) => address.id === saved.id ? saved : address));
+                toast.success('آدرس با موفقیت ویرایش شد');
+            } else {
+                const saved = await createAddress(formData);
+                setAddresses((prev) => [saved, ...prev]);
+                toast.success('آدرس جدید با موفقیت اضافه شد');
 
-        if (formData.id) {
-            // ویرایش
-            setAddresses(prev => prev.map(a => a.id === formData.id ? formData : a));
-            toast.success('آدرس با موفقیت ویرایش شد');
-        } else {
-            // افزودن جدید
-            const newAddress = { ...formData, id: Date.now() };
-            setAddresses(prev => [...prev, newAddress]);
-            toast.success('آدرس جدید با موفقیت اضافه شد');
+                if (redirectTarget === 'shipping') {
+                    navigate('/shipping');
+                    return;
+                }
+            }
+
+            await loadAddresses();
+            setFormModal({ isOpen: false, address: null });
+        } catch (error) {
+            toast.error(error.message || 'خطا در ذخیره آدرس');
+        } finally {
+            setIsSaving(false);
         }
-        setFormModal({ isOpen: false, address: null });
     };
 
-    const handleConfirmDelete = (addressId) => {
-        setAddresses(prev => prev.filter(a => a.id !== addressId));
-        toast.success('آدرس با موفقیت حذف شد');
-        setDeleteModal({ isOpen: false, address: null });
+    const handleConfirmDelete = async (addressId) => {
+        if (!addressId) return;
+
+        try {
+            await deleteAddress(addressId);
+            await loadAddresses();
+            toast.success('آدرس با موفقیت حذف شد');
+            setDeleteModal({ isOpen: false, address: null });
+        } catch (error) {
+            toast.error(error.message || 'خطا در حذف آدرس');
+        }
     };
 
-    const handleSetDefault = (addressId) => {
-        setAddresses(prev => prev.map(a => ({ ...a, isDefault: a.id === addressId })));
-        toast.success('آدرس پیش‌فرض تغییر کرد');
+    const handleSetDefault = async (addressId) => {
+        try {
+            await setDefaultAddress(addressId);
+            await loadAddresses();
+            toast.success('آدرس پیش‌فرض تغییر کرد');
+        } catch (error) {
+            toast.error(error.message || 'خطا در تغییر آدرس پیش‌فرض');
+        }
     };
 
     return (
@@ -115,6 +161,7 @@ const UserAddresses = () => {
             <AddressFormModal
                 isOpen={formModal.isOpen}
                 address={formModal.address}
+                isSaving={isSaving}
                 onClose={() => setFormModal({ isOpen: false, address: null })}
                 onSave={handleSave}
             />

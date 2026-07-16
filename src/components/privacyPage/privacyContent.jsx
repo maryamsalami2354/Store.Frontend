@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // FILE: privacyContent.jsx
 // =============================================================================
 import React, { useState } from 'react';
@@ -135,7 +135,7 @@ const PrivacyContent = () => (
                 </div>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                این سیاست حریم خصوصی توضیح می‌دهد که فروشگاه اینترنتی شاپ مارکت چگونه اطلاعات شخصی شما را جمع‌آوری، استفاده، ذخیره و محافظت می‌کند.
+                این سیاست حریم خصوصی توضیح می‌دهد که فروشگاه اینترنتی کیان شاپ چگونه اطلاعات شخصی شما را جمع‌آوری، استفاده، ذخیره و محافظت می‌کند.
                 با استفاده از خدمات ما، شما با شرایط این سیاست موافقت می‌کنید. لطفاً آن را با دقت مطالعه فرمایید.
             </p>
         </div>
@@ -153,8 +153,8 @@ const PrivacyContent = () => (
                 اگر سوال یا نگرانی درباره نحوه استفاده از اطلاعات خود دارید، با ما تماس بگیرید.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <a href="mailto:privacy@shopmarket.ir" className="px-6 py-3 bg-white text-[#002874] rounded-xl font-bold text-sm hover:bg-gray-100 transition-colors">
-                    privacy@shopmarket.ir
+                <a href="mailto:privacy@kianshop.ir" className="px-6 py-3 bg-white text-[#002874] rounded-xl font-bold text-sm hover:bg-gray-100 transition-colors">
+                    privacy@kianshop.ir
                 </a>
                 <a href="tel:02112345678" className="px-6 py-3 bg-white/20 backdrop-blur text-white rounded-xl font-medium text-sm hover:bg-white/30 transition-colors">
                     ۰۲۱-۱۲۳۴۵۶۷۸

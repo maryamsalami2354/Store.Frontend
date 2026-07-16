@@ -1,25 +1,22 @@
-// =============================================================================
-// FILE: userOrders.jsx (اصلاح‌شده - مودال انتخاب دلیل مرجوعی)
-// =============================================================================
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
 import { toast } from 'react-toastify';
-import { X, RotateCcw, ChevronLeft } from 'react-feather';
+import { X, ChevronLeft } from 'react-feather';
 import OrdersFilterBar from './ordersFilterBar';
 import OrdersList from './ordersList';
 import OrderDetailsModal from './orderDetailsModal';
 import ProductsPagination from '../../seller/sellerProducts/productsPagination';
-import ordersData from '../../../../public/jsons/sellerOrders.json';
+import { getMyOrders } from '../../../services/orderApi.js';
 
 const ITEMS_PER_PAGE = 10;
 
 const reasonsList = [
     { id: 'damaged', label: 'کالا آسیب دیده', icon: '📦' },
-    { id: 'not_match', label: 'مغایرت با توضیحات', icon: '❌' },
-    { id: 'quality', label: 'کیفیت نامناسب', icon: '👎' },
-    { id: 'wrong_item', label: 'ارسال کالای اشتباه', icon: '🔄' },
-    { id: 'no_need', label: 'انصراف از خرید', icon: '🤚' },
+    { id: 'not_match', label: 'مغایرت با توضیحات', icon: '!' },
+    { id: 'quality', label: 'کیفیت نامناسب', icon: '-' },
+    { id: 'wrong_item', label: 'ارسال کالای اشتباه', icon: '↻' },
+    { id: 'no_need', label: 'انصراف از خرید', icon: '×' },
 ];
 
 const UserOrders = () => {
@@ -31,25 +28,35 @@ const UserOrders = () => {
     const [sortBy, setSortBy] = useState('newest');
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedOrder, setSelectedOrder] = useState(null);
-    const [cancelModal, setCancelModal] = useState({ isOpen: false, order: null });
     const [returnModal, setReturnModal] = useState({ isOpen: false, order: null });
 
     useEffect(() => {
+        let isMounted = true;
+
         const loadData = async () => {
-            await new Promise(resolve => setTimeout(resolve, 800));
-            setOrders(ordersData.orders || []);
-            setIsLoading(false);
+            setIsLoading(true);
+            try {
+                const result = await getMyOrders({ page: 1, pageSize: 100 });
+                if (isMounted) setOrders(result.orders);
+            } catch (error) {
+                toast.error(error.message || 'خطا در دریافت سفارش‌ها');
+            } finally {
+                if (isMounted) setIsLoading(false);
+            }
         };
+
         loadData();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
-    const fuse = useMemo(() => {
-        return new Fuse(orders, {
-            keys: ['id', 'customer.name', 'amount', 'trackingCode'],
-            threshold: 0.3,
-            minMatchCharLength: 2,
-        });
-    }, [orders]);
+    const fuse = useMemo(() => new Fuse(orders, {
+        keys: ['id', 'amount', 'trackingCode', 'recipientName'],
+        threshold: 0.3,
+        minMatchCharLength: 2,
+    }), [orders]);
 
     const filteredOrders = useMemo(() => {
         let result = searchQuery.trim()
@@ -61,14 +68,17 @@ const UserOrders = () => {
         }
 
         switch (sortBy) {
-            case 'oldest': result.sort((a, b) => new Date(a.date) - new Date(b.date)); break;
+            case 'oldest':
+                result.sort((a, b) => new Date(a.deliveryDate || a.date) - new Date(b.deliveryDate || b.date));
+                break;
             case 'amount-desc':
-                result.sort((a, b) => parseInt(b.amount?.replace(/[^\d]/g, '') || '0') - parseInt(a.amount?.replace(/[^\d]/g, '') || '0'));
+                result.sort((a, b) => b.amountValue - a.amountValue);
                 break;
             case 'amount-asc':
-                result.sort((a, b) => parseInt(a.amount?.replace(/[^\d]/g, '') || '0') - parseInt(b.amount?.replace(/[^\d]/g, '') || '0'));
+                result.sort((a, b) => a.amountValue - b.amountValue);
                 break;
-            default: result.sort((a, b) => new Date(b.date) - new Date(a.date));
+            default:
+                result.sort((a, b) => b.id - a.id);
         }
 
         return result;
@@ -80,13 +90,9 @@ const UserOrders = () => {
         currentPage * ITEMS_PER_PAGE
     );
 
-    useEffect(() => { setCurrentPage(1); }, [searchQuery, statusFilter, sortBy]);
-
-    const handleCancelOrder = (orderId) => {
-        setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'cancelled' } : o));
-        toast.success('سفارش با موفقیت لغو شد');
-        setCancelModal({ isOpen: false, order: null });
-    };
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery, statusFilter, sortBy]);
 
     const handleReturnWithReason = (reason) => {
         if (!returnModal.order) return;
@@ -98,7 +104,7 @@ const UserOrders = () => {
         <div className="space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">سفارشات من</h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{filteredOrders.length} سفارش</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{filteredOrders.length.toLocaleString('fa-IR')} سفارش</p>
             </div>
 
             <OrdersFilterBar
@@ -111,7 +117,7 @@ const UserOrders = () => {
                 isLoading={isLoading}
                 orders={paginatedOrders}
                 onView={(order) => setSelectedOrder(order)}
-                onCancel={(order) => setCancelModal({ isOpen: true, order })}
+                onCancel={() => toast.info('لغو سفارش از پنل کاربر فعلاً فعال نیست')}
                 onReturn={(order) => setReturnModal({ isOpen: true, order })}
             />
 
@@ -129,14 +135,6 @@ const UserOrders = () => {
                 onClose={() => setSelectedOrder(null)}
             />
 
-            {cancelModal.isOpen && (
-                <CancelOrderModal
-                    order={cancelModal.order}
-                    onClose={() => setCancelModal({ isOpen: false, order: null })}
-                    onConfirm={() => handleCancelOrder(cancelModal.order.id)}
-                />
-            )}
-
             {returnModal.isOpen && (
                 <ReturnReasonModal
                     order={returnModal.order}
@@ -148,30 +146,6 @@ const UserOrders = () => {
     );
 };
 
-// =============================================================================
-// Cancel Order Modal
-// =============================================================================
-const CancelOrderModal = ({ order, onClose, onConfirm }) => (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
-        <div className="relative w-full max-w-md bg-white dark:bg-[#111] rounded-2xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
-            <div className="p-5 border-b border-gray-200 dark:border-gray-800">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">لغو سفارش</h3>
-            </div>
-            <div className="p-5">
-                <p className="text-gray-700 dark:text-gray-300">آیا از لغو سفارش <strong>{order?.id}</strong> اطمینان دارید؟</p>
-                <p className="text-sm text-gray-500 mt-2">این عملیات قابل بازگشت نیست.</p>
-            </div>
-            <div className="p-5 border-t border-gray-200 dark:border-gray-800 flex gap-3">
-                <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition">انصراف</button>
-                <button onClick={onConfirm} className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-medium transition">لغو سفارش</button>
-            </div>
-        </div>
-    </div>
-);
-
-// =============================================================================
-// Return Reason Modal
-// =============================================================================
 const ReturnReasonModal = ({ order, onClose, onSelectReason }) => (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
         <div className="relative w-full max-w-md bg-white dark:bg-[#111] rounded-2xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>

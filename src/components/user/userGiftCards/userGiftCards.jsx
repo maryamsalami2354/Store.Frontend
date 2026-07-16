@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // FILE: userGiftCards.jsx
 // =============================================================================
 import React, { useState, useEffect, useMemo } from 'react';
@@ -16,7 +16,7 @@ const ITEMS_PER_PAGE = 6;
 const sampleGiftCards = [
     { id: 1, code: 'GIFT-1234-5678', amount: 200000, remaining: 150000, from: 'علی محمدی', message: 'تولدت مبارک! 🎂', date: '۱۴۰۴/۰۲/۱۵', status: 'active', usedDate: null },
     { id: 2, code: 'GIFT-8765-4321', amount: 500000, remaining: 0, from: 'سارا رضایی', message: 'هدیه نوروزی', date: '۱۴۰۴/۰۱/۰۵', status: 'used', usedDate: '۱۴۰۴/۰۱/۲۰' },
-    { id: 3, code: 'GIFT-1122-3344', amount: 300000, remaining: 300000, from: 'فروشگاه شاپ مارکت', message: 'تبریک ثبت‌نام', date: '۱۴۰۳/۱۲/۲۸', status: 'active', usedDate: null },
+    { id: 3, code: 'GIFT-1122-3344', amount: 300000, remaining: 300000, from: 'فروشگاه کیان شاپ', message: 'تبریک ثبت‌نام', date: '۱۴۰۳/۱۲/۲۸', status: 'active', usedDate: null },
     { id: 4, code: 'GIFT-5566-7788', amount: 100000, remaining: 100000, from: 'مهرداد وفایی', message: 'خرید خوبی داشته باشی!', date: '۱۴۰۴/۰۲/۲۲', status: 'expired', usedDate: null },
 ];
 

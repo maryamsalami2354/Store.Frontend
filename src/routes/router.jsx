@@ -4,6 +4,7 @@ import MiddleWar from "../services/authService.jsx";
 import Root from "../pages/Root";
 import Login from "../pages/Login";
 import Seller from "../pages/Seller";
+import Admin from "../pages/Admin";
 import User from "../pages/User";
 import Blogs from "../pages/Blogs";
 import PageSkeleton from "../components/skeleton/MainSkeleton/MainSkeleton";
@@ -113,6 +114,11 @@ const router = createBrowserRouter([
       // SELLER PANEL
       // =========================================================================
       { path: "seller/*", element: <PageSkeleton><Seller /></PageSkeleton> },
+
+      // =========================================================================
+      // ADMIN PANEL
+      // =========================================================================
+      { path: "admin/*", element: <PageSkeleton><Admin /></PageSkeleton> },
 
       // =========================================================================
       // 404

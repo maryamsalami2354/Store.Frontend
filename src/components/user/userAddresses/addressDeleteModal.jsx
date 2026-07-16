@@ -1,4 +1,3 @@
-// src/components/user/userAddresses/addressDeleteModal.jsx
 import React from 'react';
 import { X, AlertTriangle } from 'react-feather';
 import { motion, AnimatePresence } from 'framer-motion';

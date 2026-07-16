@@ -1,4 +1,5 @@
 import axios from "axios";
+import { removeCookie } from "../utils/helpers/cookie.js";
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5155";
 
@@ -25,6 +26,11 @@ const authApiClient = axios.create({
 
 const normalizeApiError = (error) => {
     const data = error.response?.data;
+    const status = error.response?.status;
+
+    if (status === 401) {
+        return data?.message || "نشست شما منقضی شده است. لطفا دوباره وارد شوید.";
+    }
 
     if (Array.isArray(data?.errors)) {
         return data.errors.join("\n");
@@ -38,7 +44,7 @@ const normalizeApiError = (error) => {
 };
 
 authApiClient.interceptors.request.use((config) => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("authToken") || localStorage.getItem("token");
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -49,7 +55,15 @@ authApiClient.interceptors.request.use((config) => {
 
 authApiClient.interceptors.response.use(
     (response) => response,
-    (error) => Promise.reject(new Error(normalizeApiError(error)))
+    async (error) => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("token");
+            await removeCookie("origins");
+        }
+
+        return Promise.reject(new Error(normalizeApiError(error)));
+    }
 );
 
 export const requestOtp = async (phoneNumber) => {

@@ -1,20 +1,17 @@
-// =============================================================================
-// FILE: orderCard.jsx (اصلاح‌شده - دکمه مرجوعی مودال رو باز می‌کنه)
-// =============================================================================
 import React from 'react';
 import { Eye, XCircle, RotateCcw } from 'react-feather';
 
 const statusConfig = {
-    pending: { label: 'در انتظار', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
-    processing: { label: 'در حال پردازش', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' },
-    shipped: { label: 'ارسال شده', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400' },
-    completed: { label: 'تحویل شده', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
+    pending: { label: 'در انتظار پرداخت', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
+    processing: { label: 'در انتظار ارسال', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' },
+    shipped: { label: 'ارسال سفارش', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400' },
+    completed: { label: 'تحویل داده شد', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
     cancelled: { label: 'لغو شده', color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
 };
 
 const OrderCard = ({ variant, order, onView, onCancel, onReturn }) => {
     const status = statusConfig[order.status] || statusConfig.pending;
-    const canCancel = order.status === 'pending' || order.status === 'processing';
+    const canCancel = order.status === 'pending';
     const canReturn = order.status === 'completed';
 
     if (variant === 'row') {

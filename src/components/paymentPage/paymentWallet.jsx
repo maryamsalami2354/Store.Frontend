@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // FILE: paymentWallet.jsx
 // =============================================================================
 import React from 'react';
@@ -8,7 +8,7 @@ const PaymentWallet = ({ password, onPasswordChange, balance }) => (
     <div className="bg-white dark:bg-[#111] rounded-2xl border border-gray-200 dark:border-gray-800 p-4 sm:p-5">
         <h3 className="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
             <Archive size={18} className="text-[#002874] dark:text-[#4C6FB6]" />
-            کیف پول شاپ مارکت
+            کیف پول کیان شاپ
         </h3>
 
         <div className="bg-gradient-to-r from-[#002874]/10 to-[#4C6FB6]/10 dark:from-[#002874]/20 dark:to-[#4C6FB6]/20 rounded-xl p-4 mb-4">

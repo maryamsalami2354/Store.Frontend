@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Headphones, RefreshCw, Award, Shield, Phone, Video, Instagram,
@@ -63,7 +63,7 @@ const socialData = [
 // Footer Info (Hardcoded)
 const footerInfo = {
     description: 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد',
-    copyright: 'تمامی حقوق مادی و معنوی برای فروشگاه اینترنتی شاپ مارکت محفوظ می‌باشد.',
+    copyright: 'تمامی حقوق مادی و معنوی برای فروشگاه اینترنتی کیان شاپ محفوظ می‌باشد.',
     designer: 'مهرداد وفایی منش',
     designerLink: '#'
 };

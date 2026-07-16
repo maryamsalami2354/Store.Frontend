@@ -1,14 +1,13 @@
-// src/components/user/userOrders/ordersFilterBar.jsx
 import React from 'react';
 import { Search } from 'react-feather';
 import CustomSelect from '../../common/customSelect/customSelect';
 
 const statusOptions = [
     { value: 'all', label: 'همه سفارشات' },
-    { value: 'pending', label: 'در انتظار' },
-    { value: 'processing', label: 'در حال پردازش' },
-    { value: 'shipped', label: 'ارسال شده' },
-    { value: 'completed', label: 'تحویل شده' },
+    { value: 'pending', label: 'در انتظار پرداخت' },
+    { value: 'processing', label: 'در انتظار ارسال' },
+    { value: 'shipped', label: 'ارسال سفارش' },
+    { value: 'completed', label: 'تحویل داده شد' },
     { value: 'cancelled', label: 'لغو شده' },
 ];
 

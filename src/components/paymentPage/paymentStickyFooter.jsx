@@ -13,7 +13,7 @@ const PaymentStickyFooter = ({ total, onPay, paymentMethod, isPaying = false }) 
                 disabled={isPaying}
                 className="flex items-center gap-2 px-5 py-3 bg-[#002874] text-white rounded-xl font-medium text-sm hover:bg-[#001d5a] disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0"
             >
-                {paymentMethod === 'Wallet' ? <Archive size={16} /> : <CreditCard size={16} />}
+                {paymentMethod === 'wallet' ? <Archive size={16} /> : <CreditCard size={16} />}
                 {isPaying ? 'در حال ثبت...' : 'پرداخت'}
                 <ArrowLeft size={16} />
             </button>

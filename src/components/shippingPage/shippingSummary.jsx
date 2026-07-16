@@ -3,13 +3,7 @@ import { MapPin, Clock, ArrowLeft, Truck } from 'react-feather';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { toAssetUrl } from '../../services/authApi.js';
 
-const timeLabels = {
-    morning: 'صبح (۹ تا ۱۲)',
-    afternoon: 'عصر (۱۵ تا ۱۸)',
-    evening: 'غروب (۱۸ تا ۲۱)',
-};
-
-const ShippingSummary = ({ items = [], subtotal, shippingCost, total, selectedAddress, deliveryTime, shippingMethod, onContinue }) => (
+const ShippingSummary = ({ items = [], subtotal, shippingCost, total, selectedAddress, deliveryTime, deliveryTimeLabel, shippingMethod, onContinue }) => (
     <div className="bg-white dark:bg-[#111] rounded-2xl border border-gray-200 dark:border-gray-800 p-5 space-y-4">
         <h3 className="font-bold text-gray-900 dark:text-white text-lg">خلاصه سفارش</h3>
 
@@ -68,7 +62,7 @@ const ShippingSummary = ({ items = [], subtotal, shippingCost, total, selectedAd
         {deliveryTime && (
             <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                 <Clock size={14} className="text-[#002874] dark:text-[#4C6FB6]" />
-                <span>{timeLabels[deliveryTime]}</span>
+                <span>{deliveryTimeLabel || deliveryTime}</span>
             </div>
         )}
 

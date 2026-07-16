@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // FILE: clubBenefits.jsx
 // =============================================================================
 import React from 'react';
@@ -10,7 +10,7 @@ const benefits = [
     { icon: Star, title: 'امتیاز مضاعف', description: 'در مناسبت‌های خاص امتیاز دوبرابر', color: 'from-amber-500 to-orange-600' },
     { icon: Zap, title: 'ارسال سریع', description: 'اولویت در پردازش و ارسال سفارشات', color: 'from-blue-500 to-blue-600' },
     { icon: Shield, title: 'پشتیبانی VIP', description: 'پاسخگویی در کمتر از ۱ ساعت', color: 'from-purple-500 to-violet-600' },
-    { icon: Heart, title: 'دعوت به ایونت‌ها', description: 'شرکت در رویدادهای ویژه شاپ مارکت', color: 'from-red-500 to-pink-600' },
+    { icon: Heart, title: 'دعوت به ایونت‌ها', description: 'شرکت در رویدادهای ویژه کیان شاپ', color: 'from-red-500 to-pink-600' },
 ];
 
 const ClubBenefits = () => (

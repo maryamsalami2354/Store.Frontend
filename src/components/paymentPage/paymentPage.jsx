@@ -18,7 +18,7 @@ const PaymentPage = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [isPaying, setIsPaying] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState('gateway');
+    const [paymentMethod, setPaymentMethod] = useState('zarinpal');
     const [walletPassword, setWalletPassword] = useState('');
     const [checkoutInfo, setCheckoutInfo] = useState(null);
     const accessToken = useStore((state) => state.accessToken);
@@ -83,7 +83,7 @@ const PaymentPage = () => {
             return;
         }
 
-        if (paymentMethod === 'Wallet' && !walletPassword) {
+        if (paymentMethod === 'wallet' && !walletPassword) {
             toast.error('لطفا رمز کیف پول را وارد کنید');
             return;
         }
@@ -97,10 +97,15 @@ const PaymentPage = () => {
                 shippingAddress: checkoutInfo.shippingAddress,
                 recipientName: checkoutInfo.recipientName,
                 recipientPhone: checkoutInfo.recipientPhone,
+                paymentMethod,
             });
 
             localStorage.removeItem(CHECKOUT_STORAGE_KEY);
             setCart({ items: [], subtotal: 0, grandTotal: 0, totalItems: 0, totalItemCount: 0 });
+            if (result.paymentUrl) {
+                window.location.href = result.paymentUrl;
+                return;
+            }
             toast.success('سفارش با موفقیت ثبت شد');
             navigate(`/payment/result?status=ok&orderId=${result.orderId}&trackingCode=${encodeURIComponent(result.trackingCode || '')}`);
         } catch (error) {
@@ -127,7 +132,7 @@ const PaymentPage = () => {
                     <div className="flex-1 min-w-0 space-y-4">
                         <PaymentMethods selected={paymentMethod} onSelect={setPaymentMethod} />
 
-                        {paymentMethod === 'Wallet' && (
+                        {paymentMethod === 'wallet' && (
                             <PaymentWallet
                                 password={walletPassword}
                                 onPasswordChange={setWalletPassword}
@@ -145,6 +150,7 @@ const PaymentPage = () => {
                                 total={total}
                                 selectedAddress={checkoutInfo?.selectedAddress}
                                 deliveryTime={checkoutInfo?.deliveryTime}
+                                deliveryTimeLabel={checkoutInfo?.deliveryTimeTitle}
                                 shippingMethodTitle={checkoutInfo?.shippingMethodTitle}
                                 onPay={handlePay}
                                 paymentMethod={paymentMethod}

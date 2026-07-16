@@ -1,20 +1,17 @@
-// =============================================================================
-// FILE: paymentMethods.jsx
-// =============================================================================
 import React from 'react';
 import { CreditCard, Archive, Shield, Check } from 'react-feather';
 
 const methods = [
     {
-        id: 'gateway',
-        title: 'درگاه بانکی',
-        description: 'پرداخت از طریق کارت‌های شتاب',
+        id: 'zarinpal',
+        title: 'پرداخت تستی زرین‌پال',
+        description: 'انتقال به درگاه Sandbox زرین‌پال',
         icon: CreditCard,
-        cards: ['visa', 'mastercard', 'shaba'],
+        cards: ['شتاب', 'Sandbox', 'IRT'],
     },
     {
-        id: 'Wallet',
-        title: 'کیف پول شاپ مارکت',
+        id: 'wallet',
+        title: 'کیف پول کیان شاپ',
         description: 'پرداخت از موجودی کیف پول',
         icon: Archive,
     },
@@ -50,8 +47,8 @@ const PaymentMethods = ({ selected, onSelect }) => (
                                 <div className="flex items-center gap-1.5 mt-2">
                                     {method.cards.map(card => (
                                         <span key={card} className="text-[10px] bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded text-gray-500 dark:text-gray-400">
-                      {card}
-                    </span>
+                                            {card}
+                                        </span>
                                     ))}
                                 </div>
                             )}
