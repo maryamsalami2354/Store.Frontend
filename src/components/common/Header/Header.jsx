@@ -320,8 +320,8 @@ const Header = () => {
                                                 <Link to="/user" onClick={() => { setUserMenuOpen(false); navigate('/user'); }} className="flex items-center gap-2.5 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:text-[#002874] dark:hover:text-[#4C6FB6] hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                                     <User size={16} /> پنل کاربری
                                                 </Link>
-                                                <Link to="/seller" onClick={() => { setUserMenuOpen(false); navigate('/seller'); }} className="flex items-center gap-2.5 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:text-[#002874] dark:hover:text-[#4C6FB6] hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                                    <ShoppingBag size={16} /> پنل فروشندگی
+                                                <Link to="/seller" onClick={() => { setUserMenuOpen(false); navigate('/seller'); }} className="flex items-center gap-2.5 px-4 py-3 text-sm text-gray-500 dark:text-gray-400 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors">
+                                                    <ShoppingBag size={16} /> پنل فروشندگی غیرفعال
                                                 </Link>
                                                 <button onClick={handleLogout} className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border-t border-gray-100 dark:border-gray-800">
                                                     <LogOut size={16} /> خروج
@@ -354,8 +354,8 @@ const Header = () => {
                                                 <Link to="/user" onClick={() => { setUserMenuOpen(false); navigate('/user'); }} className="flex items-center gap-2.5 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:text-[#002874] dark:hover:text-[#4C6FB6] hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                                     <User size={16} /> پنل کاربری
                                                 </Link>
-                                                <Link to="/seller" onClick={() => { setUserMenuOpen(false); navigate('/seller'); }} className="flex items-center gap-2.5 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:text-[#002874] dark:hover:text-[#4C6FB6] hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                                    <ShoppingBag size={16} /> پنل فروشندگی
+                                                <Link to="/seller" onClick={() => { setUserMenuOpen(false); navigate('/seller'); }} className="flex items-center gap-2.5 px-4 py-3 text-sm text-gray-500 dark:text-gray-400 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors">
+                                                    <ShoppingBag size={16} /> پنل فروشندگی غیرفعال
                                                 </Link>
                                                 <button onClick={handleLogout} className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border-t border-gray-100 dark:border-gray-800">
                                                     <LogOut size={16} /> خروج

@@ -3,8 +3,9 @@ import { createBrowserRouter } from "react-router-dom";
 import MiddleWar from "../services/authService.jsx";
 import Root from "../pages/Root";
 import Login from "../pages/Login";
-import Seller from "../pages/Seller";
+import SellerDisabled from "../pages/SellerDisabled";
 import Admin from "../pages/Admin";
+import AdminLogin from "../pages/AdminLogin";
 import User from "../pages/User";
 import Blogs from "../pages/Blogs";
 import PageSkeleton from "../components/skeleton/MainSkeleton/MainSkeleton";
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
       // AUTH
       // =========================================================================
       { path: "login", element: <PageSkeleton><Login /></PageSkeleton> },
+      { path: "admin/login", element: <AdminLogin /> },
 
       // =========================================================================
       // PRODUCTS
@@ -113,12 +115,12 @@ const router = createBrowserRouter([
       // =========================================================================
       // SELLER PANEL
       // =========================================================================
-      { path: "seller/*", element: <PageSkeleton><Seller /></PageSkeleton> },
+      { path: "seller/*", element: <PageSkeleton><SellerDisabled /></PageSkeleton> },
 
       // =========================================================================
       // ADMIN PANEL
       // =========================================================================
-      { path: "admin/*", element: <PageSkeleton><Admin /></PageSkeleton> },
+      { path: "admin/*", element: <Admin /> },
 
       // =========================================================================
       // 404

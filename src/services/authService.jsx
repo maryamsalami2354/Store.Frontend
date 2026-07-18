@@ -10,8 +10,9 @@ const MiddleWar = () => {
     const { pathname } = useLocation();
     const noNavbarRoutes = ["/login"];
     const noFooterRoutes = ["/login"];
-    const showNavbar = !noNavbarRoutes.includes(pathname);
-    const showFooter = !noFooterRoutes.includes(pathname);
+    const isAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
+    const showNavbar = !isAdminRoute && !noNavbarRoutes.includes(pathname);
+    const showFooter = !isAdminRoute && !noFooterRoutes.includes(pathname);
 
     // useEffect(() => {
     //     async function fetchData() {

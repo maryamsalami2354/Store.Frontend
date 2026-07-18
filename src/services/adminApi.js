@@ -21,6 +21,47 @@ export const getAdminUsers = async (params = {}) => {
     };
 };
 
+const normalizeRole = (role) => ({
+    id: role.id,
+    title: role.title || "",
+    code: role.code || "",
+});
+
+const normalizeAccessUser = (user) => ({
+    id: user.id,
+    firstName: user.name || "",
+    lastName: user.lastName || "",
+    phoneNumber: user.phoneNumber || "",
+    email: user.email || "",
+    nationalCode: user.nationalCode || "",
+    roles: (user.roles || []).map(normalizeRole),
+});
+
+export const getAccessRoles = async () => {
+    const { data } = await authApiClient.get("/AdminAccess/roles");
+    return (data?.roles || []).map(normalizeRole);
+};
+
+export const getAccessUsers = async (params = {}) => {
+    const { data } = await authApiClient.get("/AdminAccess/users", { params });
+
+    return {
+        users: (data?.users || []).map(normalizeAccessUser),
+        page: Number(data?.page || 1),
+        pageSize: Number(data?.pageSize || 10),
+        totalCount: Number(data?.totalCount || 0),
+        totalPages: Number(data?.totalPages || 1),
+    };
+};
+
+export const updateUserRoles = async (userId, roleIds) => {
+    const { data } = await authApiClient.put(`/AdminAccess/users/${userId}/roles`, { roleIds });
+    return data;
+};
+
 export default {
     getAdminUsers,
+    getAccessRoles,
+    getAccessUsers,
+    updateUserRoles,
 };

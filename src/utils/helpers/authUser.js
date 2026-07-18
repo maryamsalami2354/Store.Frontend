@@ -16,6 +16,9 @@ export const getUserFullName = (user) => {
 export const normalizeAuthUser = (user) => {
     if (!user) return null;
 
+    const roles = Array.isArray(user.roles) ? user.roles : [];
+    const roleCodes = Array.isArray(user.roleCodes) ? user.roleCodes : [];
+
     return {
         ...user,
         firstName: user.name || "",
@@ -26,7 +29,32 @@ export const normalizeAuthUser = (user) => {
         nationalCode: user.nationalCode || "",
         email: user.email || "",
         hasPassword: Boolean(user.hasPassword),
+        roles,
+        roleCodes,
         avatarUrl: user.avatarUrl || user.avatar || "",
         avatar: resolveMediaUrl(user.avatarUrl || user.avatar),
     };
+};
+
+const getRoleValues = (user) =>
+    [...(user?.roles || []), ...(user?.roleCodes || [])].map((role) => String(role || "").trim().toLowerCase());
+
+export const isSuperAdminUser = (user) => {
+    const superAdminRoles = ["superadmin", "super_admin", "admin", "administrator", "مدیر", "ادمین"];
+    const values = getRoleValues(user);
+
+    return values.some((role) => superAdminRoles.includes(role));
+};
+
+export const isUserAdminUser = (user) => {
+    const values = getRoleValues(user);
+
+    return values.includes("useradmin");
+};
+
+export const isAdminUser = (user) => {
+    const adminRoles = ["admin", "administrator", "superadmin", "super_admin", "useradmin", "مدیر", "ادمین"];
+    const values = getRoleValues(user);
+
+    return values.some((role) => adminRoles.includes(role));
 };

@@ -76,6 +76,16 @@ export const login = async ({ phoneNumber, otpCode }) => {
     return data;
 };
 
+export const requestAdminOtp = async (phoneNumber) => {
+    const { data } = await authApiClient.post("/Auth/Admin/RequestOtp", { phoneNumber });
+    return data;
+};
+
+export const adminLogin = async ({ phoneNumber, otpCode }) => {
+    const { data } = await authApiClient.post("/Auth/Admin/Login", { phoneNumber, otpCode });
+    return data;
+};
+
 export const register = async (payload) => {
     const { data } = await authApiClient.post("/Auth/Register", payload);
     return data;
