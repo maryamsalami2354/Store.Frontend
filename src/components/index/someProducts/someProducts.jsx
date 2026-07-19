@@ -1,5 +1,5 @@
 // src/components/SomeProducts/SomeProducts.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import {
@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 // ایمپورت مستقیم JSON
 import productsData from '../../../../public/jsons/products.json';
+import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
+import { getCatalogProducts } from '../../../services/catalogApi.js';
 import categoriesDataJson from '../../../../public/jsons/menuCategories.json';
 import SomeProductsSkeleton from '../../skeleton/SomeProductsSkeleton';
 import useCartActions from '../../../hooks/useCartActions.js';
@@ -26,6 +28,7 @@ const PRODUCTS_PER_COLUMN = 4;
 const ImageGridItem = ({ product, index }) => {
     const [isHovered, setIsHovered] = useState(false);
     const { addProductToCart } = useCartActions();
+    const { isOutOfStock, label: availabilityLabel, badgeClass: availabilityBadgeClass } = getProductAvailability(product);
 
     const getBadge = () => {
         if (product.discount > 0) {
@@ -63,6 +66,9 @@ const ImageGridItem = ({ product, index }) => {
                     </span>
                 </div>
             )}
+            <span className={`absolute bottom-2 right-2 z-10 rounded-full border px-1.5 py-0.5 text-[8px] sm:text-[9px] font-bold bg-white/90 dark:bg-black/60 backdrop-blur-sm ${availabilityBadgeClass}`}>
+                {availabilityLabel}
+            </span>
 
             <LazyLoadImage
                 src={product.image}
@@ -99,10 +105,15 @@ const ImageGridItem = ({ product, index }) => {
                         <Heart size={14} />
                     </button>
                     <button
-                        className="p-1.5 bg-[#002874] text-white rounded-full shadow-md hover:bg-[#001d5a] dark:hover:bg-[#3a5a9a] transition-colors"
+                        disabled={isOutOfStock}
+                        className={`p-1.5 rounded-full shadow-md transition-colors ${isOutOfStock ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-800 text-gray-300 dark:text-gray-600' : 'bg-[#002874] text-white hover:bg-[#001d5a] dark:hover:bg-[#3a5a9a]'}`}
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+                            if (isOutOfStock) {
+                                toast.info('این محصول فعلا ناموجود است');
+                                return;
+                            }
                             addProductToCart(product);
                         }}
                     >
@@ -177,15 +188,41 @@ const SomeProducts = ({
                           isLoading: propLoading = false
                       }) => {
     // مستقیم از import استفاده کن
-    const allProducts = productsData.products || [];
+    const [catalogProducts, setCatalogProducts] = useState([]);
+    const allProducts = catalogProducts.length ? catalogProducts : productsData.products || [];
     const amazingProducts = allProducts.filter(p => p.isAmazing);
     const categories = categoriesDataJson.categories || [];
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadProducts = async () => {
+            try {
+                const response = await getCatalogProducts({
+                    page: 1,
+                    pageSize: 200,
+                    onlyAmazing: true,
+                    sort: 'discounted'
+                });
+                if (isMounted) setCatalogProducts(response.products || []);
+            } catch (error) {
+                console.warn('Could not load special products from API:', error);
+            }
+        };
+
+        loadProducts();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const selectedCategories = categories.slice(0, MAX_COLUMNS);
 
     const columnsData = selectedCategories.map(category => {
         const categoryProducts = amazingProducts
             .filter(p => p.categoryId === category.id)
+            .sort(compareProductAvailability)
             .slice(0, PRODUCTS_PER_COLUMN);
 
         return {
@@ -196,7 +233,7 @@ const SomeProducts = ({
         };
     }).filter(column => column.products.length > 0);
 
-    const [products] = useState(columnsData);
+    const products = columnsData;
     const isLoading = propLoading;
 
     const hasAnyProduct = products.some(col => col.products.length > 0);

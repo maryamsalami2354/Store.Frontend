@@ -8,6 +8,7 @@ import WishlistGrid from './wishlistGrid';
 import WishlistEmptyState from './wishlistEmptyState';
 import ProductsPagination from '../../seller/sellerProducts/productsPagination';
 import productsData from '../../../../public/jsons/products.json';
+import { getCatalogProducts } from '../../../services/catalogApi.js';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,7 +24,8 @@ const UserWishlist = () => {
         const loadData = async () => {
             await new Promise(resolve => setTimeout(resolve, 800));
             // گرفتن ۱۵ محصول تصادفی برای تست صفحه‌بندی
-            const allProducts = productsData.products || [];
+            const response = await getCatalogProducts({ page: 1, pageSize: 200 }).catch(() => ({ products: [] }));
+            const allProducts = response.products?.length ? response.products : productsData.products || [];
             const shuffled = [...allProducts].sort(() => 0.5 - Math.random());
             const selected = shuffled.slice(0, 15).map(p => ({
                 ...p,

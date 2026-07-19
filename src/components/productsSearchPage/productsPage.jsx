@@ -16,6 +16,10 @@ import 'react-loading-skeleton/dist/skeleton.css';
 const PRODUCTS_PER_PAGE = 12;
 
 const parsePrice = (value) => Number(String(value || '').replace(/[^\d]/g, '')) || 0;
+const sortAvailableFirst = (items) => {
+    items.sort((a, b) => Number((b.stock || 0) > 0) - Number((a.stock || 0) > 0));
+    return items;
+};
 
 const ProductsPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -165,7 +169,7 @@ const ProductsPage = () => {
                 break;
         }
 
-        return result;
+        return sortAvailableFirst(result);
     }, [products, searchQuery, appliedCategories, appliedBrands, appliedMinPrice, appliedMaxPrice, appliedOnlyAvailable, appliedOnlyDiscounted, appliedOnlyAmazing, appliedMinRating, sortBy]);
 
     const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);

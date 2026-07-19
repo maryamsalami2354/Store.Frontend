@@ -13,6 +13,7 @@ import ComparisonAddProduct from './comparisonAddProduct';
 import ComparisonTable from './comparisonTable';
 import ComparisonActions from './comparisonActions';
 import ComparisonFloatingButton from './comparisonFloatingButton';
+import { getCatalogProducts } from '../../services/catalogApi.js';
 
 const MAX_COMPARE = 4;
 
@@ -20,8 +21,9 @@ const ComparisonPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [isLoading, setIsLoading] = useState(true);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [catalogProducts, setCatalogProducts] = useState([]);
 
-    const allProducts = useMemo(() => productsData.products || [], []);
+    const allProducts = useMemo(() => catalogProducts.length ? catalogProducts : productsData.products || [], [catalogProducts]);
 
     // محصولات انتخاب‌شده از URL
     const selectedIds = useMemo(() => {
@@ -35,9 +37,24 @@ const ComparisonPage = () => {
 
     // اگر URL خالی بود ولی products داریم، چیزی نشون نده تا loaded بشه
     useEffect(() => {
+        let isMounted = true;
+
+        const loadProducts = async () => {
+            try {
+                const response = await getCatalogProducts({ page: 1, pageSize: 200 });
+                if (isMounted) setCatalogProducts(response.products || []);
+            } catch (error) {
+                console.warn('Could not load comparison products from API:', error);
+            }
+        };
+
+        loadProducts();
         const timer = setTimeout(() => setIsLoading(false), 400);
         window.scrollTo(0, 0);
-        return () => clearTimeout(timer);
+        return () => {
+            isMounted = false;
+            clearTimeout(timer);
+        };
     }, []);
 
     // =========================================================================

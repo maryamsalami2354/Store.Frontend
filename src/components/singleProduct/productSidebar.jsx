@@ -30,7 +30,8 @@ const ProductSidebar = ({product, onAddToCart}) => {
         return Number(String(p).replace(/[^\d]/g, '')).toLocaleString('fa-IR');
     };
 
-    const isOutOfStock = product?.stock === 0;
+    const stockCount = Number(product?.stock || 0);
+    const isOutOfStock = stockCount <= 0;
 
     const handleNotifyMe = () => {
         setNotifyMe(true);
@@ -118,7 +119,7 @@ const ProductSidebar = ({product, onAddToCart}) => {
                             className={`w-2.5 h-2.5 rounded-full ${isOutOfStock ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`}></span>
                         <span
                             className={`font-medium ${isOutOfStock ? 'text-red-500' : 'text-gray-700 dark:text-gray-300'}`}>
-                            {isOutOfStock ? 'ناموجود' : 'موجود در انبار'}
+                            {isOutOfStock ? 'ناموجود' : `موجود در انبار - ${stockCount.toLocaleString('fa-IR')} عدد`}
                         </span>
                     </span>
                     {showStock ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}

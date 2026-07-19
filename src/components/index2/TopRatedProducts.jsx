@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import { ChevronLeft, ChevronRight, Star, ShoppingBag, Heart, Award, ArrowLeft } from 'lucide-react';
 import productsData from '../../../public/jsons/products.json';
 import useCartActions from '../../hooks/useCartActions.js';
+import { compareProductAvailability, getProductAvailability } from '../../utils/helpers/productAvailability.js';
+import { getCatalogProducts } from '../../services/catalogApi.js';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
@@ -38,10 +40,34 @@ const TopRatedProducts = ({
     const { addProductToCart } = useCartActions();
 
     useEffect(() => {
+        let isMounted = true;
+
         setIsMounted(true);
-        const allProducts = productsData.products || [];
-        const topRated = [...allProducts].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 12);
-        setProducts(topRated);
+        const loadProducts = async () => {
+            const allProducts = productsData.products || [];
+            const fallbackProducts = [...allProducts]
+                .sort((a, b) => compareProductAvailability(a, b) || (b.rating || 0) - (a.rating || 0))
+                .slice(0, 12);
+
+            try {
+                const response = await getCatalogProducts({ page: 1, pageSize: 20, sort: 'popular' });
+                const apiProducts = response.products || [];
+                if (isMounted) {
+                    setProducts((apiProducts.length ? apiProducts : fallbackProducts)
+                        .sort((a, b) => compareProductAvailability(a, b) || (b.rating || 0) - (a.rating || 0))
+                        .slice(0, 12));
+                }
+            } catch (error) {
+                console.warn('Could not load top rated products from API:', error);
+                if (isMounted) setProducts(fallbackProducts);
+            }
+        };
+
+        loadProducts();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     const handleSwiper = useCallback((swiper) => {
@@ -118,7 +144,10 @@ const TopRatedProducts = ({
                         observer={true}
                         observeParents={true}
                     >
-                        {products.map((product) => (
+                        {products.map((product) => {
+                            const { isOutOfStock, label: availabilityLabel, badgeClass: availabilityBadgeClass } = getProductAvailability(product);
+
+                            return (
                             <SwiperSlide key={product.id} className="!h-auto">
                                 <div
                                     onClick={() => navigate(`/product/${product.id}`)}
@@ -161,6 +190,9 @@ const TopRatedProducts = ({
                                         <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 line-clamp-2 min-h-[42px] group-hover:text-[#002874] dark:group-hover:text-[#4C6FB6] transition-colors">
                                             {product.name}
                                         </h3>
+                                        <span className={`mt-2 inline-flex w-fit items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${availabilityBadgeClass}`}>
+                                            {availabilityLabel}
+                                        </span>
                                         <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-100 dark:border-gray-800">
                                             <div>
                                                 {product.oldPrice && (
@@ -174,12 +206,17 @@ const TopRatedProducts = ({
                                                 </span>
                                             </div>
                                             <button
+                                                disabled={isOutOfStock}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
+                                                    if (isOutOfStock) {
+                                                        toast.info('این محصول فعلا ناموجود است');
+                                                        return;
+                                                    }
                                                     onAddToCart?.(product);
                                                     addProductToCart(product);
                                                 }}
-                                                className="p-2 bg-[#002874] text-white rounded-lg hover:bg-[#001d5a] transition-colors shadow-md"
+                                                className={`p-2 rounded-lg transition-colors shadow-md ${isOutOfStock ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-800 text-gray-300 dark:text-gray-600' : 'bg-[#002874] text-white hover:bg-[#001d5a]'}`}
                                             >
                                                 <ShoppingBag size={14} />
                                             </button>
@@ -187,7 +224,8 @@ const TopRatedProducts = ({
                                     </div>
                                 </div>
                             </SwiperSlide>
-                        ))}
+                            );
+                        })}
                     </Swiper>
                 </div>
             </div>

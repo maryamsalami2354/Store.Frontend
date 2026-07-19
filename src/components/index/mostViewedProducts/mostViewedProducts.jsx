@@ -11,6 +11,8 @@ import {
 import ProductSkeletonSlider from '../../skeleton/ProductSkeletonSlider/ProductSkeletonSlider';
 import productsData from '../../../../public/jsons/products.json';
 import useCartActions from '../../../hooks/useCartActions.js';
+import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
+import { getCatalogProducts } from '../../../services/catalogApi.js';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -71,6 +73,7 @@ const ColorDot = ({ color }) => (
 const ProductCard = ({ product, onAddToCart, onToggleWishlist , navigate }) => {
     const [isHovered, setIsHovered] = useState(false);
     const { addProductToCart } = useCartActions();
+    const { isOutOfStock, label: availabilityLabel, badgeClass: availabilityBadgeClass } = getProductAvailability(product);
 
     const handleMouseEnter = useCallback(() => setIsHovered(true), []);
     const handleMouseLeave = useCallback(() => setIsHovered(false), []);
@@ -86,9 +89,13 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist , navigate }) => {
 
     const handleAddToCart = useCallback((e) => {
         e.stopPropagation();
+        if (isOutOfStock) {
+            toast.info('این محصول فعلا ناموجود است');
+            return;
+        }
         onAddToCart?.(product);
         addProductToCart(product);
-    }, [addProductToCart, onAddToCart, product]);
+    }, [addProductToCart, isOutOfStock, onAddToCart, product]);
     const hasDiscount = product.discount > 0;
     const hasColors = product.colors?.length > 0;
 
@@ -159,6 +166,9 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist , navigate }) => {
                 <h3 className="text-xs sm:text-sm leading-4 sm:leading-5 line-clamp-2 min-h-[32px] sm:min-h-[40px] text-gray-800 dark:text-gray-200 group-hover:text-[#002874]  dark:group-hover:text-[#4C6FB6] transition-colors duration-200 font-medium">
                     {product.name}
                 </h3>
+                <span className={`mt-1 inline-flex w-fit items-center rounded-full border px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold ${availabilityBadgeClass}`}>
+                    {availabilityLabel}
+                </span>
 
                 {/* Price & Add to Cart */}
                 <div className="mt-auto pt-2 sm:pt-3 flex items-end justify-between gap-1 sm:gap-2">
@@ -176,9 +186,12 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist , navigate }) => {
                         </span>
                     </div>
                     <button
+                        disabled={isOutOfStock}
                         onClick={handleAddToCart}
                         className={`flex-shrink-0 p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all duration-300 ${
-                            isHovered
+                            isOutOfStock
+                                ? 'opacity-100 scale-100 cursor-not-allowed bg-gray-100 dark:bg-gray-800 text-gray-300 dark:text-gray-600'
+                                : isHovered
                                 ? 'opacity-100 scale-100 bg-[#002874] text-white hover:bg-[#001d5a]'
                                 : 'opacity-0 scale-90 bg-gray-100 dark:bg-gray-800 text-gray-400'
                         }`}
@@ -210,13 +223,38 @@ const MostViewedProducts = ({
     // مستقیم از import استفاده کن - مرتب‌سازی بر اساس rating
     const allProducts = productsData.products || [];
     const mostViewedProducts = [...allProducts]
-        .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+        .sort((a, b) => compareProductAvailability(a, b) || (b.rating || 0) - (a.rating || 0))
         .slice(0, 12);
 
-    const [products] = useState(mostViewedProducts);
+    const [products, setProducts] = useState(mostViewedProducts);
 
     const handleSwiper = useCallback((swiper) => {
         setSwiperInstance(swiper);
+    }, []);
+
+    React.useEffect(() => {
+        let isMounted = true;
+
+        const loadProducts = async () => {
+            try {
+                const response = await getCatalogProducts({ page: 1, pageSize: 20, sort: 'popular' });
+                const apiProducts = response.products || [];
+                if (isMounted && apiProducts.length) {
+                    setProducts(apiProducts
+                        .sort((a, b) => compareProductAvailability(a, b) || (b.rating || 0) - (a.rating || 0))
+                        .slice(0, 12));
+                }
+            } catch (error) {
+                console.warn('Could not load most viewed products from API:', error);
+                if (isMounted) setProducts(mostViewedProducts);
+            }
+        };
+
+        loadProducts();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     React.useEffect(() => {

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ShoppingBag, Heart, Star } from 'react-feather';
 import { toast } from 'react-toastify';
 import useCartActions from '../../hooks/useCartActions.js';
+import { compareProductAvailability, getProductAvailability } from '../../utils/helpers/productAvailability.js';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
@@ -77,7 +78,10 @@ const RelatedProducts = ({ products = [] }) => {
                     dir="rtl"
                     className="!overflow-visible"
                 >
-                    {products.map((product) => (
+                    {[...products].sort(compareProductAvailability).map((product) => {
+                        const { isOutOfStock, label: availabilityLabel, badgeClass: availabilityBadgeClass } = getProductAvailability(product);
+
+                        return (
                         <SwiperSlide key={product.id} className="!h-auto">
                             <Link
                                 to={`/product/${product.id}`}
@@ -125,6 +129,9 @@ const RelatedProducts = ({ products = [] }) => {
                                     <h3 className="text-xs sm:text-sm leading-5 line-clamp-2 min-h-[40px] text-gray-800 dark:text-gray-200 group-hover:text-[#002874]  dark:group-hover:text-[#4C6FB6] transition-colors font-medium mb-2">
                                         {product.name}
                                     </h3>
+                                    <span className={`mb-2 inline-flex w-fit items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${availabilityBadgeClass}`}>
+                                        {availabilityLabel}
+                                    </span>
 
                                     {/* قیمت و دکمه خرید */}
                                     <div className="mt-auto flex items-end justify-between gap-2">
@@ -138,12 +145,17 @@ const RelatedProducts = ({ products = [] }) => {
                                             </span>
                                         </div>
                                         <button
+                                            disabled={isOutOfStock}
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 e.stopPropagation();
+                                                if (isOutOfStock) {
+                                                    toast.info('این محصول فعلا ناموجود است');
+                                                    return;
+                                                }
                                                 addProductToCart(product);
                                             }}
-                                            className="flex-shrink-0 p-2 rounded-lg bg-[#002874] text-white hover:bg-[#001d5a] transition opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100"
+                                            className={`flex-shrink-0 p-2 rounded-lg transition ${isOutOfStock ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-800 text-gray-300 dark:text-gray-600 opacity-100 scale-100' : 'bg-[#002874] text-white hover:bg-[#001d5a] opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100'}`}
                                         >
                                             <ShoppingBag size={14} />
                                         </button>
@@ -151,7 +163,8 @@ const RelatedProducts = ({ products = [] }) => {
                                 </div>
                             </Link>
                         </SwiperSlide>
-                    ))}
+                        );
+                    })}
                 </Swiper>
             </div>
         </div>

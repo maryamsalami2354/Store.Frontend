@@ -16,6 +16,8 @@ import SellerProfileStats from './sellerProfileStats';
 import SellerProfileProducts from './sellerProfileProducts';
 import SellerProfileReviews from './sellerProfileReviews';
 import SellerProfileSidebar from './sellerProfileSidebar';
+import { compareProductAvailability } from '../../utils/helpers/productAvailability.js';
+import { getCatalogProducts } from '../../services/catalogApi.js';
 
 const ITEMS_PER_LOAD = 12;
 
@@ -56,12 +58,13 @@ const SellerProfilePage = () => {
             setSeller(found);
 
             // محصولات فروشنده
-            const allProducts = productsData.products || [];
+            const response = await getCatalogProducts({ page: 1, pageSize: 200 }).catch(() => ({ products: [] }));
+            const allProducts = response.products?.length ? response.products : productsData.products || [];
             const sellerProducts = allProducts.slice(0, Math.floor(Math.random() * 20) + 10).map(p => ({
                 ...p,
                 brandId: found.id,
             }));
-            setProducts(sellerProducts);
+            setProducts(sellerProducts.sort(compareProductAvailability));
 
             // نظرات ساختگی
             const sampleReviews = [

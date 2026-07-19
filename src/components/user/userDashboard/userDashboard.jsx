@@ -5,6 +5,7 @@ import DashboardRecentOrders from './dashboardRecentOrders';
 import DashboardRecommendedProducts from './dashboardRecommendedProducts';
 import ordersData from '../../../../public/jsons/sellerOrders.json';
 import productsData from '../../../../public/jsons/products.json';
+import { getCatalogProducts } from '../../../services/catalogApi.js';
 
 const UserDashboard = () => {
     const [orders, setOrders] = useState([]);
@@ -23,7 +24,8 @@ const UserDashboard = () => {
             }));
 
             // گرفتن ۳ محصول پیشنهادی از products.json
-            const recommended = (productsData.products || [])
+            const response = await getCatalogProducts({ page: 1, pageSize: 20, sort: 'discounted' }).catch(() => ({ products: [] }));
+            const recommended = (response.products?.length ? response.products : productsData.products || [])
                 .filter(p => p.isAmazing || p.isNew)
                 .slice(0, 3);
 

@@ -11,6 +11,7 @@ import {
 import ProductSkeletonSlider from '../../skeleton/ProductSkeletonSlider/ProductSkeletonSlider';
 import productsData from '../../../../public/jsons/products.json';
 import useCartActions from '../../../hooks/useCartActions.js';
+import { getCatalogProducts } from '../../../services/catalogApi.js';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -167,11 +168,22 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist }) => {
         toast.success(`${product.name} به علاقه‌مندی‌ها اضافه شد`);
     }, [onToggleWishlist, product.id, product.name]);
 
+    const stockCount = Number(product.stock || 0);
+    const isOutOfStock = stockCount <= 0;
+    const availabilityLabel = isOutOfStock ? 'ناموجود' : `موجودی: ${stockCount.toLocaleString('fa-IR')} عدد`;
+    const availabilityBadgeClass = isOutOfStock
+        ? 'bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900'
+        : 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800';
+
     const handleAddToCart = useCallback((e) => {
         e.stopPropagation();
+        if (isOutOfStock) {
+            toast.info('این محصول فعلا ناموجود است');
+            return;
+        }
         onAddToCart?.(product);
         addProductToCart(product);
-    }, [addProductToCart, onAddToCart, product]);
+    }, [addProductToCart, isOutOfStock, onAddToCart, product]);
 
     const hasDiscount = product.discount > 0;
     const hasColors = product.colors?.length > 0;
@@ -241,6 +253,12 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist }) => {
                     {product.name}
                 </h3>
 
+                <div className="mt-2">
+                    <span className={`inline-flex max-w-full items-center rounded-lg px-2 py-1 text-[10px] sm:text-[11px] font-bold leading-4 ${availabilityBadgeClass}`}>
+                        {availabilityLabel}
+                    </span>
+                </div>
+
                 <div className="mt-auto pt-2 sm:pt-3 flex items-end justify-between gap-1 sm:gap-2">
                     <div className="flex-1 min-w-0">
                         {product.oldPrice && (
@@ -257,8 +275,11 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist }) => {
                     </div>
                     <button
                         onClick={handleAddToCart}
+                        disabled={isOutOfStock}
                         className={`flex-shrink-0 p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all duration-300 ${
-                            isHovered
+                            isOutOfStock
+                                ? 'cursor-not-allowed bg-gray-200 text-gray-400 dark:bg-gray-800 opacity-100 scale-100'
+                                : isHovered
                                 ? 'opacity-100 scale-100 bg-[#002874] text-white hover:bg-[#001d5a] '
                                 : 'opacity-0 scale-90 bg-gray-100 dark:bg-gray-800 text-gray-400'
                         }`}
@@ -294,14 +315,51 @@ const AmazingProducts = ({
 
     // مستقیم از import استفاده کن - محصولات شگفت‌انگیز رو فیلتر کن
     const allProducts = productsData.products || [];
-    const amazingProductsList = propProducts || allProducts.filter(p => p.isAmazing);
+    const amazingProductsList = propProducts || allProducts
+        .filter(p => p.isAmazing)
+        .sort((a, b) => Number((b.stock || 0) > 0) - Number((a.stock || 0) > 0));
 
-    const [products] = useState(amazingProductsList);
-    const isLoading = propLoading ?? false;
+    const [products, setProducts] = useState(amazingProductsList);
+    const [isLoading, setIsLoading] = useState(propLoading ?? !propProducts);
 
     const handleSwiper = useCallback((swiper) => {
         setSwiperInstance(swiper);
     }, []);
+
+    React.useEffect(() => {
+        let isMounted = true;
+
+        const loadProducts = async () => {
+            if (propProducts) {
+                setProducts(propProducts);
+                setIsLoading(propLoading ?? false);
+                return;
+            }
+
+            setIsLoading(true);
+            try {
+                const response = await getCatalogProducts({
+                    page: 1,
+                    pageSize: 20,
+                    onlyAmazing: true,
+                    sort: 'discounted'
+                });
+                const apiProducts = response.products || [];
+                if (isMounted) setProducts(apiProducts.length ? apiProducts : amazingProductsList);
+            } catch (error) {
+                console.warn('Could not load amazing products from API:', error);
+                if (isMounted) setProducts(amazingProductsList);
+            } finally {
+                if (isMounted) setIsLoading(propLoading ?? false);
+            }
+        };
+
+        loadProducts();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [propProducts, propLoading]);
 
     React.useEffect(() => {
         if (swiperInstance && navigationPrevRef.current && navigationNextRef.current) {

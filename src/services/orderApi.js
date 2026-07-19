@@ -44,8 +44,32 @@ const formatDate = (value) => {
     return new Date(value).toLocaleDateString("fa-IR");
 };
 
+const formatTime = (value) => {
+    if (!value) return "";
+    return new Date(value).toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" });
+};
+
+const normalizeTrackingEvent = (event) => ({
+    id: event.id,
+    rawStatus: event.status,
+    status: toUiStatus(event.status),
+    title: event.title || event.statusLabel || event.status || "",
+    statusLabel: event.statusLabel || event.title || event.status || "",
+    description: event.description || "",
+    createdAt: event.createdAt,
+    date: formatDate(event.createdAt),
+    time: formatTime(event.createdAt),
+    source: event.source || "",
+    createdByUserId: event.createdByUserId,
+    isVisibleToCustomer: event.isVisibleToCustomer !== false,
+});
+
 const normalizeOrder = (order) => {
     const totalAmount = Number(order.totalAmount ?? order.amount ?? 0);
+    const trackingHistory = (order.trackingHistory || order.history || [])
+        .map(normalizeTrackingEvent)
+        .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+
     const items = (order.orderItems || order.items || []).map((item) => ({
         id: item.id,
         productId: item.productId,
@@ -78,6 +102,9 @@ const normalizeOrder = (order) => {
             full: order.shippingAddress || "",
         },
         items,
+        trackingHistory,
+        history: trackingHistory,
+        latestTracking: trackingHistory[trackingHistory.length - 1] || null,
         paymentMethod: order.paymentMethod || "زرین‌پال",
     };
 };
@@ -115,9 +142,18 @@ export const updateAdminOrder = async (orderId, payload) => {
     return data;
 };
 
+export const getOrderTracking = async (orderId) => {
+    const { data } = await authApiClient.get(`/Order/${orderId}/tracking`);
+    return {
+        ...data,
+        trackingHistory: (data?.trackingHistory || []).map(normalizeTrackingEvent),
+    };
+};
+
 export default {
     getMyOrders,
     getAdminOrders,
     updateOrderStatus,
     updateAdminOrder,
+    getOrderTracking,
 };

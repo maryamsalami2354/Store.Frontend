@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import {
     ArrowLeft,
     CheckCircle,
+    Clock,
     Edit2,
     Home,
     LogOut,
@@ -19,7 +20,7 @@ import {
 } from "react-feather";
 import { getAccessRoles, getAccessUsers, getAdminUsers, updateUserRoles } from "../../services/adminApi.js";
 import { getMe } from "../../services/authApi.js";
-import { getAdminOrders, updateAdminOrder, updateOrderStatus } from "../../services/orderApi.js";
+import { getAdminOrders, getOrderTracking, updateAdminOrder, updateOrderStatus } from "../../services/orderApi.js";
 import useStore from "../../store/index.js";
 import { isAdminUser, isSuperAdminUser, normalizeAuthUser } from "../../utils/helpers/authUser.js";
 
@@ -370,7 +371,9 @@ const AdminOrders = ({ orders, loading, canEditOrders, onRefresh }) => {
     const [query, setQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [editingOrder, setEditingOrder] = useState(null);
+    const [trackingOrder, setTrackingOrder] = useState(null);
     const [savingId, setSavingId] = useState(null);
+    const [trackingLoadingId, setTrackingLoadingId] = useState(null);
 
     const filteredOrders = useMemo(() => {
         const normalizedQuery = query.trim().toLowerCase();
@@ -432,6 +435,21 @@ const AdminOrders = ({ orders, loading, canEditOrders, onRefresh }) => {
             toast.error(error.message || "خطا در ویرایش سفارش");
         } finally {
             setSavingId(null);
+        }
+    };
+
+    const handleShowTracking = async (order) => {
+        setTrackingOrder(order);
+        setTrackingLoadingId(order.id);
+        try {
+            const result = await getOrderTracking(order.id);
+            setTrackingOrder((current) => current?.id === order.id
+                ? { ...current, trackingHistory: result.trackingHistory || [] }
+                : current);
+        } catch (error) {
+            toast.error(error.message || "خطا در دریافت پیگیری سفارش");
+        } finally {
+            setTrackingLoadingId(null);
         }
     };
 
@@ -503,6 +521,14 @@ const AdminOrders = ({ orders, loading, canEditOrders, onRefresh }) => {
                                         </select>
                                     </td>
                                     <td className="px-4 py-3">
+                                        <div className="flex flex-wrap gap-2">
+                                            <button
+                                                onClick={() => handleShowTracking(order)}
+                                                className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                                            >
+                                                <Clock size={15} />
+                                                پیگیری
+                                            </button>
                                         {canEditOrders ? (
                                             <button
                                                 onClick={() => setEditingOrder(order)}
@@ -514,6 +540,7 @@ const AdminOrders = ({ orders, loading, canEditOrders, onRefresh }) => {
                                         ) : (
                                             <span className="text-xs text-gray-400">فقط مشاهده</span>
                                         )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -530,7 +557,91 @@ const AdminOrders = ({ orders, loading, canEditOrders, onRefresh }) => {
                     onSave={handleSaveOrder}
                 />
             )}
+            {trackingOrder && (
+                <OrderTrackingModal
+                    order={trackingOrder}
+                    isLoading={trackingLoadingId === trackingOrder.id}
+                    onClose={() => setTrackingOrder(null)}
+                />
+            )}
         </section>
+    );
+};
+
+const OrderTrackingModal = ({ order, isLoading, onClose }) => {
+    const history = order.trackingHistory || order.history || [];
+    const latest = history[history.length - 1] || null;
+
+    return (
+        <div className="fixed inset-0 z-[85] flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+            <div
+                onClick={(event) => event.stopPropagation()}
+                className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-lg bg-white p-5 shadow-xl dark:bg-[#111]"
+            >
+                <div className="mb-5 flex items-start justify-between gap-3">
+                    <div>
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white">پیگیری سفارش #{toPersianNumber(order.id)}</h2>
+                        <p className="mt-1 text-xs text-gray-500">{order.trackingCode || "کد رهگیری ثبت نشده"}</p>
+                    </div>
+                    <button type="button" onClick={onClose} className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <X size={20} />
+                    </button>
+                </div>
+
+                <div className="mb-4 grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-900">
+                        <p className="text-xs text-gray-500">وضعیت فعلی</p>
+                        <div className="mt-2"><StatusBadge status={latest?.status || order.status} /></div>
+                    </div>
+                    <div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-900">
+                        <p className="text-xs text-gray-500">زمان آخرین تغییر</p>
+                        <p className="mt-2 text-sm font-medium text-gray-800 dark:text-gray-100">
+                            {[latest?.date, latest?.time].filter(Boolean).join(" - ") || "-"}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-800">
+                    <div className="mb-4 flex items-center gap-2">
+                        <Clock size={17} className="text-[#002874] dark:text-[#4C6FB6]" />
+                        <h3 className="text-sm font-bold text-gray-900 dark:text-white">تاریخچه پیگیری</h3>
+                    </div>
+
+                    {isLoading && <EmptyText text="در حال دریافت تاریخچه پیگیری..." />}
+                    {!isLoading && history.length === 0 && <EmptyText text="هنوز تاریخچه‌ای برای این سفارش ثبت نشده است." />}
+                    {!isLoading && history.length > 0 && (
+                        <div className="space-y-0">
+                            {history.map((event, index) => (
+                                <div key={`${event.id}-${index}`} className="relative flex gap-3 pb-5 last:pb-0">
+                                    {index < history.length - 1 && (
+                                        <span className="absolute right-[15px] top-8 h-[calc(100%-2rem)] w-px bg-gray-200 dark:bg-gray-800" />
+                                    )}
+                                    <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#002874] text-white">
+                                        <Clock size={14} />
+                                    </span>
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex flex-wrap items-center justify-between gap-2">
+                                            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                                {event.title || event.statusLabel || getStatusLabel(event.status)}
+                                            </p>
+                                            <span className="text-xs text-gray-500">
+                                                {[event.date, event.time].filter(Boolean).join(" - ")}
+                                            </span>
+                                        </div>
+                                        {event.description && (
+                                            <p className="mt-1 text-xs leading-6 text-gray-500 dark:text-gray-400">{event.description}</p>
+                                        )}
+                                        {event.source && (
+                                            <p className="mt-1 text-[11px] text-gray-400">ثبت توسط: {event.source}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
     );
 };
 

@@ -3,6 +3,7 @@ import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import WishlistCard from './wishlistCard';
+import { compareProductAvailability } from '../../../utils/helpers/productAvailability.js';
 
 const WishlistGrid = ({ isLoading, products, onRemove, onAddToCart }) => {
     if (isLoading) {
@@ -24,7 +25,7 @@ const WishlistGrid = ({ isLoading, products, onRemove, onAddToCart }) => {
 
     return (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {products.map(product => (
+            {[...products].sort(compareProductAvailability).map(product => (
                 <WishlistCard
                     key={product.id}
                     product={product}

@@ -6,6 +6,8 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { ChevronLeft, ChevronRight, Flame, ArrowLeft } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
 import productsData from '../../../../public/jsons/products.json';
+import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
+import { getCatalogProducts } from '../../../services/catalogApi.js';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -63,6 +65,7 @@ const NewProductCardGrid = ({ product, rank, navigate }) => {
     const handleClick = useCallback(() => {
         navigate(`/product/${product.id}`);
     }, [navigate, product.id]);
+    const { label: availabilityLabel, badgeClass: availabilityBadgeClass } = getProductAvailability(product);
 
     return (
         <article
@@ -87,6 +90,9 @@ const NewProductCardGrid = ({ product, rank, navigate }) => {
                 <h3 className="font-bold leading-6 line-clamp-2 text-xs sm:text-sm text-gray-900 dark:text-gray-200">
                     {product.name}
                 </h3>
+                <span className={`inline-flex w-fit items-center rounded-full border px-1.5 py-0.5 text-[9px] font-bold ${availabilityBadgeClass}`}>
+                    {availabilityLabel}
+                </span>
             </div>
 
             <figure className="w-2/6">
@@ -131,9 +137,10 @@ const NewProductsGrid = ({
             // شبیه‌سازی delay برای نمایش skeleton
             await new Promise(resolve => setTimeout(resolve, 1));
 
-            const allProducts = productsData.products || [];
+            const response = await getCatalogProducts({ page: 1, pageSize: 200, sort: 'newest' });
+            const allProducts = response.products?.length ? response.products : productsData.products || [];
             const newProducts = allProducts.filter(p => p.isNew === true);
-            const sortedProducts = [...newProducts].sort((a, b) => b.id - a.id);
+            const sortedProducts = [...newProducts].sort((a, b) => compareProductAvailability(a, b) || b.id - a.id);
 
             setProducts(sortedProducts);
             setIsLoading(false);

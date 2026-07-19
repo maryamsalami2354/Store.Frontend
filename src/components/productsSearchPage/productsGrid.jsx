@@ -22,6 +22,12 @@ const ProductCard = ({ product, viewMode, onAddToCart, onToggleWishlist }) => {
     const navigate = useNavigate();
     const [isHovered, setIsHovered] = useState(false);
     const hasDiscount = product.discount > 0;
+    const stockCount = Number(product.stock || 0);
+    const isOutOfStock = stockCount <= 0;
+    const availabilityLabel = isOutOfStock ? 'ناموجود' : `موجودی: ${stockCount.toLocaleString('fa-IR')} عدد`;
+    const availabilityBadgeClass = isOutOfStock
+        ? 'bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900'
+        : 'bg-emerald-500 text-white';
 
     const handleClick = useCallback(() => {
         navigate(`/product/${product.id}`);
@@ -34,8 +40,12 @@ const ProductCard = ({ product, viewMode, onAddToCart, onToggleWishlist }) => {
 
     const handleAddToCart = useCallback((e) => {
         e.stopPropagation();
+        if (isOutOfStock) {
+            toast.info('این محصول فعلا ناموجود است');
+            return;
+        }
         onAddToCart?.(product);
-    }, [onAddToCart, product]);
+    }, [isOutOfStock, onAddToCart, product]);
 
     if (viewMode === 'list') {
         return (
@@ -45,7 +55,7 @@ const ProductCard = ({ product, viewMode, onAddToCart, onToggleWishlist }) => {
                 onMouseLeave={() => setIsHovered(false)}
                 className="relative cursor-pointer group bg-white dark:bg-[#111] rounded-xl border border-gray-100 dark:border-gray-800 p-3 flex gap-3 hover:shadow-lg transition-all duration-300"
             >
-                <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-xl bg-gray-50 dark:bg-gray-800 overflow-hidden">
+                <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-xl bg-gray-50 dark:bg-gray-800 overflow-hidden">
                     <LazyLoadImage
                         src={product.image}
                         alt={product.name}
@@ -53,6 +63,9 @@ const ProductCard = ({ product, viewMode, onAddToCart, onToggleWishlist }) => {
                         className="w-full h-full object-contain p-2"
                         placeholder={<div className="w-full h-full bg-gray-200 dark:bg-gray-700 animate-pulse" />}
                     />
+                    <span className={`absolute inset-x-1 bottom-2 rounded-lg px-1.5 py-1 text-center text-[10px] font-bold leading-4 ${availabilityBadgeClass}`}>
+                        {availabilityLabel}
+                    </span>
                 </div>
                 <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
@@ -70,7 +83,12 @@ const ProductCard = ({ product, viewMode, onAddToCart, onToggleWishlist }) => {
                         </div>
                         <button
                             onClick={handleAddToCart}
-                            className="p-2 rounded-lg bg-[#002874] text-white hover:bg-[#001d5a] transition-colors"
+                            disabled={isOutOfStock}
+                            className={`p-2 rounded-lg transition-colors ${
+                                isOutOfStock
+                                    ? 'cursor-not-allowed bg-gray-200 text-gray-400 dark:bg-gray-800'
+                                    : 'bg-[#002874] text-white hover:bg-[#001d5a]'
+                            }`}
                         >
                             <ShoppingBag size={16} />
                         </button>
@@ -105,6 +123,9 @@ const ProductCard = ({ product, viewMode, onAddToCart, onToggleWishlist }) => {
                         {product.isNew && (
                             <span className="bg-emerald-500 text-white text-[8px] sm:text-[10px] font-bold px-1 py-0.5 rounded-md">جدید</span>
                         )}
+                        <span className={`${availabilityBadgeClass} text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-md leading-4`}>
+                            {availabilityLabel}
+                        </span>
                         {hasDiscount && (
                             <span className="bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1 py-0.5 rounded-md">{product.discount}%</span>
                         )}
@@ -157,8 +178,11 @@ const ProductCard = ({ product, viewMode, onAddToCart, onToggleWishlist }) => {
                     </div>
                     <button
                         onClick={handleAddToCart}
+                        disabled={isOutOfStock}
                         className={`flex-shrink-0 p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all duration-300 ${
-                            isHovered
+                            isOutOfStock
+                                ? 'cursor-not-allowed bg-gray-200 text-gray-400 dark:bg-gray-800 opacity-100 scale-100'
+                                : isHovered
                                 ? 'opacity-100 scale-100 bg-[#002874] text-white hover:bg-[#001d5a]'
                                 : 'opacity-0 scale-90 bg-gray-100 dark:bg-gray-800 text-gray-400'
                         }`}

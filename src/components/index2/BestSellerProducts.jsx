@@ -8,6 +8,8 @@ import { TrendingUp, Star, ShoppingBag, Heart, Award, ArrowLeft, Eye } from 'luc
 import productsData from '../../../public/jsons/products.json';
 import sellerAnalytics from '../../../public/jsons/sellerAnalytics.json';
 import useCartActions from '../../hooks/useCartActions.js';
+import { compareProductAvailability, getProductAvailability } from '../../utils/helpers/productAvailability.js';
+import { getCatalogProducts } from '../../services/catalogApi.js';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const BestSellerProducts = ({ title = "پرفروش‌ترین محصولات", subtitle = "محبوب‌ترین‌های بازار", linkText = "مشاهده همه", linkHref = "/best-sellers", onAddToCart, onToggleWishlist }) => {
@@ -17,17 +19,21 @@ const BestSellerProducts = ({ title = "پرفروش‌ترین محصولات", 
     const { addProductToCart } = useCartActions();
 
     useEffect(() => {
-        const loadBestSellers = () => {
+        const loadBestSellers = async () => {
             setIsLoading(true);
             try {
-                const allProducts = productsData.products || [];
+                const response = await getCatalogProducts({ page: 1, pageSize: 200, sort: 'popular' });
+                const allProducts = response.products?.length ? response.products : productsData.products || [];
                 const topProductsIds = (sellerAnalytics.topProducts || []).slice(0, 8).map(p => p.id);
-                const bestSellerProducts = topProductsIds.map(id => allProducts.find(p => p.id === id)).filter(Boolean);
-                setProducts(bestSellerProducts);
+                const bestSellerProducts = topProductsIds
+                    .map(id => allProducts.find(p => p.id === id))
+                    .filter(Boolean)
+                    .sort(compareProductAvailability);
+                setProducts(bestSellerProducts.length ? bestSellerProducts : allProducts.slice(0, 8));
             } catch (err) {
                 console.error('Error loading best sellers:', err);
                 const allProducts = productsData.products || [];
-                setProducts(allProducts.slice(0, 8));
+                setProducts([...allProducts].sort(compareProductAvailability).slice(0, 8));
             } finally {
                 setIsLoading(false);
             }
@@ -93,7 +99,10 @@ const BestSellerProducts = ({ title = "پرفروش‌ترین محصولات", 
 
                     {/* Grid محصولات */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {products.map((product, idx) => (
+                        {products.map((product, idx) => {
+                            const { isOutOfStock, label: availabilityLabel, badgeClass: availabilityBadgeClass } = getProductAvailability(product);
+
+                            return (
                             <motion.div
                                 key={product.id}
                                 initial={{ opacity: 0, y: 20 }}
@@ -136,6 +145,9 @@ const BestSellerProducts = ({ title = "پرفروش‌ترین محصولات", 
                                     <div className="mt-2">
                                         <StarRating rating={product.rating} />
                                     </div>
+                                    <span className={`mt-2 inline-flex w-fit items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${availabilityBadgeClass}`}>
+                                        {availabilityLabel}
+                                    </span>
                                     <div className="mt-3 flex items-center justify-between">
                                         <div>
                                             {product.oldPrice && (
@@ -149,19 +161,25 @@ const BestSellerProducts = ({ title = "پرفروش‌ترین محصولات", 
                                             </span>
                                         </div>
                                         <button
+                                            disabled={isOutOfStock}
                                             onClick={(e) => {
                                                 e.stopPropagation();
+                                                if (isOutOfStock) {
+                                                    toast.info('این محصول فعلا ناموجود است');
+                                                    return;
+                                                }
                                                 onAddToCart?.(product);
                                                 addProductToCart(product);
                                             }}
-                                            className="p-2 rounded-lg bg-[#002874] text-white hover:bg-[#001d5a] transition-colors"
+                                            className={`p-2 rounded-lg transition-colors ${isOutOfStock ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-800 text-gray-300 dark:text-gray-600' : 'bg-[#002874] text-white hover:bg-[#001d5a]'}`}
                                         >
                                             <ShoppingBag size={14} />
                                         </button>
                                     </div>
                                 </div>
                             </motion.div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </div>

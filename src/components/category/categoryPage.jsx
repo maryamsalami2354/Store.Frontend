@@ -19,6 +19,10 @@ import CategoryEmpty from './categoryEmpty';
 
 const ITEMS_PER_LOAD = 10;
 const parsePrice = (value) => Number(String(value || '').replace(/[^\d]/g, '')) || 0;
+const sortAvailableFirst = (items) => {
+    items.sort((a, b) => Number((b.stock || 0) > 0) - Number((a.stock || 0) > 0));
+    return items;
+};
 
 const CategoryPage = () => {
     const { id } = useParams();
@@ -102,7 +106,7 @@ const CategoryPage = () => {
                 result.sort((a, b) => b.id - a.id);
         }
 
-        return result;
+        return sortAvailableFirst(result);
     }, [filteredProducts, sortBy]);
 
     const visibleProducts = useMemo(

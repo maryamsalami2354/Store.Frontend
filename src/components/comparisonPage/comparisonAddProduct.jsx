@@ -5,6 +5,7 @@ import React, { useState, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import { Search, X, Plus, Check } from 'react-feather';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { compareProductAvailability, getProductAvailability } from '../../utils/helpers/productAvailability.js';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const ComparisonAddProduct = ({ allProducts = [], selectedIds = [], onAdd, onClose, max = 4 }) => {
@@ -23,11 +24,11 @@ const ComparisonAddProduct = ({ allProducts = [], selectedIds = [], onAdd, onClo
     const results = useMemo(() => {
         if (!allProducts.length) return [];
         if (!searchQuery.trim()) {
-            return allProducts.slice(0, 12);
+            return [...allProducts].sort(compareProductAvailability).slice(0, 12);
         }
         if (!fuse) return [];
         const searchResults = fuse.search(searchQuery.trim());
-        return searchResults.map(r => r.item).slice(0, 12);
+        return searchResults.map(r => r.item).sort(compareProductAvailability).slice(0, 12);
     }, [searchQuery, allProducts, fuse]);
 
     const handleAdd = (product) => {
@@ -86,6 +87,7 @@ const ComparisonAddProduct = ({ allProducts = [], selectedIds = [], onAdd, onClo
                         results.map((product, index) => {
                             const isSelected = selectedIds.includes(product.id);
                             const isFull = selectedIds.length >= max && !isSelected;
+                            const { label: availabilityLabel, badgeClass: availabilityBadgeClass } = getProductAvailability(product);
 
                             return (
                                 <div
@@ -115,6 +117,9 @@ const ComparisonAddProduct = ({ allProducts = [], selectedIds = [], onAdd, onClo
                                         <p className="text-sm font-medium text-gray-900 dark:text-white line-clamp-1">
                                             {product.name}
                                         </p>
+                                        <span className={`mt-1 inline-flex w-fit items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${availabilityBadgeClass}`}>
+                                            {availabilityLabel}
+                                        </span>
                                         <p className="text-xs text-gray-500 dark:text-gray-400">
                                             {product.price} تومان
                                         </p>

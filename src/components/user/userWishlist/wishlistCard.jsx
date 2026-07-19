@@ -3,9 +3,20 @@ import React from 'react';
 import { Heart, ShoppingBag } from 'react-feather';
 import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { toast } from 'react-toastify';
+import { getProductAvailability } from '../../../utils/helpers/productAvailability.js';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const WishlistCard = ({ product, onRemove, onAddToCart }) => {
+    const { isOutOfStock, label: availabilityLabel, badgeClass: availabilityBadgeClass } = getProductAvailability(product);
+    const handleAddToCart = () => {
+        if (isOutOfStock) {
+            toast.info('این محصول فعلا ناموجود است');
+            return;
+        }
+        onAddToCart?.();
+    };
+
     return (
         <div className="bg-white dark:bg-[#111] rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden group hover:shadow-md transition-all flex flex-col">
             {/* تصویر */}
@@ -35,6 +46,9 @@ const WishlistCard = ({ product, onRemove, onAddToCart }) => {
                     <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-2 mb-2 hover:text-[#002874]  dark:hover:text-[#4C6FB6] transition leading-6 min-h-[3rem]">
                         {product.name}
                     </h3>
+                    <span className={`inline-flex w-fit items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${availabilityBadgeClass}`}>
+                        {availabilityLabel}
+                    </span>
                 </Link>
 
                 <div className="mt-auto">
@@ -53,8 +67,9 @@ const WishlistCard = ({ product, onRemove, onAddToCart }) => {
                     </div>
 
                     <button
-                        onClick={onAddToCart}
-                        className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-[#002874] text-white rounded-lg text-xs font-medium hover:bg-[#001d5a] transition"
+                        disabled={isOutOfStock}
+                        onClick={handleAddToCart}
+                        className={`w-full flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-medium transition ${isOutOfStock ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500' : 'bg-[#002874] text-white hover:bg-[#001d5a]'}`}
                     >
                         <ShoppingBag size={14} /> افزودن به سبد خرید
                     </button>

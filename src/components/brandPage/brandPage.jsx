@@ -16,6 +16,8 @@ import BrandHero from './brandHero';
 import BrandFilterBar from './brandFilterBar';
 import BrandProductGrid from './brandProductGrid';
 import BrandEmpty from './brandEmpty';
+import { compareProductAvailability } from '../../utils/helpers/productAvailability.js';
+import { getCatalogProducts } from '../../services/catalogApi.js';
 
 const ITEMS_PER_LOAD = 10;
 
@@ -27,9 +29,10 @@ const BrandPage = () => {
     const [displayCount, setDisplayCount] = useState(ITEMS_PER_LOAD);
     const [searchInput, setSearchInput] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    const [catalogProducts, setCatalogProducts] = useState([]);
 
     const allBrands = useMemo(() => brandsData.brands || [], []);
-    const allProducts = useMemo(() => productsData.products || [], []);
+    const allProducts = useMemo(() => catalogProducts.length ? catalogProducts : productsData.products || [], [catalogProducts]);
 
     const brand = useMemo(() => allBrands.find(b => b.id === parseInt(id)), [allBrands, id]);
 
@@ -48,11 +51,11 @@ const BrandPage = () => {
     const sortedProducts = useMemo(() => {
         let res = [...filteredProducts];
         switch (sortBy) {
-            case 'cheapest': res.sort((a, b) => parseInt(a.price.replace(/,/g, '')) - parseInt(b.price.replace(/,/g, ''))); break;
-            case 'expensive': res.sort((a, b) => parseInt(b.price.replace(/,/g, '')) - parseInt(a.price.replace(/,/g, ''))); break;
-            case 'popular': res.sort((a, b) => b.rating - a.rating); break;
-            case 'discount': res.sort((a, b) => b.discount - a.discount); break;
-            default: res.sort((a, b) => b.id - a.id);
+            case 'cheapest': res.sort((a, b) => compareProductAvailability(a, b) || parseInt(a.price.replace(/,/g, '')) - parseInt(b.price.replace(/,/g, ''))); break;
+            case 'expensive': res.sort((a, b) => compareProductAvailability(a, b) || parseInt(b.price.replace(/,/g, '')) - parseInt(a.price.replace(/,/g, ''))); break;
+            case 'popular': res.sort((a, b) => compareProductAvailability(a, b) || b.rating - a.rating); break;
+            case 'discount': res.sort((a, b) => compareProductAvailability(a, b) || b.discount - a.discount); break;
+            default: res.sort((a, b) => compareProductAvailability(a, b) || b.id - a.id);
         }
         return res;
     }, [filteredProducts, sortBy]);
@@ -62,6 +65,29 @@ const BrandPage = () => {
     const fetchMoreData = () => setTimeout(() => setDisplayCount(prev => Math.min(prev + ITEMS_PER_LOAD, sortedProducts.length)), 500);
 
     useEffect(() => { setDisplayCount(ITEMS_PER_LOAD); }, [sortBy, searchQuery, id]);
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadBrandProducts = async () => {
+            try {
+                const response = await getCatalogProducts({
+                    page: 1,
+                    pageSize: 200,
+                    brandId: Number(id)
+                });
+                if (isMounted) setCatalogProducts(response.products || []);
+            } catch (error) {
+                console.warn('Could not load brand products from API:', error);
+                if (isMounted) setCatalogProducts([]);
+            }
+        };
+
+        loadBrandProducts();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [id]);
     useEffect(() => { const t = setTimeout(() => setIsLoading(false), 600); window.scrollTo(0, 0); return () => clearTimeout(t); }, [id]);
 
     const handleSearch = () => setSearchQuery(searchInput.trim());

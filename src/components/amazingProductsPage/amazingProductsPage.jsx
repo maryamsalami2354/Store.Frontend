@@ -16,6 +16,8 @@ import AmazingProductsGrid from './amazingProductsGrid';
 import AmazingProductsEmpty from './amazingProductsEmpty';
 import { Clock } from 'react-feather';
 import useCartActions from '../../hooks/useCartActions.js';
+import { compareProductAvailability } from '../../utils/helpers/productAvailability.js';
+import { getCatalogProducts } from '../../services/catalogApi.js';
 
 const ITEMS_PER_LOAD = 10;
 
@@ -51,9 +53,10 @@ const AmazingProductsPage = () => {
     const [displayCount, setDisplayCount] = useState(ITEMS_PER_LOAD);
     const [searchInput, setSearchInput] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    const [catalogProducts, setCatalogProducts] = useState([]);
     const { addProductToCart } = useCartActions();
 
-    const allProducts = useMemo(() => productsData.products || [], []);
+    const allProducts = useMemo(() => catalogProducts.length ? catalogProducts : productsData.products || [], [catalogProducts]);
 
     const amazingProducts = useMemo(() => allProducts.filter(p => p.isAmazing), [allProducts]);
 
@@ -67,10 +70,10 @@ const AmazingProductsPage = () => {
     const sortedProducts = useMemo(() => {
         let res = [...filteredProducts];
         switch (sortBy) {
-            case 'cheapest': res.sort((a, b) => parseInt(a.price.replace(/,/g, '')) - parseInt(b.price.replace(/,/g, ''))); break;
-            case 'expensive': res.sort((a, b) => parseInt(b.price.replace(/,/g, '')) - parseInt(a.price.replace(/,/g, ''))); break;
-            case 'popular': res.sort((a, b) => b.rating - a.rating); break;
-            default: res.sort((a, b) => b.discount - a.discount);
+            case 'cheapest': res.sort((a, b) => compareProductAvailability(a, b) || parseInt(a.price.replace(/,/g, '')) - parseInt(b.price.replace(/,/g, ''))); break;
+            case 'expensive': res.sort((a, b) => compareProductAvailability(a, b) || parseInt(b.price.replace(/,/g, '')) - parseInt(a.price.replace(/,/g, ''))); break;
+            case 'popular': res.sort((a, b) => compareProductAvailability(a, b) || b.rating - a.rating); break;
+            default: res.sort((a, b) => compareProductAvailability(a, b) || b.discount - a.discount);
         }
         return res;
     }, [filteredProducts, sortBy]);
@@ -81,6 +84,29 @@ const AmazingProductsPage = () => {
     const fetchMoreData = () => setTimeout(() => setDisplayCount(prev => Math.min(prev + ITEMS_PER_LOAD, sortedProducts.length)), 500);
 
     useEffect(() => { setDisplayCount(ITEMS_PER_LOAD); }, [sortBy, searchQuery]);
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadCatalog = async () => {
+            try {
+                const response = await getCatalogProducts({
+                    page: 1,
+                    pageSize: 200,
+                    onlyAmazing: true,
+                    sort: 'discounted'
+                });
+                if (isMounted) setCatalogProducts(response.products || []);
+            } catch (error) {
+                console.warn('Could not load amazing page products from API:', error);
+            }
+        };
+
+        loadCatalog();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
     useEffect(() => { const t = setTimeout(() => setIsLoading(false), 600); window.scrollTo(0, 0); return () => clearTimeout(t); }, []);
 
     const handleSearch = () => setSearchQuery(searchInput.trim());

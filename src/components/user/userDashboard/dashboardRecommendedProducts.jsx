@@ -5,6 +5,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { Zap, ShoppingBag, ChevronLeft } from 'react-feather';
 import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const DashboardRecommendedProducts = ({ products, isLoading }) => {
@@ -48,7 +49,10 @@ const DashboardRecommendedProducts = ({ products, isLoading }) => {
                 </Link>
             </div>
             <div className="space-y-3">
-                {products.slice(0, 3).map(product => (
+                {[...products].sort(compareProductAvailability).slice(0, 3).map(product => {
+                    const { label: availabilityLabel, badgeClass: availabilityBadgeClass } = getProductAvailability(product);
+
+                    return (
                     <Link
                         key={product.id}
                         to={`/product/${product.id}`}
@@ -70,10 +74,14 @@ const DashboardRecommendedProducts = ({ products, isLoading }) => {
                                     <span className="text-xs text-red-500 bg-red-50 dark:bg-red-900/20 px-1.5 py-0.5 rounded">{product.discount}%</span>
                                 )}
                             </div>
+                            <span className={`mt-1 inline-flex w-fit items-center rounded-full border px-1.5 py-0.5 text-[9px] font-bold ${availabilityBadgeClass}`}>
+                                {availabilityLabel}
+                            </span>
                         </div>
                         <ShoppingBag size={16} className="text-gray-400 group-hover:text-[#002874]  transition" />
                     </Link>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );

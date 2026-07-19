@@ -8,6 +8,7 @@ import { Star, Heart, ShoppingBag, TrendingUp, Eye, BarChart2 } from 'lucide-rea
 import { toast } from 'react-toastify';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import VisitChartModal from "./visitChartModal.jsx";
+import { getProductAvailability } from '../../utils/helpers/productAvailability.js';
 
 const StarRating = ({ rating = 4 }) => (
     <div className="flex items-center gap-0.5">
@@ -39,6 +40,7 @@ const MostVisitedCard = ({ product, viewMode, onAddToCart, onToggleWishlist, nav
     const [showChart, setShowChart] = useState(false);
     const hasDiscount = product.discount > 0;
     const hasColors = product.colors?.length > 0;
+    const { isOutOfStock, label: availabilityLabel, badgeClass: availabilityBadgeClass } = getProductAvailability(product);
 
     const handleClick = () => navigate(`/product/${product.id}`);
 
@@ -49,6 +51,10 @@ const MostVisitedCard = ({ product, viewMode, onAddToCart, onToggleWishlist, nav
 
     const handleAddToCart = (e) => {
         e.stopPropagation();
+        if (isOutOfStock) {
+            toast.info('این محصول فعلا ناموجود است');
+            return;
+        }
         onAddToCart?.(product);
     };
 
@@ -97,6 +103,9 @@ const MostVisitedCard = ({ product, viewMode, onAddToCart, onToggleWishlist, nav
                             {(product.visits || 0).toLocaleString('fa-IR')}
                         </span>
                     </div>
+                    <span className={`mt-2 inline-flex w-fit items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${availabilityBadgeClass}`}>
+                        {availabilityLabel}
+                    </span>
 
                     {/* Price + Cart */}
                     <div className="flex items-end justify-between mt-2">
@@ -118,8 +127,9 @@ const MostVisitedCard = ({ product, viewMode, onAddToCart, onToggleWishlist, nav
                                 <BarChart2 size={16} />
                             </button>
                             <button
+                                disabled={isOutOfStock}
                                 onClick={handleAddToCart}
-                                className="p-2 rounded-lg bg-[#002874] dark:bg-[#4C6FB6] text-white hover:bg-[#001d5a] dark:hover:bg-[#3a5a9a] transition-colors"
+                                className={`p-2 rounded-lg transition-colors ${isOutOfStock ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-800 text-gray-300 dark:text-gray-600' : 'bg-[#002874] dark:bg-[#4C6FB6] text-white hover:bg-[#001d5a] dark:hover:bg-[#3a5a9a]'}`}
                             >
                                 <ShoppingBag size={16} />
                             </button>
@@ -241,6 +251,9 @@ const MostVisitedCard = ({ product, viewMode, onAddToCart, onToggleWishlist, nav
                 <h3 className="text-xs sm:text-sm leading-4 sm:leading-5 line-clamp-2 min-h-[32px] sm:min-h-[40px] text-gray-800 dark:text-gray-200 group-hover:text-[#002874] dark:group-hover:text-[#4C6FB6] transition-colors duration-200 font-medium">
                     {product.name}
                 </h3>
+                <span className={`mt-1 inline-flex w-fit items-center rounded-full border px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold ${availabilityBadgeClass}`}>
+                    {availabilityLabel}
+                </span>
 
                 {/* ============================================================= */}
                 {/* PRICE + ADD TO CART */}
@@ -260,9 +273,12 @@ const MostVisitedCard = ({ product, viewMode, onAddToCart, onToggleWishlist, nav
                         </span>
                     </div>
                     <button
+                        disabled={isOutOfStock}
                         onClick={handleAddToCart}
                         className={`flex-shrink-0 p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all duration-300 ${
-                            isHovered
+                            isOutOfStock
+                                ? 'opacity-100 scale-100 cursor-not-allowed bg-gray-100 dark:bg-gray-800 text-gray-300 dark:text-gray-600'
+                                : isHovered
                                 ? 'opacity-100 scale-100 bg-[#002874] text-white hover:bg-[#001d5a]'
                                 : 'opacity-0 scale-90 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500'
                         }`}
