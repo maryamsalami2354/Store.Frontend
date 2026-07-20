@@ -10,7 +10,6 @@ import {
 import productsData from '../../../../public/jsons/products.json';
 import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
 import { getCatalogProducts } from '../../../services/catalogApi.js';
-import categoriesDataJson from '../../../../public/jsons/menuCategories.json';
 import SomeProductsSkeleton from '../../skeleton/SomeProductsSkeleton';
 import useCartActions from '../../../hooks/useCartActions.js';
 import { toast } from 'react-toastify'; // اضافه شده
@@ -21,6 +20,56 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 // =============================================================================
 const MAX_COLUMNS = 4;
 const PRODUCTS_PER_COLUMN = 4;
+
+const FEATURED_PRODUCT_GROUPS = [
+    {
+        id: 'digital',
+        title: 'محصولات دیجیتال',
+        linkTo: '/search',
+        keywords: [
+            'گوشی', 'موبایل', 'تبلت', 'لپ', 'هدفون', 'ایرپاد', 'تلویزیون',
+            'مانیتور', 'کنسول', 'دوربین', 'اسپیکر', 'پاوربانک', 'کیبورد',
+            'ماوس', 'واقعیت مجازی', 'apple tv', 'xbox', 'ps5', 'rog',
+            'macbook', 'homepod', 'gopro'
+        ],
+        excludeKeywords: ['ساعت', 'دستبند', 'کیف', 'جاروبرقی', 'مایکروویو', 'کولر', 'بخور', 'تصفیه هوا', 'اصلاح']
+    },
+    {
+        id: 'accessories',
+        title: 'اکسسوری',
+        linkTo: '/search',
+        keywords: ['ساعت', 'دستبند', 'کیف', 'پاوربانک']
+    },
+    {
+        id: 'home',
+        title: 'خانه و آشپزخانه',
+        linkTo: '/search',
+        keywords: ['مایکروویو', 'جاروبرقی', 'کولر', 'تصفیه هوا', 'قفل هوشمند']
+    },
+    {
+        id: 'beauty',
+        title: 'آرایشی بهداشتی',
+        linkTo: '/search',
+        keywords: ['اصلاح', 'بخور', 'سلامتی']
+    }
+];
+
+const normalizeProductText = (value = '') => value.toString().trim().toLowerCase();
+
+const matchesFeaturedGroup = (product, group) => {
+    const text = normalizeProductText([
+        product.name,
+        product.categoryName,
+        product.shortDescription,
+        ...(product.tags || [])
+    ].filter(Boolean).join(' '));
+
+    if (group.excludeKeywords?.some(keyword => text.includes(normalizeProductText(keyword)))) {
+        return false;
+    }
+
+    return group.keywords.some(keyword => text.includes(normalizeProductText(keyword)));
+};
 
 // =============================================================================
 // IMAGE GRID ITEM
@@ -137,7 +186,7 @@ const ImageGridItem = ({ product, index }) => {
 // =============================================================================
 // SINGLE COLUMN
 // =============================================================================
-const ProductColumn = ({ title, subtitle, products, categoryId }) => (
+const ProductColumn = ({ title, subtitle, products, linkTo = '/search' }) => (
     <div className="p-4 sm:p-5 h-full flex flex-col group/column relative">
         <div className="absolute top-0 left-4 right-4 h-0.5 bg-gradient-to-r from-transparent via-[#002874]/30 to-transparent dark:via-[#4C6FB6]/30 opacity-0 group-hover/column:opacity-100 transition-opacity duration-500" />
 
@@ -149,7 +198,7 @@ const ProductColumn = ({ title, subtitle, products, categoryId }) => (
                         <Sparkles size={14} className="text-[#002874]  dark:text-[#4C6FB6] opacity-70" />
                     </h4>
                     <span className="text-[10px] bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
-                        {products.length} کالا
+                        {products.length.toLocaleString('fa-IR')} کالا
                     </span>
                 </div>
                 <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
@@ -167,7 +216,7 @@ const ProductColumn = ({ title, subtitle, products, categoryId }) => (
 
         <div className="mt-4 text-left">
             <Link
-                to={`/category/${categoryId}`}
+                to={linkTo}
                 className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-[#002874]  dark:text-[#4C6FB6] hover:gap-2 transition-all duration-200 font-medium"
             >
                 مشاهده همه
@@ -190,8 +239,7 @@ const SomeProducts = ({
     // مستقیم از import استفاده کن
     const [catalogProducts, setCatalogProducts] = useState([]);
     const allProducts = catalogProducts.length ? catalogProducts : productsData.products || [];
-    const amazingProducts = allProducts.filter(p => p.isAmazing);
-    const categories = categoriesDataJson.categories || [];
+    const featuredProducts = allProducts;
 
     useEffect(() => {
         let isMounted = true;
@@ -201,7 +249,6 @@ const SomeProducts = ({
                 const response = await getCatalogProducts({
                     page: 1,
                     pageSize: 200,
-                    onlyAmazing: true,
                     sort: 'discounted'
                 });
                 if (isMounted) setCatalogProducts(response.products || []);
@@ -217,21 +264,24 @@ const SomeProducts = ({
         };
     }, []);
 
-    const selectedCategories = categories.slice(0, MAX_COLUMNS);
+    const usedProductIds = new Set();
+    const columnsData = FEATURED_PRODUCT_GROUPS.slice(0, MAX_COLUMNS)
+        .map(group => {
+            const categoryProducts = featuredProducts
+                .filter(product => !usedProductIds.has(product.id) && matchesFeaturedGroup(product, group))
+                .sort(compareProductAvailability)
+                .slice(0, PRODUCTS_PER_COLUMN);
 
-    const columnsData = selectedCategories.map(category => {
-        const categoryProducts = amazingProducts
-            .filter(p => p.categoryId === category.id)
-            .sort(compareProductAvailability)
-            .slice(0, PRODUCTS_PER_COLUMN);
+            categoryProducts.forEach(product => usedProductIds.add(product.id));
 
-        return {
-            id: category.id,
-            title: category.name,
-            products: categoryProducts,
-            categoryId: category.id
-        };
-    }).filter(column => column.products.length > 0);
+            return {
+                id: group.id,
+                title: group.title,
+                products: categoryProducts,
+                linkTo: group.linkTo
+            };
+        })
+        .filter(column => column.products.length > 0);
 
     const products = columnsData;
     const isLoading = propLoading;
@@ -289,7 +339,7 @@ const SomeProducts = ({
                                     title={column.title}
                                     subtitle={subtitle}
                                     products={column.products}
-                                    categoryId={column.categoryId}
+                                    linkTo={column.linkTo}
                                 />
                             ))}
                     </div>

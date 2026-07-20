@@ -54,7 +54,7 @@ const RelatedProducts = ({ products = [] }) => {
                     <div className="p-2 rounded-xl bg-gradient-to-br from-[#002874]/20 to-[#4C6FB6]/20">
                         <ShoppingBag size={18} className="text-[#002874]  dark:text-[#4C6FB6]" />
                     </div>
-                    <h2 className="text-base lg:text-lg font-bold text-gray-900 dark:text-white">محصولات مرتبط</h2>
+                    <h2 className="text-base lg:text-lg font-bold text-gray-900 dark:text-white">کالاهای مشابه</h2>
                 </div>
                 <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
                     <button ref={navigationPrevRef} className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700 transition disabled:opacity-40">

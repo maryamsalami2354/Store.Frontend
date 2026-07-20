@@ -26,9 +26,9 @@ export const getCatalogProduct = async (id) => {
     return data;
 };
 
-export const getRelatedCatalogProducts = async ({ categoryId, excludeId, take = 10 }) => {
+export const getRelatedCatalogProducts = async ({ categoryId, excludeId, productId, take = 10 }) => {
     const { data } = await catalogApiClient.get("/Product/catalog/related", {
-        params: { categoryId, excludeId, take },
+        params: { categoryId, excludeId, productId, take },
     });
     return data;
 };

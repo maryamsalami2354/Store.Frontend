@@ -16,8 +16,13 @@ const ProductMainInfo = ({ product }) => {
     // آیکون‌های تصادفی برای ویژگی‌ها
     const featureIcons = [Zap, Shield, Truck, Award, Package, Headphones, Wifi, Volume2, Sun, Tool];
 
-    const features = (product?.tags || []).map((tag, idx) => ({
-        text: tag,
+    const featureTexts = [
+        ...(product?.attributes || []).map(item => `${item.key}: ${item.value}`),
+        ...(product?.tags || [])
+    ].filter(Boolean);
+
+    const features = featureTexts.map((text, idx) => ({
+        text,
         icon: featureIcons[idx % featureIcons.length],
         color: [
             'text-blue-600 bg-blue-100 dark:bg-blue-900/30',

@@ -28,11 +28,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/1.jpg",
+      "image": "/images/products/real/1.webp",
       "gallery": [
-        "/images/products/1.jpg",
-        "/images/products/1.jpg",
-        "/images/products/1.jpg",
+        "/images/products/real/1.webp",
         "/images/products/1.jpg"
       ],
       "sku": "IP15PM-001",
@@ -61,7 +59,7 @@
     {
       "id": 2,
       "name": "لپ‌تاپ دل XPS 15",
-      "categoryId": 1,
+      "categoryId": 3,
       "brandId": 2,
       "price": "28,000,000",
       "oldPrice": "30,500,000",
@@ -86,11 +84,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/2.jpg",
+      "image": "/images/products/real/2.webp",
       "gallery": [
-        "/images/products/2.jpg",
-        "/images/products/2.jpg",
-        "/images/products/2.jpg",
+        "/images/products/real/2.webp",
         "/images/products/2.jpg"
       ],
       "sku": "XPS15-9520",
@@ -107,7 +103,7 @@
       "weight": 1.86,
       "dimensions": {
         "length": 34.5,
-        "width": 23.0,
+        "width": 23,
         "height": 1.8
       },
       "shipping": {
@@ -119,7 +115,7 @@
     {
       "id": 3,
       "name": "هدفون سونی WH-1000XM5",
-      "categoryId": 1,
+      "categoryId": 12,
       "brandId": 3,
       "price": "4,500,000",
       "oldPrice": "5,200,000",
@@ -144,11 +140,9 @@
         "#b0b0b0"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/3.jpg",
+      "image": "/images/products/real/3.webp",
       "gallery": [
-        "/images/products/3.jpg",
-        "/images/products/3.jpg",
-        "/images/products/3.jpg",
+        "/images/products/real/3.webp",
         "/images/products/3.jpg"
       ],
       "sku": "WH1000XM5-S",
@@ -164,9 +158,9 @@
       ],
       "weight": 0.25,
       "dimensions": {
-        "length": 20.0,
-        "width": 15.0,
-        "height": 8.0
+        "length": 20,
+        "width": 15,
+        "height": 8
       },
       "shipping": {
         "freeShipping": false,
@@ -203,11 +197,9 @@
         "#c0c0c0"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/4.jpg",
+      "image": "/images/products/real/4.jpg",
       "gallery": [
-        "/images/products/4.jpg",
-        "/images/products/4.jpg",
-        "/images/products/4.jpg",
+        "/images/products/real/4.jpg",
         "/images/products/4.jpg"
       ],
       "sku": "AW9-41MM",
@@ -236,7 +228,7 @@
     {
       "id": 5,
       "name": "کیف چرمی مردانه",
-      "categoryId": 2,
+      "categoryId": 6,
       "brandId": 4,
       "price": "1,200,000",
       "oldPrice": "1,400,000",
@@ -261,11 +253,9 @@
         "#4a2f1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/5.jpg",
+      "image": "/images/products/real/5.jpg",
       "gallery": [
-        "/images/products/5.jpg",
-        "/images/products/5.jpg",
-        "/images/products/5.jpg",
+        "/images/products/real/5.jpg",
         "/images/products/5.jpg"
       ],
       "sku": "LB-M-001",
@@ -281,9 +271,9 @@
       ],
       "weight": 0.8,
       "dimensions": {
-        "length": 23.0,
-        "width": 8.0,
-        "height": 15.0
+        "length": 23,
+        "width": 8,
+        "height": 15
       },
       "shipping": {
         "freeShipping": false,
@@ -294,7 +284,7 @@
     {
       "id": 6,
       "name": "مایکروویو ال‌جی",
-      "categoryId": 2,
+      "categoryId": 4,
       "brandId": 5,
       "price": "8,500,000",
       "oldPrice": "9,200,000",
@@ -319,11 +309,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/6.jpg",
+      "image": "/images/products/real/6.jpg",
       "gallery": [
-        "/images/products/6.jpg",
-        "/images/products/6.jpg",
-        "/images/products/6.jpg",
+        "/images/products/real/6.jpg",
         "/images/products/6.jpg"
       ],
       "sku": "LG-MW-25L",
@@ -339,9 +327,9 @@
       ],
       "weight": 12.5,
       "dimensions": {
-        "length": 48.0,
-        "width": 38.0,
-        "height": 28.0
+        "length": 48,
+        "width": 38,
+        "height": 28
       },
       "shipping": {
         "freeShipping": true,
@@ -377,11 +365,9 @@
         "#3b5998"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/7.jpg",
+      "image": "/images/products/real/7.jpg",
       "gallery": [
-        "/images/products/7.jpg",
-        "/images/products/7.jpg",
-        "/images/products/7.jpg",
+        "/images/products/real/7.jpg",
         "/images/products/7.jpg"
       ],
       "sku": "SM-T870",
@@ -410,7 +396,7 @@
     {
       "id": 8,
       "name": "کنسول بازی PS5",
-      "categoryId": 3,
+      "categoryId": 11,
       "brandId": 7,
       "price": "22,000,000",
       "oldPrice": "24,500,000",
@@ -435,11 +421,9 @@
         "#0070d1"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/8.jpg",
+      "image": "/images/products/real/8.jpg",
       "gallery": [
-        "/images/products/8.jpg",
-        "/images/products/8.jpg",
-        "/images/products/8.jpg",
+        "/images/products/real/8.jpg",
         "/images/products/8.jpg"
       ],
       "sku": "PS5-DISC",
@@ -455,8 +439,8 @@
       ],
       "weight": 4.5,
       "dimensions": {
-        "length": 39.0,
-        "width": 26.0,
+        "length": 39,
+        "width": 26,
         "height": 10.4
       },
       "shipping": {
@@ -494,11 +478,9 @@
         "#6b5b3d"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/9.jpg",
+      "image": "/images/products/real/9.jpg",
       "gallery": [
-        "/images/products/9.jpg",
-        "/images/products/9.jpg",
-        "/images/products/9.jpg",
+        "/images/products/real/9.jpg",
         "/images/products/9.jpg"
       ],
       "sku": "SM-S928B",
@@ -527,7 +509,7 @@
     {
       "id": 10,
       "name": "ایرپادز پرو نسل سوم اپل",
-      "categoryId": 3,
+      "categoryId": 12,
       "brandId": 1,
       "price": "3,800,000",
       "oldPrice": "4,200,000",
@@ -551,11 +533,9 @@
         "#f5f5f5"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/10.jpg",
+      "image": "/images/products/real/10.jpg",
       "gallery": [
-        "/images/products/10.jpg",
-        "/images/products/10.jpg",
-        "/images/products/10.jpg",
+        "/images/products/real/10.jpg",
         "/images/products/10.jpg"
       ],
       "sku": "MTJV3",
@@ -571,7 +551,7 @@
       ],
       "weight": 0.053,
       "dimensions": {
-        "length": 6.0,
+        "length": 6,
         "width": 4.5,
         "height": 2.1
       },
@@ -584,7 +564,7 @@
     {
       "id": 11,
       "name": "تلویزیون ال‌جی OLED 55 اینچ",
-      "categoryId": 3,
+      "categoryId": 12,
       "brandId": 5,
       "price": "45,000,000",
       "oldPrice": "50,000,000",
@@ -608,11 +588,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/11.jpg",
+      "image": "/images/products/real/11.webp",
       "gallery": [
-        "/images/products/11.jpg",
-        "/images/products/11.jpg",
-        "/images/products/11.jpg",
+        "/images/products/real/11.webp",
         "/images/products/11.jpg"
       ],
       "sku": "OLED55C3",
@@ -641,7 +619,7 @@
     {
       "id": 12,
       "name": "کیبورد مکانیکال لاجیتک G Pro",
-      "categoryId": 4,
+      "categoryId": 22,
       "brandId": 8,
       "price": "2,800,000",
       "oldPrice": "3,200,000",
@@ -665,11 +643,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/12.jpg",
+      "image": "/images/products/real/12.jpg",
       "gallery": [
-        "/images/products/12.jpg",
-        "/images/products/12.jpg",
-        "/images/products/12.jpg",
+        "/images/products/real/12.jpg",
         "/images/products/12.jpg"
       ],
       "sku": "920-009388",
@@ -698,7 +674,7 @@
     {
       "id": 13,
       "name": "ماوس ریزر دث‌آدر",
-      "categoryId": 4,
+      "categoryId": 22,
       "brandId": 9,
       "price": "1,900,000",
       "oldPrice": "2,300,000",
@@ -723,11 +699,9 @@
         "#00ff00"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/13.jpg",
+      "image": "/images/products/real/13.jpg",
       "gallery": [
-        "/images/products/13.jpg",
-        "/images/products/13.jpg",
-        "/images/products/13.jpg",
+        "/images/products/real/13.jpg",
         "/images/products/13.jpg"
       ],
       "sku": "RZ01-0385",
@@ -756,7 +730,7 @@
     {
       "id": 14,
       "name": "دوربین کانن EOS R5",
-      "categoryId": 4,
+      "categoryId": 18,
       "brandId": 10,
       "price": "85,000,000",
       "oldPrice": "92,000,000",
@@ -780,11 +754,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/14.jpg",
+      "image": "/images/products/real/14.webp",
       "gallery": [
-        "/images/products/14.jpg",
-        "/images/products/14.jpg",
-        "/images/products/14.jpg",
+        "/images/products/real/14.webp",
         "/images/products/14.jpg"
       ],
       "sku": "EOSR5-BODY",
@@ -813,7 +785,7 @@
     {
       "id": 15,
       "name": "پرینتر اچ‌پی LaserJet Pro",
-      "categoryId": 4,
+      "categoryId": 14,
       "brandId": 11,
       "price": "5,500,000",
       "oldPrice": "6,200,000",
@@ -838,11 +810,9 @@
         "#c0c0c0"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/15.jpg",
+      "image": "/images/products/real/15.jpg",
       "gallery": [
-        "/images/products/15.jpg",
-        "/images/products/15.jpg",
-        "/images/products/15.jpg",
+        "/images/products/real/15.jpg",
         "/images/products/15.jpg"
       ],
       "sku": "M428fdw",
@@ -858,9 +828,9 @@
       ],
       "weight": 12.2,
       "dimensions": {
-        "length": 42.0,
-        "width": 39.0,
-        "height": 32.0
+        "length": 42,
+        "width": 39,
+        "height": 32
       },
       "shipping": {
         "freeShipping": true,
@@ -871,7 +841,7 @@
     {
       "id": 16,
       "name": "اسپیکر JBL Flip 6",
-      "categoryId": 3,
+      "categoryId": 12,
       "brandId": 12,
       "price": "1,450,000",
       "oldPrice": "1,800,000",
@@ -898,11 +868,9 @@
         "#32cd32"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/16.jpg",
+      "image": "/images/products/real/16.webp",
       "gallery": [
-        "/images/products/16.jpg",
-        "/images/products/16.jpg",
-        "/images/products/16.jpg",
+        "/images/products/real/16.webp",
         "/images/products/16.jpg"
       ],
       "sku": "JBLFLIP6BLK",
@@ -931,7 +899,7 @@
     {
       "id": 17,
       "name": "ساعت هوشمند سامسونگ Watch 6",
-      "categoryId": 4,
+      "categoryId": 2,
       "brandId": 6,
       "price": "4,200,000",
       "oldPrice": "4,800,000",
@@ -957,11 +925,9 @@
         "#deb887"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/17.jpg",
+      "image": "/images/products/real/17.jpg",
       "gallery": [
-        "/images/products/17.jpg",
-        "/images/products/17.jpg",
-        "/images/products/17.jpg",
+        "/images/products/real/17.jpg",
         "/images/products/17.jpg"
       ],
       "sku": "SM-R930",
@@ -979,7 +945,7 @@
       "dimensions": {
         "length": 4.4,
         "width": 4.4,
-        "height": 1.0
+        "height": 1
       },
       "shipping": {
         "freeShipping": true,
@@ -990,7 +956,7 @@
     {
       "id": 18,
       "name": "جاروبرقی رباتیک شیائومی",
-      "categoryId": 6,
+      "categoryId": 4,
       "brandId": 13,
       "price": "6,800,000",
       "oldPrice": "7,500,000",
@@ -1014,11 +980,9 @@
         "#f5f5f5"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/18.jpg",
+      "image": "/images/products/real/18.jpg",
       "gallery": [
-        "/images/products/18.jpg",
-        "/images/products/18.jpg",
-        "/images/products/18.jpg",
+        "/images/products/real/18.jpg",
         "/images/products/18.jpg"
       ],
       "sku": "XIAOMI-RV-VC",
@@ -1035,7 +999,7 @@
       "weight": 3.8,
       "dimensions": {
         "length": 35.3,
-        "width": 35.0,
+        "width": 35,
         "height": 9.6
       },
       "shipping": {
@@ -1072,11 +1036,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/19.jpg",
+      "image": "/images/products/real/19.png",
       "gallery": [
-        "/images/products/19.jpg",
-        "/images/products/19.jpg",
-        "/images/products/19.jpg",
+        "/images/products/real/19.png",
         "/images/products/19.jpg"
       ],
       "sku": "IPADPRO12-M2",
@@ -1105,7 +1067,7 @@
     {
       "id": 20,
       "name": "دستگاه بخور سرد بیورر",
-      "categoryId": 6,
+      "categoryId": 9,
       "brandId": 14,
       "price": "980,000",
       "oldPrice": "1,200,000",
@@ -1129,11 +1091,9 @@
         "#f5f5f5"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/20.jpg",
+      "image": "/images/products/real/20.jpg",
       "gallery": [
-        "/images/products/20.jpg",
-        "/images/products/20.jpg",
-        "/images/products/20.jpg",
+        "/images/products/real/20.jpg",
         "/images/products/20.jpg"
       ],
       "sku": "BEURER-LB88",
@@ -1149,9 +1109,9 @@
       ],
       "weight": 1.8,
       "dimensions": {
-        "length": 24.0,
-        "width": 20.0,
-        "height": 30.0
+        "length": 24,
+        "width": 20,
+        "height": 30
       },
       "shipping": {
         "freeShipping": false,
@@ -1162,7 +1122,7 @@
     {
       "id": 21,
       "name": "مانیتور ال‌جی ۲۷ اینچ 4K",
-      "categoryId": 2,
+      "categoryId": 22,
       "brandId": 5,
       "price": "12,500,000",
       "oldPrice": "14,000,000",
@@ -1186,11 +1146,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/21.jpg",
+      "image": "/images/products/real/21.jpg",
       "gallery": [
-        "/images/products/21.jpg",
-        "/images/products/21.jpg",
-        "/images/products/21.jpg",
+        "/images/products/real/21.jpg",
         "/images/products/21.jpg"
       ],
       "sku": "27UP850-W",
@@ -1207,7 +1165,7 @@
       "weight": 5.9,
       "dimensions": {
         "length": 61.3,
-        "width": 23.0,
+        "width": 23,
         "height": 45.5
       },
       "shipping": {
@@ -1219,7 +1177,7 @@
     {
       "id": 22,
       "name": "پاوربانک انکر ۲۰۰۰۰",
-      "categoryId": 1,
+      "categoryId": 22,
       "brandId": 15,
       "price": "850,000",
       "oldPrice": "1,100,000",
@@ -1243,11 +1201,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/22.jpg",
+      "image": "/images/products/real/22.webp",
       "gallery": [
-        "/images/products/22.jpg",
-        "/images/products/22.jpg",
-        "/images/products/22.jpg",
+        "/images/products/real/22.webp",
         "/images/products/22.jpg"
       ],
       "sku": "ANKER-PB20K",
@@ -1263,8 +1219,8 @@
       ],
       "weight": 0.345,
       "dimensions": {
-        "length": 15.0,
-        "width": 7.0,
+        "length": 15,
+        "width": 7,
         "height": 2.5
       },
       "shipping": {
@@ -1276,7 +1232,7 @@
     {
       "id": 23,
       "name": "عینک واقعیت مجازی Meta Quest 3",
-      "categoryId": 7,
+      "categoryId": 11,
       "brandId": 16,
       "price": "15,800,000",
       "oldPrice": "18,000,000",
@@ -1301,11 +1257,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/23.jpg",
+      "image": "/images/products/real/23.jpg",
       "gallery": [
-        "/images/products/23.jpg",
-        "/images/products/23.jpg",
-        "/images/products/23.jpg",
+        "/images/products/real/23.jpg",
         "/images/products/23.jpg"
       ],
       "sku": "META-Q3-128",
@@ -1334,7 +1288,7 @@
     {
       "id": 24,
       "name": "کولر گازی ۲۴۰۰۰ جنرال",
-      "categoryId": 6,
+      "categoryId": 4,
       "brandId": 17,
       "price": "32,000,000",
       "oldPrice": "35,500,000",
@@ -1358,11 +1312,9 @@
         "#f5f5f5"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/24.jpg",
+      "image": "/images/products/real/24.webp",
       "gallery": [
-        "/images/products/24.jpg",
-        "/images/products/24.jpg",
-        "/images/products/24.jpg",
+        "/images/products/real/24.webp",
         "/images/products/24.jpg"
       ],
       "sku": "GENERAL-24K",
@@ -1376,11 +1328,11 @@
         "تهویه",
         "خنک‌کننده"
       ],
-      "weight": 42.0,
+      "weight": 42,
       "dimensions": {
-        "length": 95.0,
-        "width": 32.0,
-        "height": 70.0
+        "length": 95,
+        "width": 32,
+        "height": 70
       },
       "shipping": {
         "freeShipping": true,
@@ -1391,7 +1343,7 @@
     {
       "id": 25,
       "name": "اسکوتر برقی شیائومی Pro 2",
-      "categoryId": 11,
+      "categoryId": 10,
       "brandId": 13,
       "price": "11,500,000",
       "oldPrice": "13,000,000",
@@ -1415,11 +1367,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/25.jpg",
+      "image": "/images/products/real/25.jpg",
       "gallery": [
-        "/images/products/25.jpg",
-        "/images/products/25.jpg",
-        "/images/products/25.jpg",
+        "/images/products/real/25.jpg",
         "/images/products/25.jpg"
       ],
       "sku": "XIAOMI-PRO2",
@@ -1435,9 +1385,9 @@
       ],
       "weight": 14.2,
       "dimensions": {
-        "length": 113.0,
-        "width": 43.0,
-        "height": 118.0
+        "length": 113,
+        "width": 43,
+        "height": 118
       },
       "shipping": {
         "freeShipping": true,
@@ -1448,7 +1398,7 @@
     {
       "id": 26,
       "name": "دوربین GoPro Hero 12",
-      "categoryId": 10,
+      "categoryId": 18,
       "brandId": 18,
       "price": "16,200,000",
       "oldPrice": "18,500,000",
@@ -1473,11 +1423,9 @@
         "#ffd700"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/26.jpg",
+      "image": "/images/products/real/26.jpg",
       "gallery": [
-        "/images/products/26.jpg",
-        "/images/products/26.jpg",
-        "/images/products/26.jpg",
+        "/images/products/real/26.jpg",
         "/images/products/26.jpg"
       ],
       "sku": "CHDHX-121",
@@ -1494,7 +1442,7 @@
       "weight": 0.154,
       "dimensions": {
         "length": 7.1,
-        "width": 5.0,
+        "width": 5,
         "height": 3.3
       },
       "shipping": {
@@ -1506,7 +1454,7 @@
     {
       "id": 27,
       "name": "رمزگشای دیجیتال اپل TV 4K",
-      "categoryId": 8,
+      "categoryId": 12,
       "brandId": 1,
       "price": "3,200,000",
       "oldPrice": "3,800,000",
@@ -1530,11 +1478,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/27.jpg",
+      "image": "/images/products/real/27.jpg",
       "gallery": [
-        "/images/products/27.jpg",
-        "/images/products/27.jpg",
-        "/images/products/27.jpg",
+        "/images/products/real/27.jpg",
         "/images/products/27.jpg"
       ],
       "sku": "MQD32",
@@ -1563,7 +1509,7 @@
     {
       "id": 28,
       "name": "ماشین اصلاح سر فیلیپس سری ۹۰۰۰",
-      "categoryId": 12,
+      "categoryId": 9,
       "brandId": 19,
       "price": "2,950,000",
       "oldPrice": "3,500,000",
@@ -1588,11 +1534,9 @@
         "#c0c0c0"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/28.jpg",
+      "image": "/images/products/real/28.jpg",
       "gallery": [
-        "/images/products/28.jpg",
-        "/images/products/28.jpg",
-        "/images/products/28.jpg",
+        "/images/products/real/28.jpg",
         "/images/products/28.jpg"
       ],
       "sku": "BT5510",
@@ -1608,9 +1552,9 @@
       ],
       "weight": 0.38,
       "dimensions": {
-        "length": 18.0,
-        "width": 6.0,
-        "height": 5.0
+        "length": 18,
+        "width": 6,
+        "height": 5
       },
       "shipping": {
         "freeShipping": false,
@@ -1621,7 +1565,7 @@
     {
       "id": 29,
       "name": "دستبند هوشمند شیائومی Mi Band 9",
-      "categoryId": 4,
+      "categoryId": 2,
       "brandId": 13,
       "price": "980,000",
       "oldPrice": "1,300,000",
@@ -1648,11 +1592,9 @@
         "#ffe66d"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/29.jpg",
+      "image": "/images/products/real/29.png",
       "gallery": [
-        "/images/products/29.jpg",
-        "/images/products/29.jpg",
-        "/images/products/29.jpg",
+        "/images/products/real/29.png",
         "/images/products/29.jpg"
       ],
       "sku": "M2345B1",
@@ -1681,7 +1623,7 @@
     {
       "id": 30,
       "name": "قفل هوشمند سادهکا",
-      "categoryId": 13,
+      "categoryId": 29,
       "brandId": 20,
       "price": "4,800,000",
       "oldPrice": "5,500,000",
@@ -1698,7 +1640,7 @@
       "visits": 4521,
       "status": "active",
       "discount": 13,
-      "rating": 4.0,
+      "rating": 4,
       "isAmazing": false,
       "isNew": false,
       "colors": [
@@ -1706,11 +1648,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/30.jpg",
+      "image": "/images/products/real/30.jpg",
       "gallery": [
-        "/images/products/30.jpg",
-        "/images/products/30.jpg",
-        "/images/products/30.jpg",
+        "/images/products/real/30.jpg",
         "/images/products/30.jpg"
       ],
       "sku": "SADEKA-SL01",
@@ -1726,9 +1666,9 @@
       ],
       "weight": 3.2,
       "dimensions": {
-        "length": 35.0,
-        "width": 8.0,
-        "height": 5.0
+        "length": 35,
+        "width": 8,
+        "height": 5
       },
       "shipping": {
         "freeShipping": true,
@@ -1739,7 +1679,7 @@
     {
       "id": 31,
       "name": "دستگاه تصفیه هوا شیائومی",
-      "categoryId": 6,
+      "categoryId": 4,
       "brandId": 13,
       "price": "3,600,000",
       "oldPrice": "4,200,000",
@@ -1763,11 +1703,9 @@
         "#f5f5f5"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/31.jpg",
+      "image": "/images/products/real/31.jpg",
       "gallery": [
-        "/images/products/31.jpg",
-        "/images/products/31.jpg",
-        "/images/products/31.jpg",
+        "/images/products/real/31.jpg",
         "/images/products/31.jpg"
       ],
       "sku": "AC-M16-SC",
@@ -1783,9 +1721,9 @@
       ],
       "weight": 4.8,
       "dimensions": {
-        "length": 24.0,
-        "width": 24.0,
-        "height": 52.0
+        "length": 24,
+        "width": 24,
+        "height": 52
       },
       "shipping": {
         "freeShipping": true,
@@ -1796,7 +1734,7 @@
     {
       "id": 32,
       "name": "کیف لپ‌تاپ تاتو",
-      "categoryId": 5,
+      "categoryId": 22,
       "brandId": 21,
       "price": "850,000",
       "oldPrice": "1,100,000",
@@ -1821,11 +1759,9 @@
         "#4a5568"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/32.jpg",
+      "image": "/images/products/real/32.jpg",
       "gallery": [
-        "/images/products/32.jpg",
-        "/images/products/32.jpg",
-        "/images/products/32.jpg",
+        "/images/products/real/32.jpg",
         "/images/products/32.jpg"
       ],
       "sku": "TATOO-LB15",
@@ -1841,9 +1777,9 @@
       ],
       "weight": 0.65,
       "dimensions": {
-        "length": 40.0,
-        "width": 30.0,
-        "height": 5.0
+        "length": 40,
+        "width": 30,
+        "height": 5
       },
       "shipping": {
         "freeShipping": false,
@@ -1880,11 +1816,9 @@
         "#4ecdc4"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/33.jpg",
+      "image": "/images/products/real/33.jpg",
       "gallery": [
-        "/images/products/33.jpg",
-        "/images/products/33.jpg",
-        "/images/products/33.jpg",
+        "/images/products/real/33.jpg",
         "/images/products/33.jpg"
       ],
       "sku": "CREALITY-E3V2",
@@ -1901,8 +1835,8 @@
       "weight": 8.5,
       "dimensions": {
         "length": 47.5,
-        "width": 47.0,
-        "height": 62.0
+        "width": 47,
+        "height": 62
       },
       "shipping": {
         "freeShipping": true,
@@ -1913,7 +1847,7 @@
     {
       "id": 34,
       "name": "دستبند سلامتی هواوی Band 8",
-      "categoryId": 4,
+      "categoryId": 2,
       "brandId": 23,
       "price": "1,150,000",
       "oldPrice": "1,450,000",
@@ -1930,7 +1864,7 @@
       "visits": 4521,
       "status": "active",
       "discount": 21,
-      "rating": 4.0,
+      "rating": 4,
       "isAmazing": false,
       "isNew": false,
       "colors": [
@@ -1940,11 +1874,9 @@
         "#f8e81c"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/34.jpg",
+      "image": "/images/products/real/34.webp",
       "gallery": [
-        "/images/products/34.jpg",
-        "/images/products/34.jpg",
-        "/images/products/34.jpg",
+        "/images/products/real/34.webp",
         "/images/products/34.jpg"
       ],
       "sku": "HUAWEI-BAND8",
@@ -1962,7 +1894,7 @@
       "dimensions": {
         "length": 4.3,
         "width": 2.5,
-        "height": 1.0
+        "height": 1
       },
       "shipping": {
         "freeShipping": true,
@@ -1973,7 +1905,7 @@
     {
       "id": 35,
       "name": "لپ‌تاپ ایسوس ROG Strix G16",
-      "categoryId": 2,
+      "categoryId": 3,
       "brandId": 24,
       "price": "52,000,000",
       "oldPrice": "58,000,000",
@@ -1997,11 +1929,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/35.jpg",
+      "image": "/images/products/real/35.webp",
       "gallery": [
-        "/images/products/35.jpg",
-        "/images/products/35.jpg",
-        "/images/products/35.jpg",
+        "/images/products/real/35.webp",
         "/images/products/35.jpg"
       ],
       "sku": "G614JI",
@@ -2019,7 +1949,7 @@
       "dimensions": {
         "length": 35.4,
         "width": 26.4,
-        "height": 3.0
+        "height": 3
       },
       "shipping": {
         "freeShipping": true,
@@ -2030,7 +1960,7 @@
     {
       "id": 36,
       "name": "هدفون بی‌سیم بوز QuietComfort Ultra",
-      "categoryId": 3,
+      "categoryId": 12,
       "brandId": 25,
       "price": "21,500,000",
       "oldPrice": "24,000,000",
@@ -2056,11 +1986,9 @@
         "#2c3e50"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/36.jpg",
+      "image": "/images/products/real/36.webp",
       "gallery": [
-        "/images/products/36.jpg",
-        "/images/products/36.jpg",
-        "/images/products/36.jpg",
+        "/images/products/real/36.webp",
         "/images/products/36.jpg"
       ],
       "sku": "BOSE-QCU",
@@ -2078,7 +2006,7 @@
       "dimensions": {
         "length": 18.5,
         "width": 15.2,
-        "height": 8.0
+        "height": 8
       },
       "shipping": {
         "freeShipping": true,
@@ -2089,7 +2017,7 @@
     {
       "id": 37,
       "name": "مانیتور گیمینگ سامسونگ Odyssey G9",
-      "categoryId": 2,
+      "categoryId": 22,
       "brandId": 6,
       "price": "48,000,000",
       "oldPrice": "55,000,000",
@@ -2113,11 +2041,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/37.jpg",
+      "image": "/images/products/real/37.webp",
       "gallery": [
-        "/images/products/37.jpg",
-        "/images/products/37.jpg",
-        "/images/products/37.jpg",
+        "/images/products/real/37.webp",
         "/images/products/37.jpg"
       ],
       "sku": "LS49AG95",
@@ -2146,7 +2072,7 @@
     {
       "id": 38,
       "name": "کنسول بازی Xbox Series X",
-      "categoryId": 3,
+      "categoryId": 11,
       "brandId": 26,
       "price": "21,000,000",
       "oldPrice": "23,500,000",
@@ -2170,11 +2096,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/38.jpg",
+      "image": "/images/products/real/38.jpg",
       "gallery": [
-        "/images/products/38.jpg",
-        "/images/products/38.jpg",
-        "/images/products/38.jpg",
+        "/images/products/real/38.jpg",
         "/images/products/38.jpg"
       ],
       "sku": "RRT-00001",
@@ -2228,11 +2152,9 @@
         "#ff4500"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/39.jpg",
+      "image": "/images/products/real/39.jpg",
       "gallery": [
-        "/images/products/39.jpg",
-        "/images/products/39.jpg",
-        "/images/products/39.jpg",
+        "/images/products/real/39.jpg",
         "/images/products/39.jpg"
       ],
       "sku": "ROG-PHONE8",
@@ -2250,7 +2172,7 @@
       "dimensions": {
         "length": 17.3,
         "width": 7.7,
-        "height": 1.0
+        "height": 1
       },
       "shipping": {
         "freeShipping": false,
@@ -2261,7 +2183,7 @@
     {
       "id": 40,
       "name": "اسپیکر هوشمند اپل HomePod 2",
-      "categoryId": 3,
+      "categoryId": 12,
       "brandId": 1,
       "price": "18,500,000",
       "oldPrice": "21,000,000",
@@ -2286,11 +2208,9 @@
         "#f5f5f5"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/40.jpg",
+      "image": "/images/products/real/40.jpg",
       "gallery": [
-        "/images/products/40.jpg",
-        "/images/products/40.jpg",
-        "/images/products/40.jpg",
+        "/images/products/real/40.jpg",
         "/images/products/40.jpg"
       ],
       "sku": "MQJ83",
@@ -2319,7 +2239,7 @@
     {
       "id": 41,
       "name": "لپ‌تاپ مک‌بوک پرو ۱۶ اینچ M3",
-      "categoryId": 2,
+      "categoryId": 3,
       "brandId": 1,
       "price": "95,000,000",
       "oldPrice": "105,000,000",
@@ -2344,11 +2264,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/41.jpg",
+      "image": "/images/products/real/41.jpg",
       "gallery": [
-        "/images/products/41.jpg",
-        "/images/products/41.jpg",
-        "/images/products/41.jpg",
+        "/images/products/real/41.jpg",
         "/images/products/41.jpg"
       ],
       "sku": "M3PRO-16",
@@ -2377,7 +2295,7 @@
     {
       "id": 42,
       "name": "تلویزیون سونی BRAVIA XR A95L",
-      "categoryId": 3,
+      "categoryId": 12,
       "brandId": 3,
       "price": "85,000,000",
       "oldPrice": "95,000,000",
@@ -2401,11 +2319,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/42.jpg",
+      "image": "/images/products/real/42.jpg",
       "gallery": [
-        "/images/products/42.jpg",
-        "/images/products/42.jpg",
-        "/images/products/42.jpg",
+        "/images/products/real/42.jpg",
         "/images/products/42.jpg"
       ],
       "sku": "XRA95L",
@@ -2423,7 +2339,7 @@
       "dimensions": {
         "length": 144.3,
         "width": 27.5,
-        "height": 84.0
+        "height": 84
       },
       "shipping": {
         "freeShipping": true,
@@ -2434,7 +2350,7 @@
     {
       "id": 43,
       "name": "هدفون گیمینگ ریزر BlackShark V2",
-      "categoryId": 3,
+      "categoryId": 12,
       "brandId": 9,
       "price": "3,200,000",
       "oldPrice": "3,900,000",
@@ -2459,11 +2375,9 @@
         "#00ff00"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/43.jpg",
+      "image": "/images/products/real/43.jpg",
       "gallery": [
-        "/images/products/43.jpg",
-        "/images/products/43.jpg",
-        "/images/products/43.jpg",
+        "/images/products/real/43.jpg",
         "/images/products/43.jpg"
       ],
       "sku": "RZ04-0323",
@@ -2480,8 +2394,8 @@
       "weight": 0.262,
       "dimensions": {
         "length": 18.5,
-        "width": 9.0,
-        "height": 20.0
+        "width": 9,
+        "height": 20
       },
       "shipping": {
         "freeShipping": false,
@@ -2492,7 +2406,7 @@
     {
       "id": 44,
       "name": "دوربین سونی Alpha A7 IV",
-      "categoryId": 4,
+      "categoryId": 18,
       "brandId": 3,
       "price": "72,000,000",
       "oldPrice": "78,000,000",
@@ -2506,11 +2420,9 @@
         "#1a1a1a"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/44.jpg",
+      "image": "/images/products/real/44.jpg",
       "gallery": [
-        "/images/products/44.jpg",
-        "/images/products/44.jpg",
-        "/images/products/44.jpg",
+        "/images/products/real/44.jpg",
         "/images/products/44.jpg"
       ],
       "sku": "ILCE-7M4",
@@ -2528,7 +2440,7 @@
       "dimensions": {
         "length": 13.1,
         "width": 9.6,
-        "height": 8.0
+        "height": 8
       },
       "shipping": {
         "freeShipping": true,
@@ -2539,7 +2451,7 @@
     {
       "id": 45,
       "name": "ساعت هوشمند گارمین Fenix 7X",
-      "categoryId": 4,
+      "categoryId": 2,
       "brandId": 27,
       "price": "28,000,000",
       "oldPrice": "32,000,000",
@@ -2565,8 +2477,9 @@
         "#deb887"
       ],
       "countdownEnd": "2026-04-25T23:59:59",
-      "image": "/images/products/45.jpg",
+      "image": "/images/products/real/45.jpg",
       "gallery": [
+        "/images/products/real/45.jpg",
         "/images/products/45.jpg",
         "/images/products/2.jpg",
         "/images/products/3.jpg",

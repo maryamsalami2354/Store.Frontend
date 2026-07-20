@@ -43,6 +43,7 @@ const SingleProductChild = () => {
             try {
                 const found = await getCatalogProduct(id);
                 const relatedResponse = await getRelatedCatalogProducts({
+                    productId: found.id,
                     categoryId: found.categoryId,
                     excludeId: found.id,
                     take: 10,
