@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { getColorHex, getColorName } from '../../../utils/helpers/colorHelpers.js';
 
 const TABS = [
     { id: 'basic', label: 'اطلاعات پایه' },
@@ -355,8 +356,8 @@ const AddProductModal = ({ isOpen, onClose, onAdd, categories, brands }) => {
                                         <div className="flex flex-wrap gap-2 mt-2">
                                             {formData.colors.map(color => (
                                                 <span key={color} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-sm">
-                                                    <span className="w-4 h-4 rounded-full border" style={{ backgroundColor: color }} />
-                                                    {color}
+                                                    <span className="w-4 h-4 rounded-full border" style={{ backgroundColor: getColorHex(color) }} />
+                                                    {getColorName(color)}
                                                     <button type="button" onClick={() => handleRemoveColor(color)} className="text-red-500"><X size={14} /></button>
                                                 </span>
                                             ))}

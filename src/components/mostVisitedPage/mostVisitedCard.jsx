@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import VisitChartModal from "./visitChartModal.jsx";
 import { getProductAvailability } from '../../utils/helpers/productAvailability.js';
+import { getColorHex } from '../../utils/helpers/colorHelpers.js';
 
 const StarRating = ({ rating = 4 }) => (
     <div className="flex items-center gap-0.5">
@@ -31,7 +32,7 @@ const StarRating = ({ rating = 4 }) => (
 const ColorDot = ({ color }) => (
     <span
         className="block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border border-gray-300 dark:border-gray-600"
-        style={{ backgroundColor: color }}
+        style={{ backgroundColor: getColorHex(color) }}
     />
 );
 

@@ -5,6 +5,7 @@ import { Plus, Minus, Trash2, Heart, Shield, Circle } from 'react-feather';
 import { toast } from 'react-toastify';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { toAssetUrl } from '../../services/authApi.js';
+import { getColorHex, getColorName } from '../../utils/helpers/colorHelpers.js';
 
 const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
     const productId = item.productId || item.id;
@@ -44,8 +45,8 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
                     {item.selectedColor && (
                         <span className="flex items-center gap-1.5">
                             <Circle size={12} />
-                            <span className="inline-block w-3 h-3 rounded-full border" style={{ backgroundColor: item.selectedColor }} />
-                            {item.selectedColor}
+                            <span className="inline-block w-3 h-3 rounded-full border" style={{ backgroundColor: getColorHex(item.selectedColor) }} />
+                            {getColorName(item.selectedColor)}
                         </span>
                     )}
                     <span className="flex items-center gap-1.5">

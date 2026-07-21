@@ -3,6 +3,7 @@
 // =============================================================================
 import React from 'react';
 import { Star, Check, X, Truck } from 'react-feather';
+import { getColorHex } from '../../utils/helpers/colorHelpers.js';
 
 const ComparisonRow = ({ label, products = [], specKey, type = 'text' }) => {
     const renderCell = (product) => {
@@ -21,7 +22,7 @@ const ComparisonRow = ({ label, products = [], specKey, type = 'text' }) => {
                             <span
                                 key={i}
                                 className="w-4 h-4 rounded-full border-2 border-gray-300 dark:border-gray-600"
-                                style={{ backgroundColor: color }}
+                                style={{ backgroundColor: getColorHex(color) }}
                             />
                         ))}
                         {(product.colors || []).length > 4 && (

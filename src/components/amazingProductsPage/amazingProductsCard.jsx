@@ -6,6 +6,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Heart, Star, ShoppingBag } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { getProductAvailability } from '../../utils/helpers/productAvailability.js';
+import { getColorHex } from '../../utils/helpers/colorHelpers.js';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const RATING_STARS = [1, 2, 3, 4, 5];
@@ -20,7 +21,7 @@ const StarRating = ({ rating = 4 }) => (
 );
 
 const ColorDot = ({ color }) => (
-    <span className="block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border ring-1 ring-transparent" style={{ backgroundColor: color }} />
+    <span className="block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border ring-1 ring-transparent" style={{ backgroundColor: getColorHex(color) }} />
 );
 
 const AmazingProductsCard = ({ product, viewMode, onAddToCart, onToggleWishlist, navigate }) => {

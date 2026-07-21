@@ -8,6 +8,7 @@ import { ShoppingBag, Heart, Star } from 'react-feather';
 import { toast } from 'react-toastify';
 import useCartActions from '../../hooks/useCartActions.js';
 import { getProductAvailability } from '../../utils/helpers/productAvailability.js';
+import { getColorHex } from '../../utils/helpers/colorHelpers.js';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const StarRating = ({ rating = 0 }) => (
@@ -85,7 +86,7 @@ const BrandProductCard = ({ product, viewMode }) => {
                     {product.colors?.length > 0 && (
                         <div className="flex gap-0.5">
                             {product.colors.slice(0,3).map((c,i) => (
-                                <span key={i} className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border border-gray-300 dark:border-gray-600" style={{backgroundColor:c}} />
+                                <span key={i} className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border border-gray-300 dark:border-gray-600" style={{backgroundColor:getColorHex(c)}} />
                             ))}
                         </div>
                     )}

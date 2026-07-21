@@ -1,26 +1,28 @@
-// src/components/singleProduct/tabs/productIntro.jsx
 import React from 'react';
 
-const productIntro = ({ product }) => {
+const splitParagraphs = (text) => String(text || '')
+    .split(/\r?\n+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+const ProductIntro = ({ product }) => {
+    const paragraphs = splitParagraphs(product?.description);
+
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white relative pb-3 before:absolute before:bottom-0 before:right-0 before:h-1 before:w-24 before:bg-[#002874] dark:before:bg-[#4C6FB6] before:rounded">
+            <h2 className="relative pb-3 text-2xl font-extrabold text-gray-900 before:absolute before:bottom-0 before:right-0 before:h-1 before:w-24 before:rounded before:bg-[#002874] dark:text-white dark:before:bg-[#4C6FB6]">
                 معرفی محصول
             </h2>
 
-            <div className="text-gray-700 dark:text-gray-300 leading-8 text-justify space-y-4">
-                <p>{product?.description || 'توضیحاتی برای این محصول ثبت نشده است.'}</p>
-
-                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.</p>
-
-                <p>کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد.</p>
-
-                <p>زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد. لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است.</p>
-
-                <p>برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد.</p>
+            <div className="space-y-4 text-justify leading-8 text-gray-700 dark:text-gray-300">
+                {paragraphs.length > 0 ? (
+                    paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)
+                ) : (
+                    <p className="text-gray-500 dark:text-gray-400">توضیحاتی برای این محصول ثبت نشده است.</p>
+                )}
             </div>
         </div>
     );
 };
 
-export default productIntro;
+export default ProductIntro;

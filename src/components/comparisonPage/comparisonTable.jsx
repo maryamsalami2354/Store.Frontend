@@ -4,6 +4,7 @@
 import React from 'react';
 import ComparisonProductHeader from './comparisonProductHeader';
 import ComparisonRow from './comparisonRow';
+import { getColorHex } from '../../utils/helpers/colorHelpers.js';
 
 const specs = [
     { label: 'قیمت', key: 'price', type: 'price' },
@@ -75,7 +76,7 @@ const ComparisonRowCell = ({ product, specKey, type }) => {
             return (
                 <div className="flex items-center gap-1">
                     {(product.colors || []).slice(0, 4).map((color, i) => (
-                        <span key={i} className="w-4 h-4 rounded-full border-2 border-gray-300 dark:border-gray-600" style={{ backgroundColor: color }} />
+                        <span key={i} className="w-4 h-4 rounded-full border-2 border-gray-300 dark:border-gray-600" style={{ backgroundColor: getColorHex(color) }} />
                     ))}
                 </div>
             );

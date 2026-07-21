@@ -4,6 +4,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { ShoppingBag, Heart, Star } from 'react-feather';
 import { toast } from 'react-toastify';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { getColorHex } from '../../utils/helpers/colorHelpers.js';
 
 const StarRating = ({ rating = 4 }) => (
     <div className="flex items-center gap-0.5">
@@ -115,7 +116,7 @@ const ProductCard = ({ product, viewMode, onAddToCart, onToggleWishlist }) => {
                     {product.colors?.length > 0 && (
                         <div className="flex flex-col gap-0.5">
                             {product.colors.slice(0, 3).map((color, i) => (
-                                <span key={i} className="w-2 h-2 rounded-full border border-white shadow-sm" style={{ backgroundColor: color }} />
+                                <span key={i} className="w-2 h-2 rounded-full border border-white shadow-sm" style={{ backgroundColor: getColorHex(color) }} />
                             ))}
                         </div>
                     )}

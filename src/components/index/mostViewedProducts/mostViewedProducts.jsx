@@ -12,6 +12,7 @@ import ProductSkeletonSlider from '../../skeleton/ProductSkeletonSlider/ProductS
 import useCartActions from '../../../hooks/useCartActions.js';
 import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
 import { getCatalogProducts } from '../../../services/catalogApi.js';
+import { getColorHex } from '../../../utils/helpers/colorHelpers.js';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -62,7 +63,7 @@ const StarRating = ({ rating = 4 }) => (
 const ColorDot = ({ color }) => (
     <span
         className="block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border border-gray-300 dark:border-gray-600"
-        style={{ backgroundColor: color }}
+        style={{ backgroundColor: getColorHex(color) }}
     />
 );
 

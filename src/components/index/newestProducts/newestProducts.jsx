@@ -11,6 +11,7 @@ import ProductSkeletonSlider from '../../skeleton/ProductSkeletonSlider/ProductS
 import useCartActions from '../../../hooks/useCartActions.js';
 import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
 import { getCatalogProducts } from '../../../services/catalogApi.js';
+import { getColorHex } from '../../../utils/helpers/colorHelpers.js';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -67,7 +68,7 @@ const ColorDot = ({ color, isActive = false }) => (
                 ? 'ring-1 sm:ring-2 ring-[#002874] dark:ring-[#4C6FB6] scale-110'
                 : 'ring-1 ring-transparent hover:ring-gray-300 dark:hover:ring-gray-600'
         }`}
-        style={{ backgroundColor: color }}
+        style={{ backgroundColor: getColorHex(color) }}
     />
 );
 

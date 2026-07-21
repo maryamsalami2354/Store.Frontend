@@ -1,12 +1,18 @@
 // src/components/singleProduct/productMainInfo.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, Heart, Share2, BarChart2, RefreshCw, ChevronLeft, ChevronDown, Zap, Shield, Truck, Award, Package, Headphones, Wifi, Volume2, Sun, Tool } from 'react-feather';
+import { getColorHex, normalizeColorOptions } from '../../utils/helpers/colorHelpers.js';
 
 const ProductMainInfo = ({ product }) => {
+    const colorOptions = normalizeColorOptions(product?.colors || [], product?.colorOptions || []);
     const [isFavorite, setIsFavorite] = useState(false);
     const [showAllFeatures, setShowAllFeatures] = useState(false);
-    const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || null); // اضافه شد
+    const [selectedColor, setSelectedColor] = useState(colorOptions[0]?.name || null);
+
+    useEffect(() => {
+        setSelectedColor(colorOptions[0]?.name || null);
+    }, [product?.id]);
 
     const formatPrice = (price) => {
         if (!price) return '۰';
@@ -90,36 +96,31 @@ const ProductMainInfo = ({ product }) => {
             </div>
 
             {/* انتخاب رنگ */}
-            {product?.colors?.length > 0 && (
+            {colorOptions.length > 0 && (
                 <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-4">
                     <div className="flex items-center justify-between mb-3">
                         <p className="text-sm font-bold text-gray-700 dark:text-gray-300">انتخاب رنگ:</p>
                         <span className="text-xs text-gray-500 bg-white dark:bg-gray-800 px-2 py-1 rounded-lg">
-              {product.colors.length} رنگ
+              {colorOptions.length} رنگ
             </span>
                     </div>
                     <div className="flex items-center gap-3 flex-wrap">
-                        {product.colors.map((color, idx) => (
+                        {colorOptions.map((color, idx) => (
                             <button
                                 key={idx}
-                                onClick={() => setSelectedColor(color)}
+                                onClick={() => setSelectedColor(color.name)}
                                 className={`group flex items-center gap-2 px-3 py-2 rounded-xl border-2 transition-all ${
-                                    selectedColor === color
+                                    selectedColor === color.name
                                         ? 'border-[#002874] dark:border-[#4C6FB6] bg-[#002874]/5 dark:bg-[#4C6FB6]/10'
                                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'
                                 }`}
                             >
                                 <span
                                     className="w-5 h-5 rounded-full border-2 border-white shadow-md"
-                                    style={{ backgroundColor: color.toLowerCase() === 'مشکی' ? '#1a1a1a' :
-                                            color.toLowerCase() === 'سفید' ? '#ffffff' :
-                                                color.toLowerCase() === 'قرمز' ? '#ef4444' :
-                                                    color.toLowerCase() === 'آبی' ? '#3b82f6' :
-                                                        color.toLowerCase() === 'سبز' ? '#22c55e' :
-                                                            color.toLowerCase() === 'زرد' ? '#eab308' : color }}
+                                    style={{ backgroundColor: color.hex || getColorHex(color.name) }}
                                 ></span>
                                 <span className="text-xs text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200">
-                  {color}
+                  {color.name}
                 </span>
                             </button>
                         ))}

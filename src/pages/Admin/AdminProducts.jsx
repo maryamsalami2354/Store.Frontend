@@ -43,10 +43,13 @@ const initialProductForm = {
     isNew: false,
     shortDescription: "",
     description: "",
+    fullDescription: "",
+    technicalSpecifications: "",
     tags: "",
     colors: "",
     attributeIds: [],
     image: null,
+    secondaryImages: [],
 };
 
 const initialCategoryForm = { title: "", icon: "", banner: "", imagePath: "", isActive: true };
@@ -57,6 +60,14 @@ const allowedImageTypes = ["image/png", "image/jpeg", "image/webp"];
 const toPersianNumber = (value) => Number(value || 0).toLocaleString("fa-IR");
 const splitList = (items = []) => items.join(", ");
 const normalizeBoolean = (value) => value === true || value === "true";
+const specsToText = (groups = []) => {
+    if (!Array.isArray(groups)) return "";
+
+    return groups
+        .flatMap((group) => (group.items || []).map((item) => `${group.title || "مشخصات فنی"} | ${item.label || ""} | ${item.value || ""}`))
+        .filter((line) => line.split("|").every((part) => part.trim()))
+        .join("\n");
+};
 
 const AdminProducts = ({ canCreateProducts }) => {
     const [activeTab, setActiveTab] = useState("products");
@@ -75,6 +86,7 @@ const AdminProducts = ({ canCreateProducts }) => {
     const [brandForm, setBrandForm] = useState(initialBrandForm);
     const [attributeForm, setAttributeForm] = useState(initialAttributeForm);
     const [preview, setPreview] = useState("");
+    const [secondaryPreviews, setSecondaryPreviews] = useState([]);
 
     const activeCategories = useMemo(() => categories.filter((item) => item.isActive), [categories]);
     const activeBrands = useMemo(() => brands.filter((item) => item.isActive), [brands]);
@@ -115,6 +127,15 @@ const AdminProducts = ({ canCreateProducts }) => {
         setPreview(url);
         return () => URL.revokeObjectURL(url);
     }, [productForm.image]);
+
+    useEffect(() => {
+        const urls = (productForm.secondaryImages || []).map((image) => URL.createObjectURL(image));
+        setSecondaryPreviews(urls);
+
+        return () => {
+            urls.forEach((url) => URL.revokeObjectURL(url));
+        };
+    }, [productForm.secondaryImages]);
 
     const productSummary = useMemo(() => {
         const active = products.filter((item) => item.status === "active").length;
@@ -165,6 +186,27 @@ const AdminProducts = ({ canCreateProducts }) => {
         setProductForm((prev) => ({ ...prev, image: file }));
     };
 
+    const handleSecondaryImagesChange = (event) => {
+        const files = Array.from(event.target.files || []);
+        if (files.length === 0) return;
+
+        const invalidFile = files.find((file) => !allowedImageTypes.includes(file.type));
+        if (invalidFile) {
+            toast.error("فرمت عکس‌های فرعی باید png، jpg یا webp باشد");
+            event.target.value = "";
+            return;
+        }
+
+        const oversizedFile = files.find((file) => file.size > 8 * 1024 * 1024);
+        if (oversizedFile) {
+            toast.error("حجم هر تصویر نباید بیشتر از ۸ مگابایت باشد");
+            event.target.value = "";
+            return;
+        }
+
+        setProductForm((prev) => ({ ...prev, secondaryImages: files }));
+    };
+
     const buildProductPayload = () => {
         const payload = new FormData();
         [
@@ -180,6 +222,7 @@ const AdminProducts = ({ canCreateProducts }) => {
             "status",
             "shortDescription",
             "description",
+            "fullDescription",
             "tags",
             "colors",
         ].forEach((field) => {
@@ -189,13 +232,22 @@ const AdminProducts = ({ canCreateProducts }) => {
             }
         });
 
+        ["shortDescription", "description", "fullDescription", "tags", "colors"].forEach((field) => {
+            payload.set(field, String(productForm[field] || "").trim());
+        });
+
         payload.append("isAmazing", String(productForm.isAmazing));
         payload.append("isNew", String(productForm.isNew));
         payload.append("attributeIds", JSON.stringify(productForm.attributeIds.map(Number)));
+        payload.set("technicalSpecificationsJson", productForm.technicalSpecifications || "");
 
         if (productForm.image) {
             payload.append("image", productForm.image);
         }
+
+        (productForm.secondaryImages || []).forEach((image) => {
+            payload.append("secondaryImages", image);
+        });
 
         return payload;
     };
@@ -249,10 +301,13 @@ const AdminProducts = ({ canCreateProducts }) => {
             isNew: normalizeBoolean(product.isNew),
             shortDescription: product.shortDescription || "",
             description: product.description || "",
+            fullDescription: product.fullDescription || "",
+            technicalSpecifications: specsToText(product.technicalSpecifications),
             tags: splitList(product.tags),
             colors: splitList(product.colors),
             attributeIds: matchedAttributeIds,
             image: null,
+            secondaryImages: [],
         });
         setPreview("");
         setActiveTab("products");
@@ -381,9 +436,11 @@ const AdminProducts = ({ canCreateProducts }) => {
                     setForm={setProductForm}
                     editingProduct={editingProduct}
                     preview={preview}
+                    secondaryPreviews={secondaryPreviews}
                     summary={productSummary}
                     onSubmit={handleProductSubmit}
                     onImageChange={handleImageChange}
+                    onSecondaryImagesChange={handleSecondaryImagesChange}
                     onCancel={resetProductForm}
                     onEdit={startEditProduct}
                     onToggleStatus={toggleProductStatus}
@@ -445,7 +502,7 @@ const AdminProducts = ({ canCreateProducts }) => {
     );
 };
 
-const ProductSection = ({ products, categories, brands, attributes, loading, saving, canCreateProducts, form, setForm, editingProduct, preview, summary, onSubmit, onImageChange, onCancel, onEdit, onToggleStatus, onCopyImagePath }) => (
+const ProductSection = ({ products, categories, brands, attributes, loading, saving, canCreateProducts, form, setForm, editingProduct, preview, secondaryPreviews, summary, onSubmit, onImageChange, onSecondaryImagesChange, onCancel, onEdit, onToggleStatus, onCopyImagePath }) => (
     <div className="space-y-5">
         <div className="grid gap-4 sm:grid-cols-3">
             {summary.map((item) => (
@@ -463,19 +520,32 @@ const ProductSection = ({ products, categories, brands, attributes, loading, sav
                     <div className="space-y-3">
                         <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-gray-50 text-center text-sm text-gray-500 hover:border-[#002874] dark:border-gray-700 dark:bg-gray-900">
                             {preview || editingProduct?.image ? (
-                                <img src={preview || toAssetUrl(editingProduct?.image)} alt="پیش‌نمایش محصول" className="h-full w-full rounded-lg object-contain p-2" />
+                                <img src={preview || toAssetUrl(editingProduct?.mainImage || editingProduct?.image)} alt="پیش‌نمایش محصول" className="h-full w-full rounded-lg object-contain p-2" />
                             ) : (
                                 <>
                                     <Image size={32} />
-                                    <span className="mt-3">تصویر محصول</span>
+                                    <span className="mt-3">عکس اصلی محصول</span>
                                     <span className="mt-1 text-xs">png / jpg / webp</span>
                                 </>
                             )}
                             <input type="file" accept=".png,.jpg,.jpeg,.webp" className="hidden" onChange={onImageChange} />
                         </label>
+                        <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 py-4 text-center text-sm text-gray-500 hover:border-[#002874] dark:border-gray-700 dark:bg-gray-900">
+                            <Image size={24} />
+                            <span className="mt-2">عکس‌های فرعی</span>
+                            <span className="mt-1 text-xs">چند فایل png / jpg / webp</span>
+                            <input type="file" accept=".png,.jpg,.jpeg,.webp" multiple className="hidden" onChange={onSecondaryImagesChange} />
+                        </label>
+                        {(secondaryPreviews.length > 0 || editingProduct?.secondaryImages?.length > 0) && (
+                            <div className="grid grid-cols-3 gap-2">
+                                {(secondaryPreviews.length > 0 ? secondaryPreviews : editingProduct.secondaryImages).slice(0, 6).map((image, index) => (
+                                    <img key={`${image}-${index}`} src={toAssetUrl(image)} alt={`عکس فرعی ${index + 1}`} className="h-16 w-full rounded-lg border border-gray-100 object-contain p-1 dark:border-gray-800" />
+                                ))}
+                            </div>
+                        )}
                         <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-200">
                             <Upload size={15} />
-                            عکس در بک‌اند فشرده می‌شود
+                            عکس‌ها در بک‌اند فشرده می‌شوند
                         </div>
                     </div>
 
@@ -503,9 +573,18 @@ const ProductSection = ({ products, categories, brands, attributes, loading, sav
                         <ToggleField label="شگفت‌انگیز" checked={form.isAmazing} onChange={(value) => setForm((prev) => ({ ...prev, isAmazing: value }))} />
                         <ToggleField label="جدید" checked={form.isNew} onChange={(value) => setForm((prev) => ({ ...prev, isNew: value }))} />
                         <TextField label="تگ‌ها" value={form.tags} onChange={(value) => setForm((prev) => ({ ...prev, tags: value }))} />
-                        <TextField label="رنگ‌ها" value={form.colors} onChange={(value) => setForm((prev) => ({ ...prev, colors: value }))} />
+                        <TextField label="رنگ‌ها" value={form.colors} onChange={(value) => setForm((prev) => ({ ...prev, colors: value }))} placeholder="مثال: مشکی، سفید، آبی" />
                         <TextareaField label="توضیح کوتاه" value={form.shortDescription} onChange={(value) => setForm((prev) => ({ ...prev, shortDescription: value }))} />
                         <TextareaField label="توضیحات" value={form.description} onChange={(value) => setForm((prev) => ({ ...prev, description: value }))} className="xl:col-span-2" />
+                        <TextareaField label="معرفی تکمیلی" value={form.fullDescription} onChange={(value) => setForm((prev) => ({ ...prev, fullDescription: value }))} className="xl:col-span-3" rows={5} />
+                        <TextareaField
+                            label="مشخصات فنی"
+                            value={form.technicalSpecifications}
+                            onChange={(value) => setForm((prev) => ({ ...prev, technicalSpecifications: value }))}
+                            className="xl:col-span-3"
+                            rows={6}
+                            placeholder={"هر خط: گروه | عنوان | مقدار\nمثال: مشخصات کلی | برند | اپل\nمثال: صفحه نمایش | اندازه | ۶.۷ اینچ"}
+                        />
                     </div>
                 </div>
 
@@ -725,7 +804,7 @@ const SectionHeading = ({ title, icon: Icon }) => (
     </div>
 );
 
-const TextField = ({ label, value, onChange, type = "text", required = false, step }) => (
+const TextField = ({ label, value, onChange, type = "text", required = false, step, placeholder }) => (
     <label className="space-y-1.5">
         <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{label}{required && " *"}</span>
         <input
@@ -733,6 +812,7 @@ const TextField = ({ label, value, onChange, type = "text", required = false, st
             value={value}
             required={required}
             step={step}
+            placeholder={placeholder}
             min={type === "number" ? "0" : undefined}
             onChange={(event) => onChange(event.target.value)}
             className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-800 focus:border-[#002874] focus:outline-none focus:ring-2 focus:ring-[#002874]/10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
@@ -749,10 +829,16 @@ const SelectField = ({ label, value, onChange, required = false, children }) => 
     </label>
 );
 
-const TextareaField = ({ label, value, onChange, className = "" }) => (
+const TextareaField = ({ label, value, onChange, className = "", rows = 3, placeholder }) => (
     <label className={`space-y-1.5 ${className}`}>
         <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{label}</span>
-        <textarea rows={3} value={value} onChange={(event) => onChange(event.target.value)} className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-800 focus:border-[#002874] focus:outline-none focus:ring-2 focus:ring-[#002874]/10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100" />
+        <textarea
+            rows={rows}
+            value={value}
+            placeholder={placeholder}
+            onChange={(event) => onChange(event.target.value)}
+            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-800 focus:border-[#002874] focus:outline-none focus:ring-2 focus:ring-[#002874]/10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+        />
     </label>
 );
 

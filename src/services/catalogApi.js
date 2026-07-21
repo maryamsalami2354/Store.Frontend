@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL, toAssetUrl } from "./authApi.js";
+import { normalizeColorOptions } from "../utils/helpers/colorHelpers.js";
 
 const catalogApiClient = axios.create({
     baseURL: API_BASE_URL,
@@ -19,18 +20,26 @@ catalogApiClient.interceptors.response.use(
 const normalizeCatalogProduct = (product) => {
     if (!product) return product;
 
-    const image = product.image || product.imagePath || product.thumbnailUrl || product.imageUrl || "";
+    const image = product.mainImage || product.primaryImage || product.image || product.imagePath || product.thumbnailUrl || product.imageUrl || "";
     const gallery = Array.isArray(product.gallery)
         ? product.gallery.map((item) => toAssetUrl(item)).filter(Boolean)
         : [];
+    const colorOptions = normalizeColorOptions(product.colors || [], product.colorOptions || []);
 
     return {
         ...product,
         image: toAssetUrl(image),
+        mainImage: toAssetUrl(product.mainImage || image),
+        primaryImage: toAssetUrl(product.primaryImage || image),
         imagePath: product.imagePath ? toAssetUrl(product.imagePath) : product.imagePath,
         thumbnailUrl: product.thumbnailUrl ? toAssetUrl(product.thumbnailUrl) : product.thumbnailUrl,
         imageUrl: product.imageUrl ? toAssetUrl(product.imageUrl) : product.imageUrl,
         gallery,
+        secondaryImages: Array.isArray(product.secondaryImages)
+            ? product.secondaryImages.map((item) => toAssetUrl(item)).filter(Boolean)
+            : gallery.slice(1),
+        colorOptions,
+        colors: colorOptions.map((item) => item.name),
     };
 };
 
