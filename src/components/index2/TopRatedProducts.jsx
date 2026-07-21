@@ -6,7 +6,6 @@ import { Navigation, FreeMode } from 'swiper/modules';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { toast } from 'react-toastify';
 import { ChevronLeft, ChevronRight, Star, ShoppingBag, Heart, Award, ArrowLeft } from 'lucide-react';
-import productsData from '../../../public/jsons/products.json';
 import useCartActions from '../../hooks/useCartActions.js';
 import { compareProductAvailability, getProductAvailability } from '../../utils/helpers/productAvailability.js';
 import { getCatalogProducts } from '../../services/catalogApi.js';
@@ -44,7 +43,7 @@ const TopRatedProducts = ({
 
         setIsMounted(true);
         const loadProducts = async () => {
-            const allProducts = productsData.products || [];
+            const allProducts = [];
             const fallbackProducts = [...allProducts]
                 .sort((a, b) => compareProductAvailability(a, b) || (b.rating || 0) - (a.rating || 0))
                 .slice(0, 12);

@@ -3,12 +3,12 @@
 // =============================================================================
 import React, { useState, useEffect, useMemo } from 'react';
 import { toast } from 'react-toastify';
-import productsData from '../../../../public/jsons/products.json';
 import UserReturnsFilterBar from './userReturnsFilterBar';
 import UserReturnsCard from './userReturnsCard';
 import UserReturnsEmpty from './userReturnsEmpty';
 import UserReturnsSkeleton from './userReturnsSkeleton';
 import ProductsPagination from '../../seller/sellerProducts/productsPagination';
+import { getCatalogProducts } from '../../../services/catalogApi.js';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -29,7 +29,7 @@ const UserReturns = () => {
     useEffect(() => {
         const loadReturns = async () => {
             await new Promise(resolve => setTimeout(resolve, 800));
-            const allProducts = productsData.products || [];
+            const allProducts = [];
             const sample = allProducts.slice(0, 8).map((p, idx) => ({
                 id: idx + 1,
                 product: p,

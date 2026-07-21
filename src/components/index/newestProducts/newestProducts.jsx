@@ -8,7 +8,6 @@ import {
     Heart, Star, Sparkles, ArrowLeft
 } from 'lucide-react';
 import ProductSkeletonSlider from '../../skeleton/ProductSkeletonSlider/ProductSkeletonSlider';
-import ProductsData from '../../../../public/jsons/products.json'; // ← مسیر صحیح API خود را تنظیم کنید
 import useCartActions from '../../../hooks/useCartActions.js';
 import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
 import { getCatalogProducts } from '../../../services/catalogApi.js';
@@ -238,7 +237,7 @@ const NewestProducts = ({
                 const response = await getCatalogProducts({ page: 1, pageSize: 20, sort: 'newest' });
                 // فرض بر این است که data شامل آرایه‌ای از محصولات است
                 const apiProducts = response.products || [];
-                const fallbackProducts = (ProductsData.products || ProductsData).filter(p => p.isNew === true);
+                const fallbackProducts = ([]).filter(p => p.isNew === true);
                 const newProducts = (apiProducts.length ? apiProducts : fallbackProducts)
                     .filter(p => p.isNew === true)
                     .sort(compareProductAvailability);

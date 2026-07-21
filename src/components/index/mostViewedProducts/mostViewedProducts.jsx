@@ -9,7 +9,6 @@ import {
     Heart, Star, TrendingUp, ArrowLeft, Eye
 } from 'lucide-react';
 import ProductSkeletonSlider from '../../skeleton/ProductSkeletonSlider/ProductSkeletonSlider';
-import productsData from '../../../../public/jsons/products.json';
 import useCartActions from '../../../hooks/useCartActions.js';
 import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
 import { getCatalogProducts } from '../../../services/catalogApi.js';
@@ -221,7 +220,7 @@ const MostViewedProducts = ({
     const [swiperInstance, setSwiperInstance] = useState(null);
     const navigate = useNavigate()
     // مستقیم از import استفاده کن - مرتب‌سازی بر اساس rating
-    const allProducts = productsData.products || [];
+    const allProducts = [];
     const mostViewedProducts = [...allProducts]
         .sort((a, b) => compareProductAvailability(a, b) || (b.rating || 0) - (a.rating || 0))
         .slice(0, 12);

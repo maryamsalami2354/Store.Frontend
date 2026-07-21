@@ -4,7 +4,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Trash2, BarChart2 } from 'react-feather';
-import productsData from '../../../public/jsons/products.json';
 import { Breadcrumb } from '../../utils/helpers/breadcrumb';
 import { toast } from 'react-toastify';
 import ComparisonPageSkeleton from '../skeleton/ComparisonPageSkeleton/ComparisonPageSkeleton';
@@ -23,7 +22,7 @@ const ComparisonPage = () => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [catalogProducts, setCatalogProducts] = useState([]);
 
-    const allProducts = useMemo(() => catalogProducts.length ? catalogProducts : productsData.products || [], [catalogProducts]);
+    const allProducts = useMemo(() => catalogProducts, [catalogProducts]);
 
     // محصولات انتخاب‌شده از URL
     const selectedIds = useMemo(() => {

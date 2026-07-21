@@ -4,7 +4,6 @@ import DashboardSummaryCards from './dashboardSummaryCards';
 import DashboardRecentOrders from './dashboardRecentOrders';
 import DashboardRecommendedProducts from './dashboardRecommendedProducts';
 import ordersData from '../../../../public/jsons/sellerOrders.json';
-import productsData from '../../../../public/jsons/products.json';
 import { getCatalogProducts } from '../../../services/catalogApi.js';
 
 const UserDashboard = () => {
@@ -22,10 +21,8 @@ const UserDashboard = () => {
                 // customer حالا یک آبجکت است، برای نمایش خلاصه اسمش رو می‌گیریم
                 customerName: typeof order.customer === 'object' ? order.customer.name : order.customer,
             }));
-
-            // گرفتن ۳ محصول پیشنهادی از products.json
             const response = await getCatalogProducts({ page: 1, pageSize: 20, sort: 'discounted' }).catch(() => ({ products: [] }));
-            const recommended = (response.products?.length ? response.products : productsData.products || [])
+            const recommended = (response.products || [])
                 .filter(p => p.isAmazing || p.isNew)
                 .slice(0, 3);
 

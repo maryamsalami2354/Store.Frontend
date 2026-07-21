@@ -6,19 +6,21 @@ import { toast } from 'react-toastify';
 import ProductsFilterBar from './productsFilterBar';
 import ProductsList from './productsList';
 import ProductsPagination from './productsPagination';
-import brandsData from '../../../../public/jsons/brands.json';
 import OperationConfirmModal from './operationConfirmModal.jsx';
 import EditProductModal from './editProductModal.jsx';
 import AddProductModal from './addProductModal.jsx';
-import productsData from '../../../../public/jsons/products.json';
-import categoriesData from '../../../../public/jsons/categories.json';
+import { getCatalogBrands, getCatalogCategories, getCatalogProducts } from '../../../services/catalogApi.js';
 
 const enhanceProducts = (products) => {
-    return products.map((product, index) => ({
-        ...product,
-        stock: product.stock ?? (index % 20) + 1,
-        status: product.status ?? (index % 3 === 0 ? 'inactive' : index % 5 === 0 ? 'outofstock' : 'active'),
-    }));
+    return products.map((product) => {
+        const stock = Number(product.stock ?? product.availableQuantity ?? 0);
+
+        return {
+            ...product,
+            stock,
+            status: product.status ?? (stock > 0 ? 'active' : 'outofstock'),
+        };
+    });
 };
 
 const ITEMS_PER_PAGE = 10;
@@ -40,11 +42,24 @@ const SellerProducts = () => {
 
     useEffect(() => {
         const loadData = async () => {
-            await new Promise(resolve => setTimeout(resolve, 800));
-            setProducts(enhanceProducts(productsData.products || []));
-            setCategories(categoriesData.categories || []);
-            setBrands(brandsData.brands || []); // 🆕 بارگذاری برندها
-            setIsLoading(false);
+            try {
+                const [productsResponse, categoriesResponse, brandsResponse] = await Promise.all([
+                    getCatalogProducts({ page: 1, pageSize: 500 }),
+                    getCatalogCategories(),
+                    getCatalogBrands(),
+                ]);
+
+                setProducts(enhanceProducts(productsResponse.products || []));
+                setCategories(categoriesResponse.categories || []);
+                setBrands(brandsResponse.brands || []);
+            } catch (error) {
+                toast.error(error.message || 'خطا در دریافت اطلاعات کاتالوگ');
+                setProducts([]);
+                setCategories([]);
+                setBrands([]);
+            } finally {
+                setIsLoading(false);
+            }
         };
         loadData();
     }, []);

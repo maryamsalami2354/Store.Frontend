@@ -6,8 +6,6 @@ import { useParams } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Fuse from 'fuse.js';
 import { Award } from 'react-feather';
-import brandsData from '../../../public/jsons/brands.json';
-import productsData from '../../../public/jsons/products.json';
 import { Breadcrumb } from '../../utils/helpers/breadcrumb';
 import { toast } from 'react-toastify';
 import BrandPageSkeleton from '../skeleton/BrandPageSkeleton/BrandPageSkeleton.jsx';
@@ -17,7 +15,7 @@ import BrandFilterBar from './brandFilterBar';
 import BrandProductGrid from './brandProductGrid';
 import BrandEmpty from './brandEmpty';
 import { compareProductAvailability } from '../../utils/helpers/productAvailability.js';
-import { getCatalogProducts } from '../../services/catalogApi.js';
+import { getCatalogBrands, getCatalogProducts } from '../../services/catalogApi.js';
 
 const ITEMS_PER_LOAD = 10;
 
@@ -30,9 +28,10 @@ const BrandPage = () => {
     const [searchInput, setSearchInput] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [catalogProducts, setCatalogProducts] = useState([]);
+    const [catalogBrands, setCatalogBrands] = useState([]);
 
-    const allBrands = useMemo(() => brandsData.brands || [], []);
-    const allProducts = useMemo(() => catalogProducts.length ? catalogProducts : productsData.products || [], [catalogProducts]);
+    const allBrands = useMemo(() => catalogBrands, [catalogBrands]);
+    const allProducts = useMemo(() => catalogProducts, [catalogProducts]);
 
     const brand = useMemo(() => allBrands.find(b => b.id === parseInt(id)), [allBrands, id]);
 
@@ -69,16 +68,27 @@ const BrandPage = () => {
         let isMounted = true;
 
         const loadBrandProducts = async () => {
+            setIsLoading(true);
             try {
-                const response = await getCatalogProducts({
-                    page: 1,
-                    pageSize: 200,
-                    brandId: Number(id)
-                });
-                if (isMounted) setCatalogProducts(response.products || []);
+                const [brandsResponse, productsResponse] = await Promise.all([
+                    getCatalogBrands(),
+                    getCatalogProducts({
+                        page: 1,
+                        pageSize: 200,
+                        brandId: Number(id)
+                    }),
+                ]);
+
+                if (!isMounted) return;
+                setCatalogBrands(brandsResponse.brands || []);
+                setCatalogProducts(productsResponse.products || []);
             } catch (error) {
                 console.warn('Could not load brand products from API:', error);
-                if (isMounted) setCatalogProducts([]);
+                if (!isMounted) return;
+                setCatalogBrands([]);
+                setCatalogProducts([]);
+            } finally {
+                if (isMounted) setIsLoading(false);
             }
         };
 
@@ -88,7 +98,7 @@ const BrandPage = () => {
             isMounted = false;
         };
     }, [id]);
-    useEffect(() => { const t = setTimeout(() => setIsLoading(false), 600); window.scrollTo(0, 0); return () => clearTimeout(t); }, [id]);
+    useEffect(() => { window.scrollTo(0, 0); }, [id]);
 
     const handleSearch = () => setSearchQuery(searchInput.trim());
     const handleClearSearch = () => { setSearchInput(''); setSearchQuery(''); };

@@ -4,9 +4,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Award } from 'react-feather';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import brandsData from '../../../public/jsons/brands.json';
-import productsData from '../../../public/jsons/products.json';
-import categoriesData from '../../../public/jsons/menuCategories.json';
 import { Breadcrumb } from '../../utils/helpers/breadcrumb';
 import brandsPageSkeleton from '../skeleton/BrandsPageSkeleton/brandsPageSkeleton.jsx';
 import brandsHero from './brandsHero';
@@ -17,6 +14,7 @@ import brandsGrid from './brandsGrid';
 import brandsFeatured from './brandsFeatured';
 import brandsEmpty from './brandsEmpty';
 import { toast } from 'react-toastify';
+import { getCatalogBrands, getCatalogCategories, getCatalogProducts } from '../../services/catalogApi.js';
 
 const ITEMS_PER_LOAD = 10;
 
@@ -29,14 +27,10 @@ const BrandsPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState('');
     const [sortBy, setSortBy] = useState('popular');
-    const [displayCount, setDisplayCount] = useState(ITEMS_PER_LOAD); // تعداد نمایشی
-
-    // =========================================================================
-    // DATA
-    // =========================================================================
-    const allBrands = useMemo(() => brandsData.brands || [], []);
-    const allProducts = useMemo(() => productsData.products || [], []);
-    const allCategories = useMemo(() => categoriesData.categories || [], []);
+    const [displayCount, setDisplayCount] = useState(ITEMS_PER_LOAD);
+    const [allBrands, setAllBrands] = useState([]);
+    const [allProducts, setAllProducts] = useState([]);
+    const [allCategories, setAllCategories] = useState([]); // تعداد نمایشی
 
     // =========================================================================
     // COMPUTED: برندها با اطلاعات کامل
@@ -117,9 +111,38 @@ const BrandsPage = () => {
     // EFFECTS
     // =========================================================================
     useEffect(() => {
-        const timer = setTimeout(() => setIsLoading(false), 600);
+        let isMounted = true;
         window.scrollTo(0, 0);
-        return () => clearTimeout(timer);
+
+        const loadCatalog = async () => {
+            setIsLoading(true);
+            try {
+                const [brandsResponse, productsResponse, categoriesResponse] = await Promise.all([
+                    getCatalogBrands(),
+                    getCatalogProducts({ page: 1, pageSize: 300 }),
+                    getCatalogCategories(),
+                ]);
+
+                if (!isMounted) return;
+                setAllBrands(brandsResponse.brands || []);
+                setAllProducts(productsResponse.products || []);
+                setAllCategories(categoriesResponse.categories || []);
+            } catch (error) {
+                toast.error(error.message || 'خطا در دریافت برندها');
+                if (!isMounted) return;
+                setAllBrands([]);
+                setAllProducts([]);
+                setAllCategories([]);
+            } finally {
+                if (isMounted) setIsLoading(false);
+            }
+        };
+
+        loadCatalog();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     // با تغییر فیلترها یا مرتب‌سازی، تعداد نمایش را ریست کن

@@ -9,7 +9,6 @@ import {
     Heart, Star, Flame, ArrowLeft
 } from 'lucide-react';
 import ProductSkeletonSlider from '../../skeleton/ProductSkeletonSlider/ProductSkeletonSlider';
-import productsData from '../../../../public/jsons/products.json';
 import useCartActions from '../../../hooks/useCartActions.js';
 import { getCatalogProducts } from '../../../services/catalogApi.js';
 
@@ -314,7 +313,7 @@ const AmazingProducts = ({
 
 
     // مستقیم از import استفاده کن - محصولات شگفت‌انگیز رو فیلتر کن
-    const allProducts = productsData.products || [];
+    const allProducts = [];
     const amazingProductsList = propProducts || allProducts
         .filter(p => p.isAmazing)
         .sort((a, b) => Number((b.stock || 0) > 0) - Number((a.stock || 0) > 0));

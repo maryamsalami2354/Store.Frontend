@@ -1,30 +1,18 @@
 // src/components/index2/VerticalSlider.jsx
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { ChevronUp, ChevronDown, Quote, Star, Gift, Zap, Award, TrendingUp, Clock, ShoppingBag, Heart } from 'lucide-react';
+import { getCatalogProducts } from '../../services/catalogApi.js';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
 
-const verticalItems = [
+const staticVerticalItems = [
     {
-        id: 1,
-        type: "product",
-        title: "گوشی آیفون ۱۵ پرو مکس",
-        description: "با ۳۵٪ تخفیف ویژه",
-        oldPrice: "55,000,000",
-        newPrice: "35,000,000",
-        discount: 35,
-        image: "/images/products/1.jpg",
-        link: "/product/1",
-        color: "from-blue-600 to-cyan-600",
-        icon: Zap
-    },
-    {
-        id: 2,
+        id: 'testimonial',
         type: "testimonial",
         text: "بهترین تجربه خرید آنلاین رو داشتم. محصولات اصل و ارسال سریع",
         author: "علی محمدی",
@@ -35,40 +23,68 @@ const verticalItems = [
         icon: Quote
     },
     {
-        id: 3,
-        type: "product",
-        title: "ساعت هوشمند گارمین Fenix 7X",
-        description: "مناسب ورزش‌های حرفه‌ای",
-        oldPrice: "32,000,000",
-        newPrice: "28,000,000",
-        discount: 12,
-        image: "/images/products/45.jpg",
-        link: "/product/45",
-        color: "from-emerald-600 to-teal-600",
-        icon: TrendingUp
-    },
-    {
-        id: 4,
+        id: 'gift',
         type: "gift",
-        title: "تخفیف ویژه نوروز",
-        description: "تا ۵۰٪ تخفیف + ارسال رایگان",
-        code: "NORUZ1404",
-        discount: 50,
-        buttonText: "خرید با تخفیف",
-        link: "/offers",
+        title: "تخفیف ویژه",
+        description: "پیشنهادهای تخفیفی محصولات را از دیتابیس دنبال کنید",
+        code: "WELCOME1404",
+        discount: 15,
+        buttonText: "مشاهده محصولات",
+        link: "/search",
         color: "from-red-600 to-orange-600",
         icon: Gift
     }
 ];
 
+const productSlideColors = ["from-blue-600 to-cyan-600", "from-emerald-600 to-teal-600", "from-indigo-600 to-violet-600"];
+const productSlideIcons = [Zap, TrendingUp, Award];
+
+const buildProductSlide = (product, index) => ({
+    id: `product-${product.id}`,
+    type: "product",
+    title: product.name,
+    description: product.shortDescription || product.categoryName || "محصول ویژه کیان شاپ",
+    oldPrice: product.oldPrice,
+    newPrice: product.price,
+    discount: Number(product.discount || 0),
+    image: product.image,
+    link: `/product/${product.id}`,
+    color: productSlideColors[index % productSlideColors.length],
+    icon: productSlideIcons[index % productSlideIcons.length]
+});
 const VerticalSlider = () => {
     const swiperRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [productSlides, setProductSlides] = useState([]);
 
     const handlePrev = useCallback(() => swiperRef.current?.slidePrev(), []);
     const handleNext = useCallback(() => swiperRef.current?.slideNext(), []);
 
-    const currentItem = verticalItems[activeIndex];
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadProducts = async () => {
+            try {
+                const response = await getCatalogProducts({ page: 1, pageSize: 3, sort: 'discounted' });
+                if (!isMounted) return;
+                setProductSlides((response.products || []).map(buildProductSlide));
+            } catch {
+                if (isMounted) setProductSlides([]);
+            }
+        };
+
+        loadProducts();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    const sliderItems = productSlides.length
+        ? [productSlides[0], staticVerticalItems[0], ...productSlides.slice(1), staticVerticalItems[1]]
+        : staticVerticalItems;
+
+    const currentItem = sliderItems[activeIndex] || sliderItems[0];
     const CurrentIcon = currentItem?.icon || Award;
 
     return (
@@ -87,7 +103,7 @@ const VerticalSlider = () => {
                             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
                             className="h-full [&_.swiper-slide]:!bg-transparent"
                         >
-                            {verticalItems.map((item) => {
+                            {sliderItems.map((item) => {
                                 const Icon = item.icon;
                                 return (
                                     <SwiperSlide key={item.id}>
@@ -187,7 +203,7 @@ const VerticalSlider = () => {
                             <ChevronUp size={20} className="text-white group-hover:-translate-y-0.5 transition-transform" />
                         </button>
                         <div className="flex flex-col gap-2">
-                            {verticalItems.map((_, idx) => (
+                            {sliderItems.map((_, idx) => (
                                 <div
                                     key={idx}
                                     onClick={() => swiperRef.current?.slideToLoop(idx)}

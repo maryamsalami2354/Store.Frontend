@@ -7,7 +7,6 @@ import {
     Heart, ShoppingBag, Star, TrendingUp, Sparkles
 } from 'lucide-react';
 // ایمپورت مستقیم JSON
-import productsData from '../../../../public/jsons/products.json';
 import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
 import { getCatalogProducts } from '../../../services/catalogApi.js';
 import SomeProductsSkeleton from '../../skeleton/SomeProductsSkeleton';
@@ -238,7 +237,7 @@ const SomeProducts = ({
                       }) => {
     // مستقیم از import استفاده کن
     const [catalogProducts, setCatalogProducts] = useState([]);
-    const allProducts = catalogProducts.length ? catalogProducts : productsData.products || [];
+    const allProducts = catalogProducts;
     const featuredProducts = allProducts;
 
     useEffect(() => {

@@ -1,29 +1,74 @@
 // =============================================================================
 // FILE: orderDetailsModal.jsx (اصلاح‌شده - نمایش کامل)
 // =============================================================================
-import React from 'react';
-import { X, Package, MapPin, CreditCard, Truck, Clock } from 'react-feather';
+import React, { useEffect, useState } from 'react';
+import { X, Package, MapPin, CreditCard, Truck, Clock, Edit3, Save } from 'react-feather';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { toast } from 'react-toastify';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import productsData from '../../../../public/jsons/products.json';
 
 const statusConfig = {
-    pending: { label: 'دره انتظار', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
-    processing: { label: 'دره حال پردازش', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' },
-    shipped: { label: 'ارسال شده', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400' },
-    completed: { label: 'تحویل شده', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
+    pending: { label: 'در انتظار پرداخت', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
+    processing: { label: 'در انتظار ارسال', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' },
+    shipped: { label: 'در حال ارسال', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400' },
+    completed: { label: 'تحویل داده شد', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
     cancelled: { label: 'لغو شده', color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
 };
 
-const getProductImage = (productId) => {
-    const product = productsData.products?.find(p => p.id === productId);
-    return product?.image || '/images/products/placeholder.jpg';
-};
+const getProductImage = (item) => item?.image || item?.productImage || item?.imagePath || '/images/products/placeholder.jpg';
 
-const OrderDetailsModal = ({ isOpen, order, onClose }) => {
+const getAddressForm = (order) => ({
+    recipientName: order?.recipientName || order?.customer?.name || '',
+    recipientPhone: order?.recipientPhone || order?.customer?.phone || '',
+    shippingAddress: order?.address?.full || '',
+});
+
+const OrderDetailsModal = ({ isOpen, order, onClose, onUpdateAddress }) => {
+    const [isEditingAddress, setIsEditingAddress] = useState(false);
+    const [addressForm, setAddressForm] = useState(getAddressForm(order));
+    const [isSavingAddress, setIsSavingAddress] = useState(false);
+
+    useEffect(() => {
+        setAddressForm(getAddressForm(order));
+        setIsEditingAddress(false);
+    }, [order?.id, isOpen]);
+
     if (!order) return null;
+
     const status = statusConfig[order.status] || statusConfig.pending;
+    const canEditAddress = Boolean(order.canEditShippingAddress) && typeof onUpdateAddress === 'function';
+
+    const handleAddressChange = (event) => {
+        const { name, value } = event.target;
+        setAddressForm((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleCancelAddressEdit = () => {
+        setAddressForm(getAddressForm(order));
+        setIsEditingAddress(false);
+    };
+
+    const handleSaveAddress = async () => {
+        if (!addressForm.recipientName.trim() || !addressForm.recipientPhone.trim() || !addressForm.shippingAddress.trim()) {
+            toast.error('نام گیرنده، شماره تماس و آدرس ارسال الزامی است');
+            return;
+        }
+
+        setIsSavingAddress(true);
+        try {
+            await onUpdateAddress(order, {
+                recipientName: addressForm.recipientName.trim(),
+                recipientPhone: addressForm.recipientPhone.trim(),
+                shippingAddress: addressForm.shippingAddress.trim(),
+            });
+            setIsEditingAddress(false);
+        } catch (error) {
+            toast.error(error.message || 'خطا در ویرایش آدرس سفارش');
+        } finally {
+            setIsSavingAddress(false);
+        }
+    };
 
     return (
         <AnimatePresence>
@@ -83,15 +128,90 @@ const OrderDetailsModal = ({ isOpen, order, onClose }) => {
 
                             {/* آدرس */}
                             <div className="p-4 rounded-xl border border-gray-200 dark:border-gray-800">
-                                <h4 className="text-sm font-bold mb-3 flex items-center gap-2">
-                                    <MapPin size={16} className="text-[#002874] dark:text-[#4C6FB6]" /> آدرس ارسال
-                                </h4>
-                                <p className="text-sm text-gray-700 dark:text-gray-300">{order.address?.full || 'آدرس ثبت نشده'}</p>
-                                <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-gray-500">
-                                    {order.address?.province && <span>{order.address.province}</span>}
-                                    {order.address?.city && <span>{order.address.city}</span>}
-                                    {order.address?.postalCode && <span>کد پستی: {order.address.postalCode}</span>}
+                                <div className="mb-3 flex items-center justify-between gap-3">
+                                    <h4 className="text-sm font-bold flex items-center gap-2">
+                                        <MapPin size={16} className="text-[#002874] dark:text-[#4C6FB6]" /> آدرس ارسال
+                                    </h4>
+                                    {canEditAddress && !isEditingAddress && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsEditingAddress(true)}
+                                            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+                                        >
+                                            <Edit3 size={14} />
+                                            ویرایش
+                                        </button>
+                                    )}
                                 </div>
+                                {isEditingAddress ? (
+                                    <div className="space-y-3">
+                                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                            <label className="space-y-1.5">
+                                                <span className="text-xs font-medium text-gray-600 dark:text-gray-300">نام گیرنده</span>
+                                                <input
+                                                    name="recipientName"
+                                                    value={addressForm.recipientName}
+                                                    onChange={handleAddressChange}
+                                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 p-2.5 text-sm dark:border-gray-700 dark:bg-gray-900"
+                                                />
+                                            </label>
+                                            <label className="space-y-1.5">
+                                                <span className="text-xs font-medium text-gray-600 dark:text-gray-300">شماره تماس گیرنده</span>
+                                                <input
+                                                    name="recipientPhone"
+                                                    value={addressForm.recipientPhone}
+                                                    onChange={handleAddressChange}
+                                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 p-2.5 text-sm dir-ltr text-left dark:border-gray-700 dark:bg-gray-900"
+                                                />
+                                            </label>
+                                        </div>
+                                        <label className="block space-y-1.5">
+                                            <span className="text-xs font-medium text-gray-600 dark:text-gray-300">آدرس کامل</span>
+                                            <textarea
+                                                name="shippingAddress"
+                                                value={addressForm.shippingAddress}
+                                                onChange={handleAddressChange}
+                                                rows={3}
+                                                className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 p-2.5 text-sm leading-7 dark:border-gray-700 dark:bg-gray-900"
+                                            />
+                                        </label>
+                                        <div className="flex flex-wrap gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={handleSaveAddress}
+                                                disabled={isSavingAddress}
+                                                className="inline-flex items-center gap-2 rounded-xl bg-[#002874] px-4 py-2 text-sm text-white transition hover:bg-[#001d5a] disabled:opacity-60"
+                                            >
+                                                <Save size={15} />
+                                                {isSavingAddress ? 'در حال ذخیره...' : 'ذخیره آدرس'}
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={handleCancelAddressEdit}
+                                                disabled={isSavingAddress}
+                                                className="rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 transition hover:bg-gray-50 disabled:opacity-60 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+                                            >
+                                                انصراف
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <p className="text-sm text-gray-700 dark:text-gray-300">{order.address?.full || 'آدرس ثبت نشده'}</p>
+                                        <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-gray-500">
+                                            {order.recipientName && <span>گیرنده: {order.recipientName}</span>}
+                                            {order.recipientPhone && <span className="dir-ltr">{order.recipientPhone}</span>}
+                                            {order.address?.province && <span>{order.address.province}</span>}
+                                            {order.address?.city && <span>{order.address.city}</span>}
+                                            {order.address?.postalCode && <span>کد پستی: {order.address.postalCode}</span>}
+                                        </div>
+                                        {!canEditAddress && (
+                                            <p className="mt-3 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-500 dark:bg-gray-900/60">
+                                                بعد از قرار گرفتن سفارش در وضعیت در حال ارسال، امکان ویرایش آدرس وجود ندارد.
+                                            </p>
+                                        )}
+                                    </>
+                                )}
                             </div>
 
                             {/* اقلام سفارش */}
@@ -102,7 +222,7 @@ const OrderDetailsModal = ({ isOpen, order, onClose }) => {
                                 </h4>
                                 <div className="space-y-3">
                                     {order.items?.map((item, idx) => {
-                                        const imageUrl = getProductImage(item.productId);
+                                        const imageUrl = getProductImage(item);
                                         return (
                                             <div key={idx} className="flex items-center gap-4 py-3 border-b border-gray-100 dark:border-gray-800 last:border-0">
                                                 <LazyLoadImage

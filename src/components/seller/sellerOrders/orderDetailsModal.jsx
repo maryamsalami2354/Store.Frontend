@@ -6,7 +6,6 @@ import { X, Package, MapPin, CreditCard, Truck, Clock, User, Phone, Mail, Messag
 import { motion, AnimatePresence } from 'framer-motion';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { toast } from 'react-toastify';
-import productsData from '../../../../public/jsons/products.json';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const statusConfig = {
@@ -25,10 +24,7 @@ const nextStatusOptions = {
     cancelled: [],
 };
 
-const getProductImage = (productId) => {
-    const product = productsData.products?.find(p => p.id === productId);
-    return product?.image || '/images/products/placeholder.jpg';
-};
+const getProductImage = (item) => item?.image || item?.productImage || item?.imagePath || '/images/products/placeholder.jpg';
 
 const OrderDetailsModal = ({ isOpen, order, onClose, onStatusChange, onAddNote }) => {
     const [showStatusDropdown, setShowStatusDropdown] = useState(false);
@@ -159,7 +155,7 @@ const OrderDetailsModal = ({ isOpen, order, onClose, onStatusChange, onAddNote }
                             {activeTab === 'items' && (
                                 <div className="space-y-3">
                                     {order.items?.map((item, idx) => {
-                                        const imageUrl = getProductImage(item.productId);
+                                        const imageUrl = getProductImage(item);
                                         const itemTotal = parseInt(String(item.price || '0').replace(/[^\d]/g, '')) * (item.quantity || 1);
                                         return (
                                             <div key={idx} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl">

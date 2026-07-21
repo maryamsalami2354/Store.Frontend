@@ -93,6 +93,7 @@ const normalizeOrder = (order) => {
         deliveryTimeSlot: order.deliveryTimeSlot || "",
         recipientName: order.recipientName || "",
         recipientPhone: order.recipientPhone || "",
+        canEditShippingAddress: Boolean(order.canEditShippingAddress ?? ["pending", "processing"].includes(toUiStatus(order.status))),
         customer: {
             name: order.recipientName || "مشتری",
             phone: order.recipientPhone || "",
@@ -142,6 +143,11 @@ export const updateAdminOrder = async (orderId, payload) => {
     return data;
 };
 
+export const updateMyOrderShippingAddress = async (orderId, payload) => {
+    const { data } = await authApiClient.patch(`/Order/${orderId}/shipping-address`, payload);
+    return data;
+};
+
 export const getOrderTracking = async (orderId) => {
     const { data } = await authApiClient.get(`/Order/${orderId}/tracking`);
     return {
@@ -155,5 +161,6 @@ export default {
     getAdminOrders,
     updateOrderStatus,
     updateAdminOrder,
+    updateMyOrderShippingAddress,
     getOrderTracking,
 };

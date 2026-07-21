@@ -18,7 +18,7 @@ const CategoryTopBrands = ({ categoryProducts = [] }) => {
 
             const current = brandsMap.get(product.brandId) || {
                 id: product.brandId,
-                name: product.brandName || `برند ${product.brandId}`,
+                name: product.brandName || 'نامشخص',
                 logo: product.brandLogo,
                 productCount: 0,
             };

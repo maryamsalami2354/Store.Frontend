@@ -8,6 +8,7 @@ import {
     Edit2,
     Home,
     LogOut,
+    MessageCircle,
     Package,
     RefreshCw,
     Save,
@@ -23,6 +24,8 @@ import { getMe } from "../../services/authApi.js";
 import { getAdminOrders, getOrderTracking, updateAdminOrder, updateOrderStatus } from "../../services/orderApi.js";
 import useStore from "../../store/index.js";
 import { isAdminUser, isSuperAdminUser, normalizeAuthUser } from "../../utils/helpers/authUser.js";
+import AdminProducts from "./AdminProducts.jsx";
+import AdminModeration from "./AdminModeration.jsx";
 
 const statusOptions = [
     { value: "pending", label: "در انتظار پرداخت" },
@@ -139,9 +142,11 @@ const Admin = () => {
     };
 
     const canManageAccess = isSuperAdminUser(adminUser);
+    const canManageProducts = isSuperAdminUser(adminUser);
+    const canManageModeration = isSuperAdminUser(adminUser);
 
     return (
-        <AdminLayout adminUser={adminUser} canManageAccess={canManageAccess} onRefresh={refreshAll}>
+        <AdminLayout adminUser={adminUser} canManageAccess={canManageAccess} canManageProducts={canManageProducts} canManageModeration={canManageModeration} onRefresh={refreshAll}>
             <Routes>
                 <Route index element={<AdminDashboard users={users} orders={orders} loading={usersLoading || ordersLoading} />} />
                 <Route path="users" element={<AdminUsers users={users} loading={usersLoading} onRefresh={loadUsers} />} />
@@ -149,19 +154,23 @@ const Admin = () => {
                     path="orders"
                     element={<AdminOrders orders={orders} loading={ordersLoading} canEditOrders={canManageAccess} onRefresh={loadOrders} />}
                 />
+                <Route path="products" element={canManageProducts ? <AdminProducts canCreateProducts={canManageProducts} /> : <AccessDenied />} />
+                <Route path="moderation" element={canManageModeration ? <AdminModeration /> : <AccessDenied />} />
                 <Route path="access" element={canManageAccess ? <AdminAccess /> : <AccessDenied />} />
             </Routes>
         </AdminLayout>
     );
 };
 
-const AdminLayout = ({ children, adminUser, canManageAccess, onRefresh }) => {
+const AdminLayout = ({ children, adminUser, canManageAccess, canManageProducts, canManageModeration, onRefresh }) => {
     const navigate = useNavigate();
     const logout = useStore((state) => state.logout);
     const navItems = [
         { to: "/admin", label: "داشبورد", icon: Home, end: true },
         { to: "/admin/users", label: "کاربران", icon: Users },
         { to: "/admin/orders", label: "سفارش‌ها", icon: ShoppingBag },
+        ...(canManageProducts ? [{ to: "/admin/products", label: "محصولات", icon: Package }] : []),
+        ...(canManageModeration ? [{ to: "/admin/moderation", label: "دیدگاه و پرسش", icon: MessageCircle }] : []),
         ...(canManageAccess ? [{ to: "/admin/access", label: "دسترسی کاربران", icon: Shield }] : []),
     ];
 

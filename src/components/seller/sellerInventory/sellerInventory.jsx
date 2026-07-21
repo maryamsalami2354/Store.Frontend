@@ -7,7 +7,6 @@ import InventoryFilterBar from './inventoryFilterBar';
 import InventoryList from './inventoryList';
 import InventoryAdjustModal from './inventoryAdjustModal';
 import ProductsPagination from '../sellerProducts/productsPagination';
-import productsData from '../../../../public/jsons/products.json';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -24,7 +23,7 @@ const SellerInventory = () => {
     useEffect(() => {
         const loadData = async () => {
             await new Promise(resolve => setTimeout(resolve, 800));
-            const enhanced = (productsData.products || []).map(p => ({
+            const enhanced = ([]).map(p => ({
                 ...p,
                 stock: p.stock ?? Math.floor(Math.random() * 30) + 1,
                 minStock: p.minStock ?? 5,

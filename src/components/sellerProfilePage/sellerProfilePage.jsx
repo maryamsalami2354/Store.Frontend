@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Award } from 'react-feather';
 import sellersData from '../../../public/jsons/sellers.json';
-import productsData from '../../../public/jsons/products.json';
 import { Breadcrumb } from '../../utils/helpers/breadcrumb';
 import { toast } from 'react-toastify';
 import SellerProfilePageSkeleton from '../skeleton/SellerProfilePageSkeleton/SellerProfilePageSkeleton';
@@ -59,7 +58,7 @@ const SellerProfilePage = () => {
 
             // محصولات فروشنده
             const response = await getCatalogProducts({ page: 1, pageSize: 200 }).catch(() => ({ products: [] }));
-            const allProducts = response.products?.length ? response.products : productsData.products || [];
+            const allProducts = response.products || [];
             const sellerProducts = allProducts.slice(0, Math.floor(Math.random() * 20) + 10).map(p => ({
                 ...p,
                 brandId: found.id,

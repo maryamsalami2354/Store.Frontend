@@ -9,7 +9,7 @@ const ProductSpecs = ({ product }) => {
             icon: Cpu,
             items: [
                 { label: 'نوع محصول', value: product?.categoryId === 1 ? 'گوشی موبایل' : 'کالای دیجیتال' },
-                { label: 'برند', value: `برند ${product?.brandId || 'نامشخص'}` },
+                { label: 'برند', value: product?.brandName || 'نامشخص' },
                 { label: 'کد محصول', value: product?.sku || `SKU-${product?.id}` },
                 { label: 'وضعیت', value: product?.status === 'active' ? 'فعال' : 'غیرفعال' },
                 { label: 'مدل', value: product?.name?.split(' ').slice(0, 3).join(' ') || '---' },

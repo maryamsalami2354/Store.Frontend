@@ -4,13 +4,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import Fuse from 'fuse.js';
-import productsData from '../../../../public/jsons/products.json';
 import SellerReturnsFilterBar from './sellerReturnsFilterBar';
 import SellerReturnsCard from './sellerReturnsCard';
 import SellerReturnsEmpty from './sellerReturnsEmpty';
 import SellerReturnsSkeleton from './sellerReturnsSkeleton';
 import SellerReturnsDetailModal from './sellerReturnsDetailModal';
 import ProductsPagination from '../sellerProducts/productsPagination';
+import { getCatalogProducts } from '../../../services/catalogApi.js';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -33,7 +33,7 @@ const SellerReturns = () => {
     useEffect(() => {
         const load = async () => {
             await new Promise(resolve => setTimeout(resolve, 600));
-            const allProducts = productsData.products || [];
+            const allProducts = [];
             const reasons = ['کالا آسیب دیده', 'مغایرت با توضیحات', 'کیفیت نامناسب', 'ارسال کالای اشتباه', 'انصراف از خرید'];
             const customers = ['علی محمدی', 'سارا رضایی', 'محمد کریمی', 'مریم حسینی'];
 

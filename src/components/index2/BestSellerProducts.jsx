@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { toast } from 'react-toastify';
 import { TrendingUp, Star, ShoppingBag, Heart, Award, ArrowLeft, Eye } from 'lucide-react';
-import productsData from '../../../public/jsons/products.json';
 import sellerAnalytics from '../../../public/jsons/sellerAnalytics.json';
 import useCartActions from '../../hooks/useCartActions.js';
 import { compareProductAvailability, getProductAvailability } from '../../utils/helpers/productAvailability.js';
@@ -23,7 +22,7 @@ const BestSellerProducts = ({ title = "پرفروش‌ترین محصولات", 
             setIsLoading(true);
             try {
                 const response = await getCatalogProducts({ page: 1, pageSize: 200, sort: 'popular' });
-                const allProducts = response.products?.length ? response.products : productsData.products || [];
+                const allProducts = response.products || [];
                 const topProductsIds = (sellerAnalytics.topProducts || []).slice(0, 8).map(p => p.id);
                 const bestSellerProducts = topProductsIds
                     .map(id => allProducts.find(p => p.id === id))
@@ -32,7 +31,7 @@ const BestSellerProducts = ({ title = "پرفروش‌ترین محصولات", 
                 setProducts(bestSellerProducts.length ? bestSellerProducts : allProducts.slice(0, 8));
             } catch (err) {
                 console.error('Error loading best sellers:', err);
-                const allProducts = productsData.products || [];
+                const allProducts = [];
                 setProducts([...allProducts].sort(compareProductAvailability).slice(0, 8));
             } finally {
                 setIsLoading(false);

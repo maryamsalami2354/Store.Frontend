@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Fuse from 'fuse.js';
 import { TrendingUp } from 'react-feather';
-import productsData from '../../../public/jsons/products.json';
 import { Breadcrumb } from '../../utils/helpers/breadcrumb';
 import { toast } from 'react-toastify';
 import MostVisitedPageSkeleton from '../skeleton/MostVisitedPageSkeleton/MostVisitedPageSkeleton.jsx';
@@ -28,7 +27,7 @@ const MostVisitedPage = () => {
     const [catalogProducts, setCatalogProducts] = useState([]);
     const { addProductToCart } = useCartActions();
 
-    const allProducts = useMemo(() => (catalogProducts.length ? catalogProducts : productsData.products || []).map(p => ({
+    const allProducts = useMemo(() => (catalogProducts).map(p => ({
         ...p,
         visits: p.visits || Math.floor(Math.random() * 5000) + 100
     })), [catalogProducts]);

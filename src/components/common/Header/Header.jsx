@@ -4,11 +4,8 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
-import menuCategoriesData from '../../../../public/jsons/menuCategories.json';
 import navItemsDataJson from '../../../../public/jsons/navItems.json';
-import brandsDataJson from '../../../../public/jsons/brands.json';
-import productsDataJson from '../../../../public/jsons/products.json';
-import { getCatalogCategories } from '../../../services/catalogApi.js';
+import { getCatalogBrands, getCatalogCategories, getCatalogProducts } from '../../../services/catalogApi.js';
 import { getCart, removeCartItem, updateCartItem } from '../../../services/cartApi.js';
 import { toAssetUrl } from '../../../services/authApi.js';
 import useStore from '../../../store/index.js';
@@ -47,14 +44,14 @@ const Header = () => {
     const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [showHeader, setShowHeader] = useState(true);
-    const [catalogCategories, setCatalogCategories] = useState(menuCategoriesData.categories || []);
+    const [catalogCategories, setCatalogCategories] = useState([]);
+    const [catalogBrands, setCatalogBrands] = useState([]);
+    const [catalogProducts, setCatalogProducts] = useState([]);
     const lastScrollY = useRef(0);
     const headerRef = useRef(null);
     const headerHeightRef = useRef(0);
     const categoriesData = useMemo(() => ({ categories: catalogCategories }), [catalogCategories]);
     const navItemsData = navItemsDataJson;
-    const brandsData = brandsDataJson;
-    const productsData = productsDataJson;
     const accessToken = useStore((state) => state.accessToken);
     const user = useStore((state) => state.user);
     const logout = useStore((state) => state.logout);
@@ -69,19 +66,7 @@ const Header = () => {
         let result = str;
         persian.forEach((p, i) => result = result.replace(new RegExp(p, 'g'), english[i]));
         return result;
-    };
-    const initialCartItems = useMemo(() => {
-        if (productsData?.products?.length >= 2) {
-            return [
-                { ...productsData.products[0], quantity: 1 },
-                { ...productsData.products[1], quantity: 1 }
-            ];
-        }
-        return [
-            { id: 1, name: 'گوشی هوشمند مدل A', price: '۱۲,۵۰۰,۰۰۰ تومان', quantity: 1, image: '/placeholder.jpg' },
-            { id: 2, name: 'هدفون بی‌سیم', price: '۲,۳۰۰,۰۰۰ تومان', quantity: 1, image: '/placeholder.jpg' }
-        ];
-    }, [productsData]);
+    };
     const [cartItems, setCartItems] = useState([]);
     const searchRef = useRef(null);
     const megaMenuRef = useRef(null);
@@ -89,18 +74,29 @@ const Header = () => {
     const desktopUserMenuRef = useRef(null);
     const mobileUserMenuRef = useRef(null);
     const fuse = useMemo(() => {
-        if (!productsData?.products) return null;
-        return new Fuse(productsData.products, { keys: ['name'], threshold: 0.3 });
-    }, [productsData]);
+        if (!catalogProducts.length) return null;
+        return new Fuse(catalogProducts, { keys: ['name'], threshold: 0.3 });
+    }, [catalogProducts]);
     useEffect(() => {
         let isMounted = true;
 
         const loadHeaderCategories = async () => {
             try {
-                const data = await getCatalogCategories();
-                if (isMounted) setCatalogCategories(data.categories || []);
+                const [categoriesResponse, brandsResponse, productsResponse] = await Promise.all([
+                    getCatalogCategories(),
+                    getCatalogBrands(),
+                    getCatalogProducts({ page: 1, pageSize: 200 }),
+                ]);
+
+                if (!isMounted) return;
+                setCatalogCategories(categoriesResponse.categories || []);
+                setCatalogBrands(brandsResponse.brands || []);
+                setCatalogProducts(productsResponse.products || []);
             } catch {
-                if (isMounted) setCatalogCategories(menuCategoriesData.categories || []);
+                if (!isMounted) return;
+                setCatalogCategories([]);
+                setCatalogBrands([]);
+                setCatalogProducts([]);
             }
         };
 
@@ -269,7 +265,7 @@ const Header = () => {
                                                         <div>
                                                             <p className="text-sm font-medium">{res.name}</p>
                                                             <p className="text-xs text-gray-500">
-                                                                {getCategoryName(res.categoryId, categoriesData?.categories)} • {getBrandName(res.brandId, brandsData?.brands)}
+                                                                {getCategoryName(res.categoryId, categoriesData?.categories)} • {getBrandName(res.brandId, catalogBrands)}
                                                             </p>
                                                         </div>
                                                         <span className="mr-auto text-xs font-medium" style={{ color: '#4C6FB6' }}>{res.price}</span>

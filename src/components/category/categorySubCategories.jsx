@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import productsData from '../../../public/jsons/products.json';
 
 const CategorySubCategories = ({ subcategories }) => {
-    const allProducts = useMemo(() => productsData.products || [], []);
+    const allProducts = useMemo(() => [], []);
 
     if (!subcategories || subcategories.length === 0) return null;
 

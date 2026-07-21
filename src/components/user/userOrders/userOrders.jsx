@@ -7,7 +7,7 @@ import OrdersFilterBar from './ordersFilterBar';
 import OrdersList from './ordersList';
 import OrderDetailsModal from './orderDetailsModal';
 import ProductsPagination from '../../seller/sellerProducts/productsPagination';
-import { getMyOrders } from '../../../services/orderApi.js';
+import { getMyOrders, updateMyOrderShippingAddress } from '../../../services/orderApi.js';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -100,6 +100,31 @@ const UserOrders = () => {
         setReturnModal({ isOpen: false, order: null });
     };
 
+    const handleUpdateOrderAddress = async (order, payload) => {
+        if (!order?.id) return;
+
+        const result = await updateMyOrderShippingAddress(order.id, payload);
+        const updatedOrder = {
+            ...order,
+            recipientName: result.recipientName,
+            recipientPhone: result.recipientPhone,
+            canEditShippingAddress: result.canEditShippingAddress,
+            customer: {
+                ...order.customer,
+                name: result.recipientName,
+                phone: result.recipientPhone,
+            },
+            address: {
+                ...order.address,
+                full: result.shippingAddress,
+            },
+        };
+
+        setOrders((prev) => prev.map((item) => (item.id === order.id ? { ...item, ...updatedOrder } : item)));
+        setSelectedOrder(updatedOrder);
+        toast.success(result.message || 'آدرس سفارش ویرایش شد');
+    };
+
     return (
         <div className="space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -133,6 +158,7 @@ const UserOrders = () => {
                 isOpen={!!selectedOrder}
                 order={selectedOrder}
                 onClose={() => setSelectedOrder(null)}
+                onUpdateAddress={handleUpdateOrderAddress}
             />
 
             {returnModal.isOpen && (

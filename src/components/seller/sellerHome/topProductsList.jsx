@@ -4,7 +4,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, TrendingUp } from 'react-feather';
-import productsData from '../../../../public/jsons/products.json';
+import { getCatalogProducts } from '../../../services/catalogApi.js';
 
 const TopProductsList = () => {
     const [products, setProducts] = useState([]);
@@ -13,7 +13,7 @@ const TopProductsList = () => {
     useEffect(() => {
         const loadData = async () => {
             await new Promise(resolve => setTimeout(resolve, 0.1));
-            const rawProducts = productsData.products || [];
+            const rawProducts = [];
             const enhanced = rawProducts.slice(0, 4).map((product, index) => {
                 const salesValues = [156, 124, 98, 67];
                 const priceValues = [18900000, 2490000, 8900000, 1890000];

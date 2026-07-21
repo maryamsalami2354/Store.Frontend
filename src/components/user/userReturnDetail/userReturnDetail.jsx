@@ -6,10 +6,10 @@ import { useParams, Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { ChevronLeft, Clock, MessageSquare } from 'react-feather';
 import { toast } from 'react-toastify';
-import productsData from '../../../../public/jsons/products.json';
 import UserReturnDetailSkeleton from './userReturnDetailSkeleton';
 import UserReturnDetailTimeline from './userReturnDetailTimeline';
 import UserReturnDetailActions from './userReturnDetailActions';
+import { getCatalogProducts } from '../../../services/catalogApi.js';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const UserReturnDetail = () => {
@@ -19,26 +19,37 @@ const UserReturnDetail = () => {
 
     useEffect(() => {
         const load = async () => {
-            await new Promise(resolve => setTimeout(resolve, 800));
-            const products = productsData.products || [];
-            const product = products[parseInt(id) - 1] || products[0];
-            setReturnData({
-                id: parseInt(id),
-                product,
-                reason: 'کالا آسیب دیده',
-                description: 'بسته محصول هنگام تحویل آسیب دیده بود و جعبه آن پاره شده است.',
-                status: 'pending',
-                requestDate: '۱۴۰۴/۰۲/۲۵',
-                trackingCode: `RET-${String(id).padStart(4, '0')}`,
-                refundAmount: product.price,
-                timeline: [
-                    { date: '۱۴۰۴/۰۲/۲۵', title: 'ثبت درخواست', description: 'درخواست مرجوعی ثبت شد', done: true },
-                    { date: '—', title: 'بررسی کارشناس', description: 'در انتظار بررسی', done: false },
-                    { date: '—', title: 'تأیید یا رد', description: '', done: false },
-                    { date: '—', title: 'بازگشت وجه', description: '', done: false },
-                ],
-            });
-            setIsLoading(false);
+            try {
+                const response = await getCatalogProducts({ page: 1, pageSize: 200 });
+                const products = response.products || [];
+                const product = products[parseInt(id, 10) - 1] || products[0];
+
+                if (!product) {
+                    setReturnData(null);
+                    return;
+                }
+
+                setReturnData({
+                    id: parseInt(id, 10),
+                    product,
+                    reason: 'کالا آسیب دیده',
+                    description: 'بسته محصول هنگام تحویل آسیب دیده بود و جعبه آن پاره شده است.',
+                    status: 'pending',
+                    requestDate: '۱۴۰۴/۰۲/۲۵',
+                    trackingCode: `RET-${String(id).padStart(4, '0')}`,
+                    refundAmount: product.price,
+                    timeline: [
+                        { date: '۱۴۰۴/۰۲/۲۵', title: 'ثبت درخواست', description: 'درخواست مرجوعی ثبت شد', done: true },
+                        { date: '—', title: 'بررسی کارشناس', description: 'در انتظار بررسی', done: false },
+                        { date: '—', title: 'تأیید یا رد', description: '', done: false },
+                        { date: '—', title: 'بازگشت وجه', description: '', done: false },
+                    ],
+                });
+            } catch {
+                setReturnData(null);
+            } finally {
+                setIsLoading(false);
+            }
         };
         load();
     }, [id]);

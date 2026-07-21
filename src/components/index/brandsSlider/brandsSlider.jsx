@@ -1,4 +1,3 @@
-import brandsData from '../../../../public/jsons/brands.json';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -12,6 +11,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import ErrorOnFetchApi from "../../common/ErrorOnFetchApi/index.js";
+import { getCatalogBrands } from '../../../services/catalogApi.js';
 
 // =============================================================================
 // CONSTANTS
@@ -105,7 +105,7 @@ const BrandsSlider = () => {
                 setIsLoading(true);
                 setError(null);
                 // شبیه‌سازی دریافت داده از فایل JSON
-                const data = brandsData;
+                const data = await getCatalogBrands();
                 setBrands(data.brands || []);
             } catch (err) {
                 console.error('Fetch error:', err);
@@ -142,7 +142,7 @@ const BrandsSlider = () => {
         try {
             setIsLoading(true);
             setError(null);
-            const data = brandsData;
+            const data = await getCatalogBrands();
             setBrands(data.brands || []);
         } catch (err) {
             setError(err.message || 'خطا در دریافت برندها');

@@ -6,7 +6,6 @@ import { Navigation, FreeMode } from 'swiper/modules';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { toast } from 'react-toastify';
 import { ChevronLeft, ChevronRight, Clock, ShoppingBag, Heart, Star, Flame, ArrowLeft } from 'lucide-react';
-import productsData from '../../../public/jsons/products.json';
 import useCartActions from '../../hooks/useCartActions.js';
 import { compareProductAvailability, getProductAvailability } from '../../utils/helpers/productAvailability.js';
 import { getCatalogProducts } from '../../services/catalogApi.js';
@@ -252,7 +251,7 @@ const FlashDeals = ({
     const navigationNextRef = useRef(null);
     const [swiperReady, setSwiperReady] = useState(false);
 
-    const allProducts = productsData.products || [];
+    const allProducts = [];
     const fallbackFlashProducts = allProducts.filter(p => p.isAmazing === true).sort(compareProductAvailability).slice(0, 12);
     const [flashProducts, setFlashProducts] = useState(fallbackFlashProducts);
 

@@ -5,7 +5,6 @@ import { Navigation, FreeMode } from 'swiper/modules';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { ChevronLeft, ChevronRight, Flame, ArrowLeft } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
-import productsData from '../../../../public/jsons/products.json';
 import { compareProductAvailability, getProductAvailability } from '../../../utils/helpers/productAvailability.js';
 import { getCatalogProducts } from '../../../services/catalogApi.js';
 
@@ -138,7 +137,7 @@ const NewProductsGrid = ({
             await new Promise(resolve => setTimeout(resolve, 1));
 
             const response = await getCatalogProducts({ page: 1, pageSize: 200, sort: 'newest' });
-            const allProducts = response.products?.length ? response.products : productsData.products || [];
+            const allProducts = response.products || [];
             const newProducts = allProducts.filter(p => p.isNew === true);
             const sortedProducts = [...newProducts].sort((a, b) => compareProductAvailability(a, b) || b.id - a.id);
 
